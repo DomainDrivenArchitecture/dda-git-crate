@@ -27,9 +27,23 @@
 (def facility :dda-git)
 (def version  [0 1 0])
 
-(def GitProjectConfig
+(def GitRepository
+  "ssh://jem@repository.domaindrivenarchitecture.org:29418/hewater/meissa-sugar-module.git
+   https://jem:pass@repository.domaindrivenarchitecture.org/r/hewater/meissa-sugar-module.git
+   ssh://git@github.com:PolitAktiv/paArchitecture.git
+   https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
+  {:ssh s/Str
+   :https s/Str
+   (s/optional-key :user) s/Str
+   (s/optional-key :password) s/Str})
+
+(def GitServerConfig
   "Configuration of projects clone location"
-  {s/Keyword [s/Str]})
+  {:name s/Str
+   (s/optional-key :ssh+key) {:login s/Str}
+   (s/optional-key :https+password) {:login s/Str
+                                     :password s/Str}
+   s/Keyword [s/Str]})
 
 (s/defmethod dda-crate/dda-settings facility
   [dda-crate partial-effective-config]
