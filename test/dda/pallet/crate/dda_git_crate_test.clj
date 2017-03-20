@@ -18,22 +18,49 @@
     [clojure.test :refer :all]
     [schema.core :as s]
     [dda.pallet.crate.dda-git-crate :as sut]))
+  
+(def config1 {:ssh-url "fqdn:29418/repo.git"
+              :https-url "fqdn/r/repo.git"
+              :server-type :gitblit
+              :ssh {:user "user"}})
+  
+(def config2 {:ssh-url "fqdn:29418/repo.git"
+              :https-url "fqdn/r/repo.git"
+              :server-type :gitblit
+              :https-public {}})
+  
+(def config3 {:ssh-url "fqdn:29418/repo.git"
+              :https-url "fqdn/r/repo.git"
+              :server-type :gitblit
+              :https-private {:user "user"
+                              :password "pass"}})
+   
+(def config4 {:ssh-url "github.com:Orga/repo.git"
+              :https-url "github.com/Orga/repo.git"
+              :server-type :github
+              :ssh {}})
 
+(def config5 {:ssh-url ""
+              :https-url ""
+              :server-type :gitblit
+              :ssh {}})
+  
 (deftest plan-def
   (testing 
     "test plan-def" 
       (is (=
-            "ssh://jem@repository.domaindrivenarchitecture.org:29418/hewater/meissa-sugar-module.git"
-            (sut/git-url :ssh+key
-                         {:ssh "ssh://repository.domaindrivenarchitecture.org:29418/hewater/meissa-sugar-module.git"
-                          :https "https://repository.domaindrivenarchitecture.org/r/hewater/meissa-sugar-module.git"
-                          :user "jem"
-                          :password "pass"})))
+            "ssh://user@fqdn:29418/repo.git"
+            (sut/git-url config1)))
       (is (=
-            "https://jem:pass@repository.domaindrivenarchitecture.org/r/hewater/meissa-sugar-module.git"
-            (sut/git-url :https+pass
-                         {:ssh "ssh://repository.domaindrivenarchitecture.org:29418/hewater/meissa-sugar-module.git"
-                          :https "https://repository.domaindrivenarchitecture.org/r/hewater/meissa-sugar-module.git"
-                          :user "jem"
-                          :password "pass"})))
+            "https://fqdn/r/repo.git"
+            (sut/git-url config2)))
+      (is (=
+            "https://user:pass@fqdn/r/repo.git"
+            (sut/git-url config3)))
+      (is (=
+            "ssh://git@github.com:Orga/repo.git"
+            (sut/git-url config4)))
+      
+      (is (thrown? IllegalArgumentException
+                   (sut/git-url config5)))      
       ))
