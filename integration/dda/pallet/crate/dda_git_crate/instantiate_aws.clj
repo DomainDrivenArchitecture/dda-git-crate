@@ -23,6 +23,7 @@
     [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
     [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
     [org.domaindrivenarchitecture.cm.operation :as operation]
+    [dda.pallet.crate.dda-git-crate.aws :as cloud-target]
     [dda.pallet.domain.dda-git-crate :as domain]))
 
 
@@ -31,20 +32,20 @@
 
 (defn integrated-group-spec [count]
   (merge 
-    (ide/managed-ide-group domain-config)
-    {:node-spec (aws/node-spec provisioning-user)}
+    (domain/dda-git-group domain-config)
+    {:node-spec (cloud-target/node-spec)}
     {:count count}))
 
 (defn converge-install
   ([count]
-    (operation/do-converge-install (aws-provider) (domain/dda-git-group count domain-config (aws-node-spec))))
+    (operation/do-converge-install (cloud-target/provider) (integrated-group-spec count)))
   ([key-id key-passphrase count]
-    (operation/do-converge-install (aws-provider key-id key-passphrase) (domain/dda-git-group count domain-config (aws-node-spec))))
+    (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (integrated-group-spec count)))
   )
 
 (defn server-test
   ([]
-    (operation/do-server-test (aws-provider) (domain/dda-git-group domain-config "vmuser")))
+    (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
   ([key-id key-passphrase]
-    (operation/do-server-test (aws-provider key-id key-passphrase) (domain/dda-git-group domain-config "vmuser")))
+    (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
   )

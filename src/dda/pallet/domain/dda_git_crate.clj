@@ -47,7 +47,5 @@
     (api/group-spec
       "dda-git-group"
       :extends [(config-crate/with-config config)
-                git-crate/with-git]
-      :node-spec (get-in target [:aws :aws-node-spec])
-      :count (get-in target [:aws :count])))
+                git-crate/with-git]))
   )
