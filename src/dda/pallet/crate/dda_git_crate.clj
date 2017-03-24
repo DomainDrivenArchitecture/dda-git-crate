@@ -28,13 +28,15 @@
 (def version  [0 1 0])
 
 (def GitRepository
-  {:ssh-url s/Str
-   :https-url s/Str
-   :server-type (s/enum :gitblit :github)   
-   (s/optional-key :ssh) {(s/optional-key :user) s/Str}
-   (s/optional-key :https-public) {(s/optional-key :user) s/Str}
-   (s/optional-key :https-private) {:user s/Str
-                                    :password s/Str}})
+  {:user-credentials {(s/optional-key :user) s/Str
+                      (s/optional-key :password) s/Str}
+   :fqdn s/Str
+   (s/optional-key :ssh-port) s/Str
+   (s/optional-key :orga) s/Str
+   :repo s/Str
+   :local-dir s/Str
+   :transport-type (s/enum :ssh :https-public :https-private)
+   :server-type (s/enum :gitblit :github)})
 
 (def GitServerConfig
   {s/Keyword [GitRepository]})
@@ -44,50 +46,33 @@
 
 (s/defn git-url :- s/Str 
   [repository :- GitRepository]
-  (cond
-    (and
-      (= :github (get-in repository [:server-type]))
-      (contains? repository :ssh)) 
-    (str "ssh://git@" (get-in repository [:ssh-url]))
-    
-    (and
-      (= :github (get-in repository [:server-type]))
-      (contains? repository :https-public))
-    (str "https://" (get-in repository [:https-url]))
-    
-    (and
-      (= :github (get-in repository [:server-type]))
-      (contains? repository :https-private))
-    (str "https://" (get-in repository [:https-private :user]) ":" (get-in repository [:https-private :password]) "@" (get-in repository [:https-url]))
-    
-    (and
-      (= :gitblit (get-in repository [:server-type]))
-      (contains? repository :ssh)
-      (not (contains? (get-in repository [:ssh]) :user)))
-    (throw (IllegalArgumentException. "For gitblit&ssh an username is required."))
-    
-    (and
-      (= :gitblit (get-in repository [:server-type]))
-      (contains? repository :ssh))
-    (str "ssh://" (get-in repository [:ssh :user]) "@" (get-in repository [:ssh-url]))
-    
-    (and
-      (= :gitblit (get-in repository [:server-type]))
-      (contains? repository :https-public)
-      (empty? (get-in repository [:https-public :user])))
-    (str "https://" (get-in repository [:https-url]))
-    
-    (and
-      (= :gitblit (get-in repository [:server-type]))
-      (contains? repository :https-public)
-      (some? (get-in repository [:https-public :user])))
-    (str "https://" (get-in repository [:https-public :user]) "@" (get-in repository [:https-url]))
-    
-    (and
-      (= :gitblit (get-in repository [:server-type]))
-      (contains? repository :https-private))
-    (str "https://" (get-in repository [:https-private :user]) ":" (get-in repository [:https-private :password]) "@" (get-in repository [:https-url]))
-    )  
+  (let [{:keys [user-credentials fqdn ssh-port repo local-dir 
+                transport-type server-type orga]} repository 
+        cred (cond 
+               (= :https-public transport-type) ""
+               (= :https-private transport-type) (str
+                                                   (:user user-credentials) ":"
+                                                   (:password user-credentials) "@")
+               (= :ssh transport-type) (str (:user user-credentials) "@"))
+        protocol (if (= :ssh transport-type)
+                   "ssh://" "https://")
+        base-path (cond
+                    (and 
+                      (= :gitblit server-type)
+                      (not (= :ssh transport-type))) "/r"
+                    (and 
+                      (= :github server-type)
+                      (= :ssh transport-type)) (str ":" orga)
+                    (and 
+                      (= :github server-type)
+                      (not (= :ssh transport-type))) (str "/" orga)
+                    :default "")
+        server (if (and
+                     (= :ssh transport-type) 
+                     (contains? repository :ssh-port))
+                 (str fqdn ":" ssh-port) fqdn)]
+	  (str protocol cred server base-path repo) 
+   )
   )
 
 

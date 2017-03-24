@@ -19,32 +19,70 @@
     [schema.core :as s]
     [dda.pallet.crate.dda-git-crate :as sut]))
   
-(def config1 {:ssh-url "fqdn:29418/repo.git"
-              :https-url "fqdn/r/repo.git"
+(def config1 {:fqdn "fqdn"
+              :ssh-port "29418"
+              :repo "/repo.git"
+              :local-dir "/home/x/code/y"
+              :user-credentials {:user "user"}
               :server-type :gitblit
-              :ssh {:user "user"}})
-  
-(def config2 {:ssh-url "fqdn:29418/repo.git"
-              :https-url "fqdn/r/repo.git"
-              :server-type :gitblit
-              :https-public {}})
-  
-(def config3 {:ssh-url "fqdn:29418/repo.git"
-              :https-url "fqdn/r/repo.git"
-              :server-type :gitblit
-              :https-private {:user "user"
-                              :password "pass"}})
-   
-(def config4 {:ssh-url "github.com:Orga/repo.git"
-              :https-url "github.com/Orga/repo.git"
-              :server-type :github
-              :ssh {}})
+              :transport-type :ssh})
 
-(def config5 {:ssh-url ""
-              :https-url ""
+(def config2 {:fqdn "fqdn"
+              :ssh-port "29418"
+              :repo "/repo.git"
+              :local-dir "/home/x/code/y"
+              :user-credentials {:user "user"}
               :server-type :gitblit
-              :ssh {}})
+              :transport-type :https-public})
+
+(def config3 {:fqdn "fqdn"
+              :ssh-port "29418"
+              :repo "/repo.git"
+              :local-dir "/home/x/code/y"
+              :user-credentials {:user "user"
+                                 :password "pass"}
+              :server-type :gitblit
+              :transport-type :https-private})
+
+(def config4 {:fqdn "github.com"
+              :orga "orga"
+              :repo "/repo.git"
+              :local-dir "/home/x/code/y"
+              :user-credentials {:user "git"}
+              :server-type :github
+              :transport-type :ssh})
+
+(def config5 {:fqdn "github.com"
+              :orga "orga"
+              :repo "/repo.git"
+              :local-dir "/home/x/code/y"
+              :user-credentials {}
+              :server-type :github
+              :transport-type :https-public})
   
+(def bad-config1 {:fqdn "github.com"
+                  :repo "/repo.git"
+                  :local-dir "/home/x/code/y"
+                  :user-credentials {:password "orga missing and password not needed"}
+                  :server-type :github
+                  :transport-type :https-public})
+
+(def bad-config2 {:fqdn "github.com"
+                  :orga "orga"
+                  :repo "/repo.git"
+                  :local-dir "/home/x/code/y"
+                  :user-credentials {:user "github ssh user is allways git"}
+                  :server-type :github
+                  :transport-type :ssh})
+
+(def bad-config3 {:fqdn "fqdn"
+                  :ssh-port "29418"
+                  :repo "/repo.git"
+                  :local-dir "/home/x/code/y"
+                  :user-credentials {:password "user is needed for gitblit ssh"}
+                  :server-type :gitblit
+                  :transport-type :ssh})
+
 (deftest plan-def
   (testing 
     "test plan-def" 
@@ -58,9 +96,9 @@
             "https://user:pass@fqdn/r/repo.git"
             (sut/git-url config3)))
       (is (=
-            "ssh://git@github.com:Orga/repo.git"
+            "ssh://git@github.com:orga/repo.git"
             (sut/git-url config4)))
-      
-      (is (thrown? IllegalArgumentException
-                   (sut/git-url config5)))      
+      (is (=
+            "https://github.com/orga/repo.git"
+            (sut/git-url config5)))
       ))
