@@ -32,15 +32,9 @@
 
 (defn integrated-group-spec [count]
   (merge 
-    (domain/dda-git-group domain-config)
+    (domain/dda-git-group (domain/dda-git-crate-stack-configuration domain-config))
     (cloud-target/node-spec)
     {:count count}))
-
-(defn integrated-existing-group-spec []
-  (merge 
-    (domain/dda-git-group domain-config)
-    (dda.pallet.crate.dda-git-crate.existing/node-spec {:login "initial"
-                                                        :password "test1234"})))
 
 (defn converge-install
   ([count]

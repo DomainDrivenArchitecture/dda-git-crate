@@ -4,7 +4,7 @@
 (ns dda.pallet.domain.dda-git-crate
   (:require
     [pallet.actions :as actions]
-    [pallet.api :as api]    
+    [pallet.api :as api]
     [schema.core :as s]
     [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
     [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
@@ -12,18 +12,13 @@
     [dda.pallet.crate.dda-git-crate :as git-crate]
     ))
 
-(def GitDomainConfig 
+(def GitDomainConfig
   {:repo-groups (hash-set (s/enum :dda-pallet))})
 
 
 (def GitCrateStackConfig
-  {:ssh-keys s/Any
-   :os-user s/Any
-   :group-specific-config 
-   {:dda-git-group 
-    {:host-name s/Str 
-     :domain-name s/Str
-     :additional-config {:dda-git s/Any}}}
+  {:group-specific-config
+   {:dda-git-group {:dda-git git-crate/GitCrateConfig}}
    }
   )
 
@@ -52,23 +47,24 @@
 
 (s/defn ^:always-validate dda-git-crate-stack-configuration :- GitCrateStackConfig
   [convention-config :- GitDomainConfig]
-  {:ssh-keys nil
-   :os-user nil
-   :group-specific-config 
-   {:dda-git-group 
-    {:host-name ""
-     :domain-name ""
-     :additional-config {:dda-git nil}}}
-   }
+  {:group-specific-config
+   {:dda-git-group
+    {:dda-git {:ubuntu [{:fqdn "github.com"
+                         :orga "orga"
+                         :repo "/repo.git"
+                         :local-dir "/home/x/code/y"
+                         :user-credentials {}
+                         :server-type :github
+                         :transport-type :https-public}]}
+     }}}
   )
 
 
 (s/defn ^:always-validate dda-git-group
-  [domain-config :- GitDomainConfig]
-  (let [target (get-in domain-config [:target])
-        config (dda-git-crate-stack-configuration domain-config)]
+  [stack-config :- GitCrateStackConfig]
+  (let []
     (api/group-spec
       "dda-git-group"
-      :extends [(config-crate/with-config config)
+      :extends [(config-crate/with-config stack-config)
                 git-crate/with-git]))
   )

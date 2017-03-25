@@ -38,11 +38,8 @@
    :transport-type (s/enum :ssh :https-public :https-private)
    :server-type (s/enum :gitblit :github)})
 
-(def GitServerConfig
-  {s/Keyword [GitRepository]})
-
 (def GitCrateConfig
-  {s/Keyword [GitServerConfig]})
+  {s/Keyword [GitRepository]})
 
 (s/defn git-url :- s/Str 
   [repository :- GitRepository]
