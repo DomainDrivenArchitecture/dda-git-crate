@@ -13,7 +13,7 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate
+(ns dda.pallet.crate.dda-git-crate.schema
   (:require
     [clojure.tools.logging :as logging]
     [schema.core :as s]
@@ -22,47 +22,19 @@
     [pallet.crate :as crate]
     [pallet.crate.git :as git]
     [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
-    [dda.pallet.crate.dda-git-crate.schema :as git-schema]
-    [dda.pallet.crate.dda-git-crate.git-repo :as git-repo]
     [org.domaindrivenarchitecture.pallet.servertest.fact.packages :as package-fact]
     [org.domaindrivenarchitecture.pallet.servertest.test.packages :as package-test]))
 
-(def facility :dda-git)
-(def version  [0 1 0])
-
 (def GitRepository
-  git-schema/GitRepository)
+  {:user-credentials {(s/optional-key :user) s/Str
+                      (s/optional-key :password) s/Str}
+   :fqdn s/Str
+   (s/optional-key :ssh-port) s/Str
+   (s/optional-key :orga) s/Str
+   :repo s/Str
+   :local-dir s/Str
+   :transport-type (s/enum :ssh :https-public :https-private)
+   :server-type (s/enum :gitblit :github)})
 
 (def GitCrateConfig
-  git-schema/GitCrateConfig)
-
-(s/defmethod dda-crate/dda-settings facility
-  [dda-crate partial-effective-config])
-  ;(package-fact/collect-packages-fact)
-
-(s/defmethod dda-crate/dda-configure facility
-  [dda-crate config]
-  "dda-git: configure"
-  (let [repos (:ubuntu config)]
-    (doseq [repo repos]
-      (let [repo-parent (git-repo/project-parent-path repo)]
-        (git-repo/create-project-parent repo-parent)
-        (git-repo/clone repo)))))
-
-(s/defmethod dda-crate/dda-install facility
-  [dda-crate config]
-  "dda-git: install routine"
-  (git/install))
-
-
-(s/defmethod dda-crate/dda-test facility
-  [dda-crate partial-effective-config])
-
-
-(def dda-git-crate
-  (dda-crate/make-dda-crate
-    :facility facility
-    :version version))
-
-(def with-git
-  (dda-crate/create-server-spec dda-git-crate))
+  {s/Keyword [GitRepository]})

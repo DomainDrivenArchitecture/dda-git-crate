@@ -31,21 +31,20 @@
   {:repo-groups #{:dda-pallet}})
 
 (defn integrated-group-spec [count]
-  (merge 
+  (merge
     (domain/dda-git-group (domain/dda-git-crate-stack-configuration domain-config))
     (cloud-target/node-spec)
     {:count count}))
 
 (defn converge-install
   ([count]
-    (operation/do-converge-install (cloud-target/provider) (integrated-group-spec count)))
+   (operation/do-converge-install (cloud-target/provider) (integrated-group-spec count)))
   ([key-id key-passphrase count]
-    (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (integrated-group-spec count)))
-  )
+   (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (integrated-group-spec count))))
+
 
 (defn server-test
   ([]
-    (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
+   (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
   ([key-id key-passphrase]
-    (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
-  )
+   (operation/do-server-test (cloud-target/provider) (integrated-group-spec count))))

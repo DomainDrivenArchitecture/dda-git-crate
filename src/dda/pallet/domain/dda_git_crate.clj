@@ -9,8 +9,8 @@
     [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
     [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
     [org.domaindrivenarchitecture.pallet.crate.config :as config-crate]
-    [dda.pallet.crate.dda-git-crate :as git-crate]
-    ))
+    [dda.pallet.crate.dda-git-crate :as git-crate]))
+
 
 (def GitDomainConfig
   {:repo-groups (hash-set (s/enum :dda-pallet))})
@@ -18,14 +18,13 @@
 
 (def GitCrateStackConfig
   {:group-specific-config
-   {:dda-git-group {:dda-git git-crate/GitCrateConfig}}
-   }
-  )
+   {:dda-git-group {:dda-git git-crate/GitCrateConfig}}})
+
+
 
 (def dda-projects
   {:dda-pallet
-   ["github.com/DomainDrivenArchitecture/dda-config-commons.git"
-    "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
+   [ "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet.git"
     "https://github.com/DomainDrivenArchitecture/dda-user-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-iptables-crate.git"
@@ -50,14 +49,14 @@
   {:group-specific-config
    {:dda-git-group
     {:dda-git {:ubuntu [{:fqdn "github.com"
-                         :orga "orga"
-                         :repo "/repo.git"
-                         :local-dir "/home/x/code/y"
+                         :orga "DomainDrivenArchitecture"
+                         :repo "/dda-config-commons.git"
+                         :local-dir "/home/jem/code/dda-pallet/dda-config-commons"
                          :user-credentials {}
                          :server-type :github
-                         :transport-type :https-public}]}
-     }}}
-  )
+                         :transport-type :https-public}]}}}})
+
+
 
 
 (s/defn ^:always-validate dda-git-group
@@ -66,5 +65,4 @@
     (api/group-spec
       "dda-git-group"
       :extends [(config-crate/with-config stack-config)
-                git-crate/with-git]))
-  )
+                git-crate/with-git])))
