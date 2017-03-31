@@ -26,7 +26,6 @@
     [dda.pallet.crate.dda-git-crate.aws :as cloud-target]
     [dda.pallet.domain.dda-git-crate :as domain]))
 
-
 (def domain-config
   {:repo-groups #{:dda-pallet}})
 

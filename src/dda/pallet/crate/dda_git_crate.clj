@@ -24,6 +24,7 @@
     [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
     [dda.pallet.crate.dda-git-crate.schema :as git-schema]
     [dda.pallet.crate.dda-git-crate.git-repo :as git-repo]
+    [dda.pallet.crate.dda-git-crate.server-trust :as server-trust]
     [org.domaindrivenarchitecture.pallet.servertest.fact.packages :as package-fact]
     [org.domaindrivenarchitecture.pallet.servertest.test.packages :as package-test]))
 
@@ -33,21 +34,37 @@
 (def GitRepository
   git-schema/GitRepository)
 
-(def GitCrateConfig
-  git-schema/GitCrateConfig)
+(def GitConfig
+  git-schema/GitConfig)
 
 (s/defmethod dda-crate/dda-settings facility
   [dda-crate partial-effective-config])
   ;(package-fact/collect-packages-fact)
 
+(s/defn configure-user
+  "configure user setup"
+  [config :- GitConfig]
+  (let [user :ubuntu
+        user-name (name user)
+        repos (get-in config [user :repo])
+        trusts (get-in config [user :trust])]
+    (pallet.action/with-action-options
+        {:sudo-user user-name
+         :script-env {:HOME (str "/home/" user-name "/")}}
+      (doseq [trust trusts]
+        (when (contains? trust :pin-fqdn-or-ip)
+          (server-trust/add-node-to-known-hosts (:pin-fqdn-or-ip trust)))
+        (when (contains? trust :fingerprint)
+          (server-trust/add-fingerprint-to-known-hosts (:fingerprint trust))))
+      (doseq [repo repos]
+        (let [repo-parent (git-repo/project-parent-path repo)]
+          (git-repo/create-project-parent repo-parent)
+          (git-repo/clone repo))))))
+
 (s/defmethod dda-crate/dda-configure facility
   [dda-crate config]
   "dda-git: configure"
-  (let [repos (:ubuntu config)]
-    (doseq [repo repos]
-      (let [repo-parent (git-repo/project-parent-path repo)]
-        (git-repo/create-project-parent repo-parent)
-        (git-repo/clone repo)))))
+  (configure-user config))
 
 (s/defmethod dda-crate/dda-install facility
   [dda-crate config]
@@ -57,7 +74,6 @@
 
 (s/defmethod dda-crate/dda-test facility
   [dda-crate partial-effective-config])
-
 
 (def dda-git-crate
   (dda-crate/make-dda-crate

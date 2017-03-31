@@ -36,5 +36,13 @@
    :transport-type (s/enum :ssh :https-public :https-private)
    :server-type (s/enum :gitblit :github)})
 
-(def GitCrateConfig
-  {s/Keyword [GitRepository]})
+(def ServerTrust
+  {(s/optional-key :pin-fqdn-or-ip) s/Str
+   (s/optional-key :fingerprint) s/Str})
+
+(def UserGitConfig
+  {:trust [ServerTrust]
+   :repo [GitRepository]})
+
+(def GitConfig
+  {s/Keyword UserGitConfig})

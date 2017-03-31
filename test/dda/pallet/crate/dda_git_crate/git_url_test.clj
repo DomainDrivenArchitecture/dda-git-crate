@@ -13,12 +13,12 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate-test
+(ns dda.pallet.crate.dda-git-crate.git-url-test
   (:require
     [clojure.test :refer :all]
     [schema.core :as s]
-    [dda.pallet.crate.dda-git-crate :as sut]))
-  
+    [dda.pallet.crate.dda-git-crate.git-url :as sut]))
+
 (def config1 {:fqdn "fqdn"
               :ssh-port "29418"
               :repo "/repo.git"
@@ -59,7 +59,7 @@
               :user-credentials {}
               :server-type :github
               :transport-type :https-public})
-  
+
 (def bad-config1 {:fqdn "github.com"
                   :repo "/repo.git"
                   :local-dir "/home/x/code/y"
@@ -84,8 +84,8 @@
                   :transport-type :ssh})
 
 (deftest plan-def
-  (testing 
-    "test plan-def" 
+  (testing
+    "test plan-def"
       (is (=
             "ssh://user@fqdn:29418/repo.git"
             (sut/git-url config1)))
@@ -100,5 +100,4 @@
             (sut/git-url config4)))
       (is (=
             "https://github.com/orga/repo.git"
-            (sut/git-url config5)))
-      ))
+            (sut/git-url config5)))))

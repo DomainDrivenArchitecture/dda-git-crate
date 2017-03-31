@@ -18,9 +18,7 @@
 
 (def GitCrateStackConfig
   {:group-specific-config
-   {:dda-git-group {:dda-git git-crate/GitCrateConfig}}})
-
-
+   {:dda-git-group {:dda-git git-crate/GitConfig}}})
 
 (def dda-projects
   {:dda-pallet
@@ -43,21 +41,18 @@
     "https://github.com/DomainDrivenArchitecture/dda-managed-ide.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
-
 (s/defn ^:always-validate dda-git-crate-stack-configuration :- GitCrateStackConfig
   [convention-config :- GitDomainConfig]
   {:group-specific-config
    {:dda-git-group
-    {:dda-git {:ubuntu [{:fqdn "github.com"
-                         :orga "DomainDrivenArchitecture"
-                         :repo "/dda-config-commons.git"
-                         :local-dir "/home/jem/code/dda-pallet/dda-config-commons"
-                         :user-credentials {}
-                         :server-type :github
-                         :transport-type :https-public}]}}}})
-
-
-
+    {:dda-git {:ubuntu {:trust [{:pin-fqdn-or-ip "github.com"}]
+                        :repo [{:fqdn "github.com"
+                                :orga "DomainDrivenArchitecture"
+                                :repo "/dda-config-commons.git"
+                                :local-dir "/home/ubuntu/dda-config-commons"
+                                :user-credentials {}
+                                :server-type :github
+                                :transport-type :https-public}]}}}}})
 
 (s/defn ^:always-validate dda-git-group
   [stack-config :- GitCrateStackConfig]
