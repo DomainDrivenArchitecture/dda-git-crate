@@ -15,14 +15,13 @@
 (def GitDomainConfig
   {:repo-groups (hash-set (s/enum :dda-pallet))})
 
-
 (def GitCrateStackConfig
   {:group-specific-config
    {:dda-git-group {:dda-git git-crate/GitConfig}}})
 
 (def dda-projects
   {:dda-pallet
-   [ "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
+   ["https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet.git"
     "https://github.com/DomainDrivenArchitecture/dda-user-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-iptables-crate.git"
@@ -49,7 +48,7 @@
                         :repo [{:fqdn "github.com"
                                 :orga "DomainDrivenArchitecture"
                                 :repo "/dda-config-commons.git"
-                                :local-dir "/home/ubuntu/dda-config-commons"
+                                :local-dir "/home/ubuntu/code/dda-pallet/dda-config-commons"
                                 :user-credentials {}
                                 :server-type :github
                                 :transport-type :https-public}]}}}}})

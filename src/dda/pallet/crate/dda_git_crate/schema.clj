@@ -21,9 +21,7 @@
     [pallet.actions :as actions]
     [pallet.crate :as crate]
     [pallet.crate.git :as git]
-    [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
-    [org.domaindrivenarchitecture.pallet.servertest.fact.packages :as package-fact]
-    [org.domaindrivenarchitecture.pallet.servertest.test.packages :as package-test]))
+    [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]))
 
 (def GitRepository
   {:user-credentials {(s/optional-key :user) s/Str

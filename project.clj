@@ -21,7 +21,7 @@
                [org.slf4j/jcl-over-slf4j "1.7.22"]]
               :plugins
               [[lein-sub "0.3.0"]]}
-              :leiningen/reply
+             :leiningen/reply
                {:dependencies [[org.slf4j/jcl-over-slf4j "1.7.22"]]
                 :exclusions [commons-logging]}}
    :local-repo-classpath true
