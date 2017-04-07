@@ -12,8 +12,12 @@
    [dda.pallet.crate.dda-git-crate :as git-crate]
    [dda.pallet.domain.dda-git-crate.parse-url :as pu]))
 
+(s/defn github-host-workaround [elem]
+  (let [host (:host elem)]
+    {:pin-fqdn-or-ip (first (string/split host #":"))}))
+
 (s/defn collect-trust :- [schema/ServerTrust]
   [domain-repo-uris :- [s/Str]]
   (let [parsed-uris (map pu/string->url domain-repo-uris)]
     (distinct
-      (map (fn [elem] {:pin-fqdn-or-ip (:host elem)}) parsed-uris))))
+      (map  github-host-workaround parsed-uris))))
