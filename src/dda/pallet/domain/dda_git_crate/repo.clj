@@ -58,7 +58,7 @@
                        :default {})
         port-map (if (some? port) {:ssh-port port} {})
         credentials-map (cond (= transport-type :https-private) {:user-credentials current-credentials}
-                              (= transport-type :https-public) {}
+                              (= transport-type :https-public) {:user-credentials {}}
                               (and (= server-type :gitblit)
                                    (= transport-type :ssh)) {:user-credentials {:user (:user current-credentials)}}
                               :default {:user-credentials {:user "git"}})]
@@ -80,8 +80,8 @@
       (map server-trust parsed-uris))))
 
 (s/defn collect-repo :- [crate-schema/GitRepository]
-  [config :- domain-schema/GitDomainConfig
-   domain-repo-uris :- [s/Str]]
-  (let [{:keys [local-root credentials]} config
-        parsed-uris (map pu/string->url domain-repo-uris)]
-    (map #(git-repository local-root :dda-pallet credentials %) parsed-uris)))
+  [credentials :- domain-schema/GitCredentials
+   local-root :- s/Str
+   domain-repo-uris :- {s/Keyword [s/Str]}]
+  (let [parsed-uris (map pu/string->url (first (vals domain-repo-uris)))]
+    (map #(git-repository local-root (first (keys domain-repo-uris)) credentials %) parsed-uris)))

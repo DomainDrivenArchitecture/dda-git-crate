@@ -46,4 +46,4 @@
                      (= :ssh transport-type)
                      (contains? repository :ssh-port))
                  (str fqdn ":" ssh-port) fqdn)]
-    (str protocol cred server base-path repo)))
+    (str protocol cred server base-path "/" repo)))

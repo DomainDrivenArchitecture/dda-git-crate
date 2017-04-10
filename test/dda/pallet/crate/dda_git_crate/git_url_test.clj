@@ -21,7 +21,7 @@
 
 (def config1 {:fqdn "fqdn"
               :ssh-port "29418"
-              :repo "/repo.git"
+              :repo "repo.git"
               :local-dir "/home/x/code/y"
               :user-credentials {:user "user"}
               :server-type :gitblit
@@ -29,7 +29,7 @@
 
 (def config2 {:fqdn "fqdn"
               :ssh-port "29418"
-              :repo "/repo.git"
+              :repo "repo.git"
               :local-dir "/home/x/code/y"
               :user-credentials {:user "user"}
               :server-type :gitblit
@@ -37,7 +37,7 @@
 
 (def config3 {:fqdn "fqdn"
               :ssh-port "29418"
-              :repo "/repo.git"
+              :repo "repo.git"
               :local-dir "/home/x/code/y"
               :user-credentials {:user "user"
                                  :password "pass"}
@@ -46,7 +46,7 @@
 
 (def config4 {:fqdn "github.com"
               :orga "orga"
-              :repo "/repo.git"
+              :repo "repo.git"
               :local-dir "/home/x/code/y"
               :user-credentials {:user "git"}
               :server-type :github
@@ -54,14 +54,14 @@
 
 (def config5 {:fqdn "github.com"
               :orga "orga"
-              :repo "/repo.git"
+              :repo "repo.git"
               :local-dir "/home/x/code/y"
               :user-credentials {}
               :server-type :github
               :transport-type :https-public})
 
 (def bad-config1 {:fqdn "github.com"
-                  :repo "/repo.git"
+                  :repo "repo.git"
                   :local-dir "/home/x/code/y"
                   :user-credentials {:password "orga missing and password not needed"}
                   :server-type :github
@@ -69,7 +69,7 @@
 
 (def bad-config2 {:fqdn "github.com"
                   :orga "orga"
-                  :repo "/repo.git"
+                  :repo "repo.git"
                   :local-dir "/home/x/code/y"
                   :user-credentials {:user "github ssh user is allways git"}
                   :server-type :github
@@ -77,7 +77,7 @@
 
 (def bad-config3 {:fqdn "fqdn"
                   :ssh-port "29418"
-                  :repo "/repo.git"
+                  :repo "repo.git"
                   :local-dir "/home/x/code/y"
                   :user-credentials {:password "user is needed for gitblit ssh"}
                   :server-type :gitblit

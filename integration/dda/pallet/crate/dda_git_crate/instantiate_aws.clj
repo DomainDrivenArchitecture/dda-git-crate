@@ -27,7 +27,8 @@
     [dda.pallet.domain.dda-git-crate :as domain]))
 
 (def domain-config
-  {:repo-groups #{:dda-pallet}})
+  {:os-user :ubuntu
+   :repo-groups #{:dda-pallet}})
 
 (defn integrated-group-spec [count]
   (merge

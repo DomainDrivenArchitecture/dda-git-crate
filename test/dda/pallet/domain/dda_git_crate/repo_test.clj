@@ -49,21 +49,22 @@
             :server-type :gitblit
             :transport-type :ssh}]
           (sut/collect-repo
-            {:local-root "/home/ubuntu/code/"
-             :credentials repo-credentials}
-            [gitblit-ssh])))
+            repo-credentials
+            "/home/ubuntu/code/"
+            {:dda-pallet [gitblit-ssh]})))
   (testing
     "test gitblit-public-https"
       (is (=
            [{:fqdn "fqdn"
              :repo "repo2.git"
              :local-dir "/home/ubuntu/code/dda-pallet/repo2"
+             :user-credentials {}
              :server-type :gitblit
              :transport-type :https-public}]
            (sut/collect-repo
-             {:local-root "/home/ubuntu/code/"
-              :credentials repo-credentials}
-             [gitblit-public-https]))))
+             repo-credentials
+             "/home/ubuntu/code/"
+             {:dda-pallet [gitblit-public-https]}))))
   (testing
    "test gitblit-private-https"
      (is (=
@@ -75,9 +76,9 @@
             :server-type :gitblit
             :transport-type :https-private}]
           (sut/collect-repo
-            {:local-root "/home/ubuntu/code/"
-             :credentials repo-credentials}
-            [gitblit-private-https]))))
+            repo-credentials
+            "/home/ubuntu/code/"
+            {:dda-pallet [gitblit-private-https]}))))
   (testing
     "test github-ssh"
       (is (=
@@ -89,9 +90,9 @@
              :server-type :github
              :transport-type :ssh}]
            (sut/collect-repo
-             {:local-root "/home/ubuntu/code/"
-              :credentials repo-credentials}
-             [github-ssh]))))
+             repo-credentials
+             "/home/ubuntu/code/"
+             {:dda-pallet [github-ssh]}))))
   (testing
    "test github-public-https"
      (is (=
@@ -99,9 +100,10 @@
             :orga "orga"
             :repo "repo5.git"
             :local-dir "/home/ubuntu/code/dda-pallet/repo5"
+            :user-credentials {}
             :server-type :github
             :transport-type :https-public}]
           (sut/collect-repo
-            {:local-root "/home/ubuntu/code/"
-             :credentials repo-credentials}
-            [github-public-https]))))))
+            repo-credentials
+            "/home/ubuntu/code/"
+            {:dda-pallet [github-public-https]}))))))

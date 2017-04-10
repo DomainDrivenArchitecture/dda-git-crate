@@ -23,6 +23,6 @@
                               (s/optional-key :password) s/Str}})
 
 (def GitDomainConfig
-     {:local-root s/Str
+     {:os-user s/Keyword
       (s/optional-key :credentials) GitCredentials
       :repo-groups (hash-set (s/enum :dda-pallet))})

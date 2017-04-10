@@ -23,8 +23,8 @@
     [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
     [org.domaindrivenarchitecture.pallet.crate.config :as config-crate]
     [dda.pallet.crate.dda-git-crate :as git-crate]
-    [dda.pallet.domain.dda-git-crate.schema :as domain-schema]))
-
+    [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
+    [dda.pallet.domain.dda-git-crate.repo :as repo]))
 
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
@@ -56,16 +56,16 @@
 
 (s/defn ^:always-validate dda-git-crate-stack-configuration :- GitCrateStackConfig
   [convention-config :- GitDomainConfig]
-  {:group-specific-config
-   {:dda-git-group
-    {:dda-git {:ubuntu {:trust [{:pin-fqdn-or-ip "github.com"}]
-                        :repo [{:fqdn "github.com"
-                                :orga "DomainDrivenArchitecture"
-                                :repo "/dda-config-commons.git"
-                                :local-dir "/home/ubuntu/code/dda-pallet/dda-config-commons"
-                                :user-credentials {}
-                                :server-type :github
-                                :transport-type :https-public}]}}}}})
+  (let [{:keys [os-user repo-groups credentials]} convention-config
+        repos dda-projects]
+    {:group-specific-config
+      {:dda-git-group
+        {:dda-git
+          {os-user {:trust (repo/collect-trust (first (vals repos)))
+                    :repo (repo/collect-repo
+                            credentials
+                            (str "/home/" (name os-user) "/code/")
+                            repos)}}}}}))
 
 (s/defn ^:always-validate dda-git-group
   [stack-config :- GitCrateStackConfig]
