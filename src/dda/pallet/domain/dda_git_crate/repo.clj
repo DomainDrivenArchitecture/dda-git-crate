@@ -1,5 +1,18 @@
-; Copyright (c) meissa GmbH. All rights reserved.
-; You must not remove this notice, or any other, from this software.
+; Licensed to the Apache Software Foundation (ASF) under one
+; or more contributor license agreements. See the NOTICE file
+; distributed with this work for additional information
+; regarding copyright ownership. The ASF licenses this file
+; to you under the Apache License, Version 2.0 (the
+; "License"); you may not use this file except in compliance
+; with the License. You may obtain a copy of the License at
+;
+; http://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software
+; distributed under the License is distributed on an "AS IS" BASIS,
+; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and
+; limitations under the License.
 
 (ns dda.pallet.domain.dda-git-crate.repo
   (:require
@@ -8,16 +21,67 @@
    [pallet.actions :as actions]
    [pallet.api :as api]
    [schema.core :as s]
-   [dda.pallet.crate.dda-git-crate.schema :as schema]
-   [dda.pallet.crate.dda-git-crate :as git-crate]
+   [dda.pallet.crate.dda-git-crate :as crate-schema]
+   [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
    [dda.pallet.domain.dda-git-crate.parse-url :as pu]))
 
-(s/defn github-host-workaround [elem]
+(s/defn ^:private server-trust :- crate-schema/ServerTrust
+  [elem]
   (let [host (:host elem)]
     {:pin-fqdn-or-ip (first (string/split host #":"))}))
 
-(s/defn collect-trust :- [schema/ServerTrust]
+(s/defn ^:private git-repository :- crate-schema/GitRepository
+  [local-root :- s/Str
+   repo-group :- s/Keyword
+   credentials :- domain-schema/GitCredentials
+   elem :- s/Any]
+  (let [{:keys [host scheme path port user]} elem
+        parsed-host (first (string/split host #":"))
+        server-type (if (re-matches #"github.com" parsed-host) :github :gitblit)
+        transport-type (cond
+                          (= scheme "ssh") :ssh
+                          (and
+                            (some? user)
+                            (not (= "git" user))) :https-private
+                          :default :https-public)
+        current-credentials (server-type credentials)
+        path-without-gitblit-r (if (and (= server-type :gitblit)
+                                        (= (first path) "r")) (rest path)
+                                        path)
+        path-without-orga (if (and (= server-type :github)
+                                   (not (= transport-type :ssh))) (rest path-without-gitblit-r)
+                            path-without-gitblit-r)
+        repo (string/join "/" path-without-orga)
+        orga-map (cond (and (= server-type :github)
+                            (= transport-type :ssh)) {:orga (fnext (string/split host #":"))}
+                       (= server-type :github) {:orga (first path-without-gitblit-r)}
+                       :default {})
+        port-map (if (some? port) {:ssh-port port} {})
+        credentials-map (cond (= transport-type :https-private) {:user-credentials current-credentials}
+                              (= transport-type :https-public) {}
+                              (and (= server-type :gitblit)
+                                   (= transport-type :ssh)) {:user-credentials {:user (:user current-credentials)}}
+                              :default {:user-credentials {:user "git"}})]
+    (merge
+      {:fqdn parsed-host
+       :repo repo
+       :local-dir (str local-root (name repo-group) "/"
+                       (first (string/split repo #".git")))
+       :server-type server-type
+       :transport-type transport-type}
+      orga-map
+      port-map
+      credentials-map)))
+
+(s/defn collect-trust :- [crate-schema/ServerTrust]
   [domain-repo-uris :- [s/Str]]
   (let [parsed-uris (map pu/string->url domain-repo-uris)]
     (distinct
-      (map  github-host-workaround parsed-uris))))
+      (map server-trust parsed-uris))))
+
+(s/defn collect-repo :- [crate-schema/GitRepository]
+  [config :- domain-schema/GitDomainConfig
+   domain-repo-uris :- [s/Str]]
+  (let [{:keys [local-root credentials]} config
+        parsed-uris (map pu/string->url domain-repo-uris)]
+    (map #(git-repository local-root :dda-pallet credentials %) parsed-uris)))

@@ -19,11 +19,13 @@
     [schema.core :as s]
     [dda.pallet.domain.dda-git-crate.repo :as sut]))
 
-(def gitblit-ssh "ssh://user@fqdn:29418/repo.git")
-(def gitblit-public-https "https://fqdn/r/repo.git")
-(def gitblit-private-https "https://user:pass@fqdn/r/repo.git")
-(def github-ssh "ssh://git@github.com:orga/repo.git")
-(def github-public-https "https://github.com/orga/repo.git")
+(def gitblit-ssh "ssh://user@fqdn:29418/repo1.git")
+(def gitblit-public-https "https://fqdn/r/repo2.git")
+(def gitblit-private-https "https://user:pass@fqdn/r/repo3.git")
+(def github-ssh "ssh://git@github.com:orga/repo4.git")
+(def github-public-https "https://github.com/orga/repo5.git")
+
+(def repo-credentials {:gitblit {:user "user" :password "pass"}})
 
 (def domain-repos [gitblit-ssh gitblit-private-https github-public-https github-ssh gitblit-public-https])
 
@@ -34,3 +36,72 @@
            [{:pin-fqdn-or-ip "fqdn"}
             {:pin-fqdn-or-ip "github.com"}]
            (sut/collect-trust domain-repos)))))
+
+(deftest collect-repo-test
+ (testing
+   "test gitblit-ssh"
+     (is (=
+          [{:fqdn "fqdn"
+            :ssh-port 29418
+            :repo "repo1.git"
+            :local-dir "/home/ubuntu/code/dda-pallet/repo1"
+            :user-credentials {:user "user"}
+            :server-type :gitblit
+            :transport-type :ssh}]
+          (sut/collect-repo
+            {:local-root "/home/ubuntu/code/"
+             :credentials repo-credentials}
+            [gitblit-ssh])))
+  (testing
+    "test gitblit-public-https"
+      (is (=
+           [{:fqdn "fqdn"
+             :repo "repo2.git"
+             :local-dir "/home/ubuntu/code/dda-pallet/repo2"
+             :server-type :gitblit
+             :transport-type :https-public}]
+           (sut/collect-repo
+             {:local-root "/home/ubuntu/code/"
+              :credentials repo-credentials}
+             [gitblit-public-https]))))
+  (testing
+   "test gitblit-private-https"
+     (is (=
+          [{:fqdn "fqdn"
+            :repo "repo3.git"
+            :local-dir "/home/ubuntu/code/dda-pallet/repo3"
+            :user-credentials {:user "user"
+                               :password "pass"}
+            :server-type :gitblit
+            :transport-type :https-private}]
+          (sut/collect-repo
+            {:local-root "/home/ubuntu/code/"
+             :credentials repo-credentials}
+            [gitblit-private-https]))))
+  (testing
+    "test github-ssh"
+      (is (=
+           [{:fqdn "github.com"
+             :repo "repo4.git"
+             :orga "orga"
+             :local-dir "/home/ubuntu/code/dda-pallet/repo4"
+             :user-credentials {:user "git"}
+             :server-type :github
+             :transport-type :ssh}]
+           (sut/collect-repo
+             {:local-root "/home/ubuntu/code/"
+              :credentials repo-credentials}
+             [github-ssh]))))
+  (testing
+   "test github-public-https"
+     (is (=
+          [{:fqdn "github.com"
+            :orga "orga"
+            :repo "repo5.git"
+            :local-dir "/home/ubuntu/code/dda-pallet/repo5"
+            :server-type :github
+            :transport-type :https-public}]
+          (sut/collect-repo
+            {:local-root "/home/ubuntu/code/"
+             :credentials repo-credentials}
+            [github-public-https]))))))

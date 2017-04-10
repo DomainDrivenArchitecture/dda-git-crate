@@ -34,6 +34,9 @@
 (def GitRepository
   git-schema/GitRepository)
 
+(def ServerTrust
+  git-schema/ServerTrust)
+
 (def GitConfig
   git-schema/GitConfig)
 
