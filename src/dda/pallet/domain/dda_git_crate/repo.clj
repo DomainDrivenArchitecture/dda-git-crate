@@ -22,6 +22,7 @@
    [pallet.api :as api]
    [schema.core :as s]
    [dda.pallet.crate.dda-git-crate :as crate-schema]
+   [dda.pallet.domain.dda-git-crate.git-url :as git-url]
    [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
    [dda.pallet.domain.dda-git-crate.parse-url :as pu]))
 
@@ -30,7 +31,7 @@
   (let [host (:host elem)]
     {:pin-fqdn-or-ip (first (string/split host #":"))}))
 
-(s/defn ^:private git-repository :- crate-schema/GitRepository
+(s/defn ^:private git-repository :- domain-schema/GitRepository
   [local-root :- s/Str
    repo-group :- s/Keyword
    credentials :- domain-schema/GitCredentials
@@ -39,18 +40,18 @@
         parsed-host (first (string/split host #":"))
         server-type (if (re-matches #"github.com" parsed-host) :github :gitblit)
         transport-type (cond
-                          (= scheme "ssh") :ssh
-                          (and
-                            (some? user)
-                            (not (= "git" user))) :https-private
-                          :default :https-public)
+                         (= scheme "ssh") :ssh
+                         (and
+                          (some? user)
+                          (not (= "git" user))) :https-private
+                         :default :https-public)
         current-credentials (server-type credentials)
         path-without-gitblit-r (if (and (= server-type :gitblit)
                                         (= (first path) "r")) (rest path)
-                                        path)
+                                   path)
         path-without-orga (if (and (= server-type :github)
                                    (not (= transport-type :ssh))) (rest path-without-gitblit-r)
-                            path-without-gitblit-r)
+                              path-without-gitblit-r)
         repo (string/join "/" path-without-orga)
         orga-map (cond (and (= server-type :github)
                             (= transport-type :ssh)) {:orga (fnext (string/split host #":"))}
@@ -63,15 +64,20 @@
                                    (= transport-type :ssh)) {:user-credentials {:user (:user current-credentials)}}
                               :default {:user-credentials {:user "git"}})]
     (merge
-      {:fqdn parsed-host
-       :repo repo
-       :local-dir (str local-root (name repo-group) "/"
-                       (first (string/split repo #".git")))
-       :server-type server-type
-       :transport-type transport-type}
-      orga-map
-      port-map
-      credentials-map)))
+     {:fqdn parsed-host
+      :repo repo
+      :local-dir (str local-root (name repo-group) "/"
+                      (first (string/split repo #".git")))
+      :server-type server-type
+      :transport-type transport-type}
+     orga-map
+     port-map
+     credentials-map)))
+
+(s/defn crate-repo :- crate-schema/GitRepository
+  [domain-repo :- domain-schema/GitRepository]
+  {:repo (git-url/git-url domain-repo)
+   :local-dir (:local-dir domain-repo)})
 
 (s/defn collect-trust :- [crate-schema/ServerTrust]
   [domain-repo-uris :- [s/Str]]
@@ -84,4 +90,7 @@
    local-root :- s/Str
    domain-repo-uris :- {s/Keyword [s/Str]}]
   (let [parsed-uris (map pu/string->url (first (vals domain-repo-uris)))]
-    (map #(git-repository local-root (first (keys domain-repo-uris)) credentials %) parsed-uris)))
+    (map
+     #(crate-repo
+       (git-repository local-root (first (keys domain-repo-uris)) credentials %))
+     parsed-uris)))

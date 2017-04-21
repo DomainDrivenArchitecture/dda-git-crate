@@ -13,11 +13,11 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.git-url-test
+(ns dda.pallet.domain.dda-git-crate.git-url-test
   (:require
     [clojure.test :refer :all]
     [schema.core :as s]
-    [dda.pallet.crate.dda-git-crate.git-url :as sut]))
+    [dda.pallet.domain.dda-git-crate.git-url :as sut]))
 
 (def config1 {:fqdn "fqdn"
               :ssh-port "29418"

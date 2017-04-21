@@ -20,8 +20,7 @@
     [schema.core :as s]
     [pallet.actions :as actions]
     [pallet.crate.git :as git]
-    [dda.pallet.crate.dda-git-crate.schema :as git-schema]
-    [dda.pallet.crate.dda-git-crate.git-url :as git-url]))
+    [dda.pallet.crate.dda-git-crate.schema :as git-schema]))
 
 (s/defn project-parent-path
   [repo :- git-schema/GitRepository]
@@ -33,8 +32,8 @@
   (actions/directory path))
 
 (s/defn clone
-  [repo :- git-schema/GitRepository]
-  (let [{:keys [local-dir]} repo]
+  [crate-repo :- git-schema/GitRepository]
+  (let [{:keys [local-dir repo]} crate-repo]
     (git/clone
-      (git-url/git-url repo)
+      repo
       :checkout-dir local-dir)))

@@ -31,18 +31,18 @@
 (def facility :dda-git)
 (def version  [0 1 0])
 
-(def GitRepository
-  git-schema/GitRepository)
-
 (def ServerTrust
   git-schema/ServerTrust)
+
+(def GitRepository
+  git-schema/GitRepository)
 
 (def GitConfig
   git-schema/GitConfig)
 
 (s/defmethod dda-crate/dda-settings facility
   [dda-crate partial-effective-config])
-  ;(package-fact/collect-packages-fact)
+                                        ;(package-fact/collect-packages-fact)
 
 (s/defn configure-user
   "configure user setup"
@@ -80,8 +80,8 @@
 
 (def dda-git-crate
   (dda-crate/make-dda-crate
-    :facility facility
-    :version version))
+   :facility facility
+   :version version))
 
 (def with-git
   (dda-crate/create-server-spec dda-git-crate))

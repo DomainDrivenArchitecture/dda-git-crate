@@ -15,28 +15,21 @@
 ; limitations under the License.
 (ns dda.pallet.crate.dda-git-crate.schema
   (:require
-    [clojure.tools.logging :as logging]
-    [schema.core :as s]
-    [pallet.api :as api]
-    [pallet.actions :as actions]
-    [pallet.crate :as crate]
-    [pallet.crate.git :as git]
-    [dda.pallet.core.dda-crate :as dda-crate]))
-
-(def GitRepository
-  {:user-credentials {(s/optional-key :user) s/Str
-                      (s/optional-key :password) s/Str}
-   :fqdn s/Str
-   (s/optional-key :ssh-port) s/Str
-   (s/optional-key :orga) s/Str
-   :repo s/Str
-   :local-dir s/Str
-   :transport-type (s/enum :ssh :https-public :https-private)
-   :server-type (s/enum :gitblit :github)})
+   [clojure.tools.logging :as logging]
+   [schema.core :as s]
+   [pallet.api :as api]
+   [pallet.actions :as actions]
+   [pallet.crate :as crate]
+   [pallet.crate.git :as git]
+   [dda.pallet.core.dda-crate :as dda-crate]))
 
 (def ServerTrust
   {(s/optional-key :pin-fqdn-or-ip) s/Str
    (s/optional-key :fingerprint) s/Str})
+
+(def GitRepository
+  {:repo s/Str
+   :local-dir s/Str})
 
 (def UserGitConfig
   {:trust [ServerTrust]
