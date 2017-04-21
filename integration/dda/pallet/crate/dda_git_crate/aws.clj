@@ -22,7 +22,7 @@
     [org.domaindrivenarchitecture.pallet.commons.encrypted-credentials :as crypto]
     [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
     [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
-    [org.domaindrivenarchitecture.cm.operation :as operation]))
+    [dda.cm.operation :as operation]))
 
 (defn provider
   ([]

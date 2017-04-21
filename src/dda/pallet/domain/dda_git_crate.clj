@@ -20,8 +20,8 @@
     [pallet.api :as api]
     [schema.core :as s]
     [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
-    [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
-    [org.domaindrivenarchitecture.pallet.crate.config :as config-crate]
+    [dda.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.crate.config :as config-crate]
     [dda.pallet.crate.dda-git-crate :as git-crate]
     [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
     [dda.pallet.domain.dda-git-crate.repo :as repo]))

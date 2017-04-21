@@ -9,7 +9,7 @@
                  [prismatic/schema "1.1.3"]
                  [com.palletops/git-crate "0.8.0-alpha.2" :exclusions [org.clojure/clojure]]
                  [org.domaindrivenarchitecture/dda-pallet-commons "0.3.1"]
-                 [org.domaindrivenarchitecture/dda-pallet "0.4.0-SNAPSHOT"]]
+                 [dda/dda-pallet "0.4.0-SNAPSHOT"]]
   :profiles {:dev
              {:source-paths ["integration"]
               :resource-paths ["dev-resources"]

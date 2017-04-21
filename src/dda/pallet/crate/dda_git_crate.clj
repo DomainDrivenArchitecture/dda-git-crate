@@ -21,7 +21,7 @@
     [pallet.actions :as actions]
     [pallet.crate :as crate]
     [pallet.crate.git :as git]
-    [org.domaindrivenarchitecture.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.core.dda-crate :as dda-crate]
     [dda.pallet.crate.dda-git-crate.schema :as git-schema]
     [dda.pallet.crate.dda-git-crate.git-repo :as git-repo]
     [dda.pallet.crate.dda-git-crate.server-trust :as server-trust]
