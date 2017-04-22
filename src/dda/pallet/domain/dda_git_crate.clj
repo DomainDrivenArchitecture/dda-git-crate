@@ -57,17 +57,18 @@
 
 (s/defn ^:always-validate dda-git-crate-stack-configuration :- GitCrateStackConfig
   [convention-config :- GitDomainConfig]
-  (let [{:keys [os-user repo-groups credentials]} convention-config
+  (let [{:keys [os-user user-email repo-groups credentials]} convention-config
         repos dda-projects]
     {:group-specific-config
       {:dda-git-group
         {:dda-git
-          {os-user {:trust (repo/collect-trust (first (vals repos)))
-                    :repo (into []
-                            (repo/collect-repo
-                                credentials
-                                (str "/home/" (name os-user) "/code/")
-                                repos))}}}}}))
+          {os-user {
+            :email user-email
+            :trust (repo/collect-trust (first (vals repos)))
+            :repo  (repo/collect-repo
+              credentials
+              (str "/home/" (name os-user) "/code/")
+              repos)}}}}}))
 
 (s/defn ^:always-validate dda-git-group
   [stack-config :- GitCrateStackConfig]

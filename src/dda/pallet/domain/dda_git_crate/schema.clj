@@ -35,5 +35,6 @@
 
 (def GitDomainConfig
      {:os-user s/Keyword
+      :user-email s/Str
       (s/optional-key :credentials) GitCredentials
       :repo-groups (hash-set (s/enum :dda-pallet))})

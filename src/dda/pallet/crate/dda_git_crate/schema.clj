@@ -32,7 +32,8 @@
    :local-dir s/Str})
 
 (def UserGitConfig
-  {:trust [ServerTrust]
+  {:email s/Str
+   :trust [ServerTrust]
    :repo [GitRepository]})
 
 (def GitConfig

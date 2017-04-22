@@ -28,6 +28,7 @@
 
 (def domain-config
   {:os-user :ubuntu
+   :user-email "ubuntu@domain"
    :repo-groups #{:dda-pallet}})
 
 (defn integrated-group-spec [count]

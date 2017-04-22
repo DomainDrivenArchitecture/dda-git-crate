@@ -13,24 +13,14 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.existing
+
+(ns dda.pallet.crate.dda-git-crate.git-config
   (:require
-    [pallet.compute.node-list :as node-list]
-    [pallet.compute :as compute]))
+   [pallet.actions :as actions]))
 
-(defn remote-node [provisioning-ip]
-  (node-list/make-node
-    "git-integration"
-    "dda-git-group"
-    provisioning-ip
-    :ubuntu
-    :id :meissa-ide))
-
-(defn provider [provisioning-ip]
-  (compute/instantiate-provider
-    "node-list"
-    :node-list [(remote-node provisioning-ip)]))
-
-(defn node-spec [provisioning-user]
-  {:image
-   {:login-user provisioning-user}})
+(defn configure-user [user-name email]
+  (actions/exec-checked-script
+    "configures git globally for user"
+    ("git" "config" "--global" "push.default" "simple")
+    ("git" "config" "--global" "user.name" ~user-name)
+    ("git" "config" "--global" "user.email" ~email)))
