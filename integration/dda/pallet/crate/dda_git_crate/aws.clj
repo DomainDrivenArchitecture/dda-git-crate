@@ -39,7 +39,7 @@
       [aws-encrypted-credentials (get-in (pallet.configure/pallet-config) [:services :aws])
        aws-decrypted-credentials (crypto/decrypt
                                    (crypto/get-secret-key
-                                     {:user-home "/home/mje/"
+                                     {:user-home "~/"
                                       :key-id key-id})
                                    aws-encrypted-credentials
                                    key-passphrase)]
@@ -62,10 +62,10 @@
             ;eu-west1 16-04 LTS hvm :image-id "ami-07174474"
             ;us-east-1 16-04 LTS hvm :image-id "ami-45b69e52"
             :os-version "16.04"
+            :key-name "jem"
             :login-user "ubuntu"}
     :hardware {:hardware-id "t2.micro"}
-    :provider {:pallet-ec2 {:key-name "jem"
-                            :network-interfaces [{:device-index 0
+    :provider {:pallet-ec2 {:network-interfaces [{:device-index 0
                                                   :groups ["sg-0606b16e"]
                                                   :subnet-id "subnet-f929df91"
                                                   :associate-public-ip-address true
