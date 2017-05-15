@@ -37,4 +37,5 @@
    :repo [GitRepository]})
 
 (def GitConfig
+  ;TODO: Docu, Keyword is user-name
   {s/Keyword UserGitConfig})
