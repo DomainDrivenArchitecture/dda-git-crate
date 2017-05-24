@@ -18,6 +18,8 @@
   (:require
    [pallet.actions :as actions]))
 
+;todo: git config --global --add diff.tool meld
+
 (defn configure-user [user-name email]
   (actions/exec-checked-script
     "configures git globally for user"
