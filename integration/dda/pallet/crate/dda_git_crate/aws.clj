@@ -26,36 +26,36 @@
 
 (defn provider
   ([]
-    (let
-      [aws-decrypted-credentials (get-in (pallet.configure/pallet-config) [:services :aws])]
-      (compute/instantiate-provider
-       :pallet-ec2
-       :identity (get-in aws-decrypted-credentials [:account])
-       :credential (get-in aws-decrypted-credentials [:secret])
-       :endpoint "eu-central-1"
-       :subnet-ids ["subnet-f929df91"])))
+   (let
+     [aws-decrypted-credentials (get-in (pallet.configure/pallet-config) [:services :aws])]
+     (compute/instantiate-provider
+      :pallet-ec2
+      :identity (get-in aws-decrypted-credentials [:account])
+      :credential (get-in aws-decrypted-credentials [:secret])
+      :endpoint "eu-central-1"
+      :subnet-ids ["subnet-f929df91"])))
   ([key-id key-passphrase]
-    (let
-      [aws-encrypted-credentials (get-in (pallet.configure/pallet-config) [:services :aws])
-       aws-decrypted-credentials (crypto/decrypt
-                                   (crypto/get-secret-key
-                                     {:user-home "~/"
-                                      :key-id key-id})
-                                   aws-encrypted-credentials
-                                   key-passphrase)]
-      (compute/instantiate-provider
-       :pallet-ec2
-       :identity (get-in aws-decrypted-credentials [:account])
-       :credential (get-in aws-decrypted-credentials [:secret])
-       :endpoint "eu-central-1"
-       :subnet-ids ["subnet-f929df91"]))))
+   (let
+     [aws-encrypted-credentials (get-in (pallet.configure/pallet-config) [:services :aws])
+      aws-decrypted-credentials (crypto/decrypt
+                                  (crypto/get-secret-key
+                                    {:user-home "~/"
+                                     :key-id key-id})
+                                  aws-encrypted-credentials
+                                  key-passphrase)]
+     (compute/instantiate-provider
+      :pallet-ec2
+      :identity (get-in aws-decrypted-credentials [:account])
+      :credential (get-in aws-decrypted-credentials [:secret])
+      :endpoint "eu-central-1"
+      :subnet-ids ["subnet-f929df91"]))))
 
 (defn node-spec []
   (api/node-spec
-    :location {:location-id "eu-central-1a"
+    :location {:location-id "eu-central-1a"}
                ;:location-id "eu-west-1b"
                ;:location-id "us-east-1a"
-               }
+
     :image {:os-family :ubuntu
             ;eu-central-1 16-04 LTS hvm
             :image-id "ami-82cf0aed"

@@ -23,7 +23,7 @@
     [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
     [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
-    [dda.pallet.crate.dda-git-crate.aws :as cloud-target]
+    [dda.cm.aws :as cloud-target]
     [dda.pallet.domain.dda-git-crate :as domain]))
 
 (def domain-config
@@ -34,7 +34,7 @@
 (defn integrated-group-spec [count]
   (merge
     (domain/dda-git-group (domain/dda-git-crate-stack-configuration domain-config))
-    (cloud-target/node-spec)
+    (cloud-target/node-spec "jem")
     {:count count}))
 
 (defn converge-install
@@ -43,9 +43,8 @@
   ([key-id key-passphrase count]
    (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (integrated-group-spec count))))
 
-
 (defn server-test
-  ([]
+  ([count]
    (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
-  ([key-id key-passphrase]
-   (operation/do-server-test (cloud-target/provider) (integrated-group-spec count))))
+  ([key-id key-passphrase count]
+   (operation/do-server-test (cloud-target/provider key-id key-passphrase) (integrated-group-spec count))))
