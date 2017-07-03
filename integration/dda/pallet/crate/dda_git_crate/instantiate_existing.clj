@@ -17,16 +17,24 @@
   (:require
     [clojure.inspector :as inspector]
     [schema.core :as s]
+    [pallet.api :as api]
     [dda.config.commons.map-utils :as mu]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
+    [dda.pallet.crate.config :as config-crate]    
+    [dda.pallet.crate.dda-git-crate :as git-crate]
     [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
+    [dda.pallet.crate.dda-servertest-crate :as server-test-crate]
     [dda.pallet.domain.dda-git-crate :as domain]))
 
-(def domain-config
+(def git-config
   {:os-user :ubuntu
    :user-email "ubuntu@domain"
    :repo-groups #{:dda-pallet}})
+
+(def test-config
+  {:file {:ubuntu-code {:path "/home/ubuntu/code"
+                        :exist? true}}})
 
 (def provisioning-ip
      "52.28.86.52")
@@ -40,12 +48,21 @@
 
 (defn group-configuration []
   (mu/deep-merge
-   (domain/dda-git-crate-stack-configuration domain-config)
-   (server-test-domain/crate-stack-configuration {})))
+   (domain/dda-git-crate-stack-configuration git-config)
+   (server-test-domain/crate-stack-configuration test-config :group-key :dda-git-group)))
+
+(defn group [stack-config]
+ (let []
+   (api/group-spec
+     "dda-git-group"
+     :extends [(config-crate/with-config stack-config)
+               server-test-crate/with-servertest
+               git-crate/with-git])))
+
 
 (defn integrated-group-spec []
   (merge
-    (domain/dda-git-group (group-configuration))
+    (group (group-configuration))
     (existing/node-spec provisioning-user)))
 
 (defn apply-install []
