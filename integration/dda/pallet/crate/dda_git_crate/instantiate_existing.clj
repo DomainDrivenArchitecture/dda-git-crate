@@ -17,8 +17,10 @@
   (:require
     [clojure.inspector :as inspector]
     [schema.core :as s]
+    [dda.config.commons.map-utils :as mu]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
+    [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
     [dda.pallet.domain.dda-git-crate :as domain]))
 
 (def domain-config
@@ -36,10 +38,15 @@
 (def provider
  (existing/provider provisioning-ip "node-id" "dda-git-group"))
 
+(defn group-configuration []
+  (mu/deep-merge
+   (domain/dda-git-crate-stack-configuration domain-config)
+   (server-test-domain/crate-stack-configuration {})))
+
 (defn integrated-group-spec []
   (merge
-    (domain/dda-git-group (domain/dda-git-crate-stack-configuration domain-config))
-    (existing/node-spec  provisioning-user)))
+    (domain/dda-git-group (group-configuration))
+    (existing/node-spec provisioning-user)))
 
 (defn apply-install []
   (operation/do-apply-install provider (integrated-group-spec)))
