@@ -30,22 +30,22 @@
      "52.28.86.52")
 
 (def provisioning-user
- {:login "shantanu"})
+ {:login "ubuntu"})
+;:login "shantanu"})
 
 (def provider
  (existing/provider provisioning-ip "node-id" "dda-git-group"))
 
-(defn integrated-group-spec [count]
+(defn integrated-group-spec []
   (merge
     (domain/dda-git-group (domain/dda-git-crate-stack-configuration domain-config))
-    (existing/node-spec  provisioning-user)
-    {:count count}))
+    (existing/node-spec  provisioning-user)))
 
 (defn apply-install []
-  (operation/do-apply-install (provider) (integrated-group-spec)))
+  (operation/do-apply-install provider (integrated-group-spec)))
 
 (defn apply-config []
-  (operation/do-apply-configure (provider) (integrated-group-spec)))
+  (operation/do-apply-configure provider (integrated-group-spec)))
 
 (defn server-test []
-  (operation/do-server-test (provider) (integrated-group-spec)))
+  (operation/do-server-test provider (integrated-group-spec)))
