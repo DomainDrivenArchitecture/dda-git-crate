@@ -9,7 +9,7 @@
                  [com.palletops/stevedore "0.8.0-beta.7"]
                  [com.palletops/git-crate "0.8.0-alpha.2" :exclusions [org.clojure/clojure]]
                  [org.domaindrivenarchitecture/dda-pallet-commons "0.3.1"]
-                 [dda/dda-pallet "0.4.0-SNAPSHOT"]]
+                 [dda/dda-pallet "0.5.0-SNAPSHOT"]]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
   :deploy-repositories [["snapshots" :clojars]

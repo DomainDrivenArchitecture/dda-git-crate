@@ -18,7 +18,7 @@
     [schema.core :as s]
     [pallet.api :as api]
     [dda.config.commons.map-utils :as mu]
-    [dda.pallet.crate.config :as config-crate]
+    [dda.pallet.dda-config-crate.infra :as config-crate]
     [dda.pallet.dda-git-crate.infra :as infra]
     [dda.pallet.dda-git-crate.domain :as domain]
     [dda.pallet.dda-git-crate.app :as app]

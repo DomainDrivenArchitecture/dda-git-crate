@@ -20,7 +20,7 @@
    [schema.core :as s]
    [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
    [dda.pallet.core.dda-crate :as dda-crate]
-   [dda.pallet.crate.config :as config-crate]
+   [dda.pallet.dda-config-crate.infra :as config-crate]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain :as domain]))
 
