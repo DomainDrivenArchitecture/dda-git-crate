@@ -22,7 +22,7 @@
     [dda.pallet.dda-git-crate.infra :as infra]
     [dda.pallet.dda-git-crate.domain :as domain]
     [dda.pallet.dda-git-crate.app :as app]
-    [dda.pallet.domain.dda-user-crate :as user]
+    [dda.pallet.dda-user-crate.app :as user]
     [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
     [dda.pallet.crate.dda-servertest-crate :as server-test-crate]))
 
