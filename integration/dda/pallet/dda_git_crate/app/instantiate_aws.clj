@@ -17,20 +17,13 @@
   (:require
     [clojure.inspector :as inspector]
     [schema.core :as s]
-    [pallet.api :as api]
     [dda.config.commons.map-utils :as mu]
-    [pallet.compute :as compute]
     [org.domaindrivenarchitecture.pallet.commons.encrypted-credentials :as crypto]
     [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
     [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
     [dda.cm.aws :as cloud-target]
-    [dda.pallet.crate.config :as config-crate]
-    [dda.pallet.domain.dda-user-crate :as user]
-    [dda.pallet.dda-git-crate.infra :as git-crate]
-    [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
-    [dda.pallet.crate.dda-servertest-crate :as server-test-crate]
-    [dda.pallet.dda-git-crate.domain :as domain]))
+    [dda.pallet.dda-git-crate.app.user-test-app :as app]))
 
 (def jem-key-vm
   {:type "ssh-rsa"
@@ -50,38 +43,20 @@
   {:file {:ubuntu-code {:path "/home/jem/code"
                         :exist? true}}})
 
-(defn group-configuration []
-  (mu/deep-merge
-    (user/crate-stack-configuration
-     user-config :group-key :dda-git-group)
-   (domain/dda-git-crate-stack-configuration
-    git-config)
-   (server-test-domain/crate-stack-configuration
-    test-config :group-key :dda-git-group)))
-
-(defn group [stack-config]
- (let []
-   (api/group-spec
-     "dda-git-group"
-     :extends [(config-crate/with-config stack-config)
-               server-test-crate/with-servertest
-               user/with-user
-               git-crate/with-git])))
-
-(defn integrated-group-spec [count]
+(defn provisioning-spec [count]
   (merge
-    (group (group-configuration))
+    (app/group-spec (app/app-configuration git-config user-config test-config))
     (cloud-target/node-spec "jem")
     {:count count}))
 
 (defn converge-install
   ([count]
-   (operation/do-converge-install (cloud-target/provider) (integrated-group-spec count)))
+   (operation/do-converge-install (cloud-target/provider) (provisioning-spec count)))
   ([key-id key-passphrase count]
-   (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (integrated-group-spec count))))
+   (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (provisioning-spec count))))
 
 (defn server-test
   ([count]
-   (operation/do-server-test (cloud-target/provider) (integrated-group-spec count)))
+   (operation/do-server-test (cloud-target/provider) (provisioning-spec count)))
   ([key-id key-passphrase count]
-   (operation/do-server-test (cloud-target/provider key-id key-passphrase) (integrated-group-spec count))))
+   (operation/do-server-test (cloud-target/provider key-id key-passphrase) (provisioning-spec count))))

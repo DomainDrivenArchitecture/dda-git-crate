@@ -16,23 +16,15 @@
 
 (ns dda.pallet.dda-git-crate.domain
   (:require
-   [pallet.actions :as actions]
-   [pallet.api :as api]
    [schema.core :as s]
    [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
-   [dda.pallet.core.dda-crate :as dda-crate]
-   [dda.pallet.crate.config :as config-crate]
-   [dda.pallet.dda-git-crate.infra :as git-crate]
+   [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain.git-url :as git-url]
    [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
-
-(def GitCrateStackConfig
-  {:group-specific-config
-   {:dda-git-group {:dda-git git-crate/GitConfig}}})
 
 (def dda-projects
   {:dda-pallet
@@ -55,25 +47,15 @@
     "https://github.com/DomainDrivenArchitecture/dda-managed-ide.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
-(s/defn ^:always-validate dda-git-crate-stack-configuration :- GitCrateStackConfig
+(s/defn ^:always-validate infra-configuration
   [convention-config :- GitDomainConfig]
   (let [{:keys [os-user user-email repo-groups credentials]} convention-config
         repos dda-projects]
-    {:group-specific-config
-      {:dda-git-group
-        {:dda-git
-          {os-user {
-                    :email user-email
-                    :trust (repo/collect-trust (first (vals repos)))
-                    :repo  (repo/collect-repo
-                            credentials
-                            (str "/home/" (name os-user) "/code/")
-                            repos)}}}}}))
-
-(s/defn ^:always-validate dda-git-group
-  [stack-config :- GitCrateStackConfig]
-  (let []
-    (api/group-spec
-      "dda-git-group"
-      :extends [(config-crate/with-config stack-config)
-                git-crate/with-git])))
+    {infra/facility
+      {os-user {
+                :email user-email
+                :trust (repo/collect-trust (first (vals repos)))
+                :repo  (repo/collect-repo
+                        credentials
+                        (str "/home/" (name os-user) "/code/")
+                        repos)}}}))
