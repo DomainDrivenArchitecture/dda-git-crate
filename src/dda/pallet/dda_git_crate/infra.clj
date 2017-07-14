@@ -13,7 +13,7 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate
+(ns dda.pallet.dda-git-crate.infra
   (:require
     [clojure.tools.logging :as logging]
     [schema.core :as s]
@@ -22,10 +22,10 @@
     [pallet.crate :as crate]
     [pallet.crate.git :as git]
     [dda.pallet.core.dda-crate :as dda-crate]
-    [dda.pallet.crate.dda-git-crate.schema :as git-schema]
-    [dda.pallet.crate.dda-git-crate.git-repo :as git-repo]
-    [dda.pallet.crate.dda-git-crate.git-config :as git-config]
-    [dda.pallet.crate.dda-git-crate.server-trust :as server-trust]
+    [dda.pallet.dda-git-crate.infra.schema :as git-schema]
+    [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
+    [dda.pallet.dda-git-crate.infra.git-config :as git-config]
+    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]
     [org.domaindrivenarchitecture.pallet.servertest.fact.packages :as package-fact]
     [org.domaindrivenarchitecture.pallet.servertest.test.packages :as package-test]))
 

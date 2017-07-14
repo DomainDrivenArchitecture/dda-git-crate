@@ -1,15 +1,15 @@
 ; Copyright (c) meissa GmbH. All rights reserved.
 ; You must not remove this notice, or any other, from this software.
 
-(ns dda.pallet.domain.dda-git-crate.parse-url
+(ns dda.pallet.dda-git-crate.domain.parse-url
   (:require
    [clojure.string :as string]
    [clojure.walk :refer (keywordize-keys)]
    [pallet.actions :as actions]
    [pallet.api :as api]
    [schema.core :as s]
-   [dda.pallet.crate.dda-git-crate.schema :as schema]
-   [dda.pallet.crate.dda-git-crate :as git-crate]))
+   [dda.pallet.dda-git-crate.infra.schema :as schema]
+   [dda.pallet.dda-git-crate.infra :as git-crate]))
 
 (defn- maybe
   "Helper function for creating predicates that might be nil."

@@ -13,29 +13,16 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.schema
+
+(ns dda.pallet.dda-git-crate.infra.git-config
   (:require
-   [clojure.tools.logging :as logging]
-   [schema.core :as s]
-   [pallet.api :as api]
-   [pallet.actions :as actions]
-   [pallet.crate :as crate]
-   [pallet.crate.git :as git]
-   [dda.pallet.core.dda-crate :as dda-crate]))
+   [pallet.actions :as actions]))
 
-(def ServerTrust
-  {(s/optional-key :pin-fqdn-or-ip) s/Str
-   (s/optional-key :fingerprint) s/Str})
+;todo: git config --global --add diff.tool meld
 
-(def GitRepository
-  {:repo s/Str
-   :local-dir s/Str})
-
-(def UserGitConfig
-  {:email s/Str
-   :trust [ServerTrust]
-   :repo [GitRepository]})
-
-(def GitConfig
-  ;TODO: Docu, Keyword is user-name
-  {s/Keyword UserGitConfig})
+(defn configure-user [user-name email]
+  (actions/exec-checked-script
+    "configures git globally for user"
+    ("git" "config" "--global" "push.default" "simple")
+    ("git" "config" "--global" "user.name" ~user-name)
+    ("git" "config" "--global" "user.email" ~email)))

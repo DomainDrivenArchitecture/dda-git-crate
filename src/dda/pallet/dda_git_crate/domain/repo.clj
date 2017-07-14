@@ -14,17 +14,17 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.domain.dda-git-crate.repo
+(ns dda.pallet.dda-git-crate.domain.repo
   (:require
    [clojure.string :as string]
    [clojure.walk :refer (keywordize-keys)]
    [pallet.actions :as actions]
    [pallet.api :as api]
    [schema.core :as s]
-   [dda.pallet.crate.dda-git-crate :as crate-schema]
-   [dda.pallet.domain.dda-git-crate.git-url :as git-url]
-   [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
-   [dda.pallet.domain.dda-git-crate.parse-url :as pu]))
+   [dda.pallet.dda-git-crate.infra :as crate-schema]
+   [dda.pallet.dda-git-crate.domain.git-url :as git-url]
+   [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
+   [dda.pallet.dda-git-crate.domain.parse-url :as pu]))
 
 (s/defn ^:private server-trust :- crate-schema/ServerTrust
   [elem]

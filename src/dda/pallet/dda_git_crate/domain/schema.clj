@@ -14,7 +14,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.domain.dda-git-crate.schema
+(ns dda.pallet.dda-git-crate.domain.schema
   (:require
    [schema.core :as s]))
 

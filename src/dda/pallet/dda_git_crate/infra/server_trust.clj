@@ -13,24 +13,20 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.existing
+(ns dda.pallet.dda-git-crate.infra.server-trust
   (:require
-    [pallet.compute.node-list :as node-list]
-    [pallet.compute :as compute]))
+    [pallet.actions :as actions]))
 
-(defn remote-node [provisioning-ip]
-  (node-list/make-node
-    "git-integration"
-    "dda-git-group"
-    provisioning-ip
-    :ubuntu
-    :id :meissa-ide))
+(defn add-fingerprint-to-known-hosts
+  "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
+  [fingerprint]
+  (actions/exec-checked-script
+    "add fingerprint to known_hosts"
+    ("echo" ~fingerprint ">>" "~/.ssh/known_hosts")))
 
-(defn provider [provisioning-ip]
-  (compute/instantiate-provider
-    "node-list"
-    :node-list [(remote-node provisioning-ip)]))
-
-(defn node-spec [provisioning-user]
-  {:image
-   {:login-user provisioning-user}})
+(defn add-node-to-known-hosts
+  "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
+  [fqdn-or-ip & {:keys [port] :or {port 22}}]
+  (actions/exec-checked-script
+    "add delivered key to known_hosts"
+    ("ssh-keyscan" "-p" ~port "-H" ~fqdn-or-ip ">>" "~/.ssh/known_hosts")))

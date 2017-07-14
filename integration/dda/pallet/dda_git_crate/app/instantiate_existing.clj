@@ -13,7 +13,7 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.instantiate-existing
+(ns dda.pallet.dda-git-crate.app.instantiate-existing
   (:require
     [clojure.inspector :as inspector]
     [schema.core :as s]
@@ -21,11 +21,11 @@
     [dda.config.commons.map-utils :as mu]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
-    [dda.pallet.crate.config :as config-crate]    
-    [dda.pallet.crate.dda-git-crate :as git-crate]
+    [dda.pallet.crate.config :as config-crate]
+    [dda.pallet.dda-git-crate.infra :as git-crate]
     [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
     [dda.pallet.crate.dda-servertest-crate :as server-test-crate]
-    [dda.pallet.domain.dda-git-crate :as domain]))
+    [dda.pallet.dda-git-crate.domain :as domain]))
 
 (def git-config
   {:os-user :ubuntu

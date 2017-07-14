@@ -14,7 +14,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.domain.dda-git-crate
+(ns dda.pallet.dda-git-crate.domain
   (:require
    [pallet.actions :as actions]
    [pallet.api :as api]
@@ -22,10 +22,10 @@
    [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
    [dda.pallet.core.dda-crate :as dda-crate]
    [dda.pallet.crate.config :as config-crate]
-   [dda.pallet.crate.dda-git-crate :as git-crate]
-   [dda.pallet.domain.dda-git-crate.git-url :as git-url]
-   [dda.pallet.domain.dda-git-crate.schema :as domain-schema]
-   [dda.pallet.domain.dda-git-crate.repo :as repo]))
+   [dda.pallet.dda-git-crate.infra :as git-crate]
+   [dda.pallet.dda-git-crate.domain.git-url :as git-url]
+   [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
+   [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
@@ -63,12 +63,12 @@
       {:dda-git-group
         {:dda-git
           {os-user {
-            :email user-email
-            :trust (repo/collect-trust (first (vals repos)))
-            :repo  (repo/collect-repo
-              credentials
-              (str "/home/" (name os-user) "/code/")
-              repos)}}}}}))
+                    :email user-email
+                    :trust (repo/collect-trust (first (vals repos)))
+                    :repo  (repo/collect-repo
+                            credentials
+                            (str "/home/" (name os-user) "/code/")
+                            repos)}}}}}))
 
 (s/defn ^:always-validate dda-git-group
   [stack-config :- GitCrateStackConfig]

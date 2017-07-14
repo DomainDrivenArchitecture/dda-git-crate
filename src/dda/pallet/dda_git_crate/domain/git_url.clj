@@ -13,11 +13,11 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.domain.dda-git-crate.git-url
+(ns dda.pallet.dda-git-crate.domain.git-url
   (:require
    [clojure.tools.logging :as logging]
    [schema.core :as s]
-   [dda.pallet.domain.dda-git-crate.schema :as git-schema]))
+   [dda.pallet.dda-git-crate.domain.schema :as git-schema]))
 
 (s/defn git-url :- s/Str
   [repository :- git-schema/GitRepository]

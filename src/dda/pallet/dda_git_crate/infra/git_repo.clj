@@ -13,20 +13,27 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.crate.dda-git-crate.server-trust
+(ns dda.pallet.dda-git-crate.infra.git-repo
   (:require
-    [pallet.actions :as actions]))
+    [clojure.tools.logging :as logging]
+    [clojure.string :as st]
+    [schema.core :as s]
+    [pallet.actions :as actions]
+    [pallet.crate.git :as git]
+    [dda.pallet.dda-git-crate.infra.schema :as git-schema]))
 
-(defn add-fingerprint-to-known-hosts
-  "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [fingerprint]
-  (actions/exec-checked-script
-    "add fingerprint to known_hosts"
-    ("echo" ~fingerprint ">>" "~/.ssh/known_hosts")))
+(s/defn project-parent-path
+  [repo :- git-schema/GitRepository]
+  (let [{:keys [local-dir]} repo]
+    (st/join "/" (drop-last (st/split local-dir #"/")))))
 
-(defn add-node-to-known-hosts
-  "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [fqdn-or-ip & {:keys [port] :or {port 22}}]
-  (actions/exec-checked-script
-    "add delivered key to known_hosts"
-    ("ssh-keyscan" "-p" ~port "-H" ~fqdn-or-ip ">>" "~/.ssh/known_hosts")))
+(s/defn create-project-parent
+  [path :- s/Str]
+  (actions/directory path))
+
+(s/defn clone
+  [crate-repo :- git-schema/GitRepository]
+  (let [{:keys [local-dir repo]} crate-repo]
+    (git/clone
+      repo
+      :checkout-dir local-dir)))
