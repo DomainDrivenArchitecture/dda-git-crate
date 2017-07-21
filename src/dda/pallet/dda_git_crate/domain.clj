@@ -48,8 +48,8 @@
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
 (s/defn ^:always-validate infra-configuration
-  [convention-config :- GitDomainConfig]
-  (let [{:keys [os-user user-email repo-groups credentials]} convention-config
+  [domain-config :- GitDomainConfig]
+  (let [{:keys [os-user user-email repo-groups credentials]} domain-config
         repos dda-projects]
     {infra/facility
       {os-user {

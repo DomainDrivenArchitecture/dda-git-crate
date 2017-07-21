@@ -15,8 +15,8 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.app.instantiate-aws
   (:require
+    [pallet.repl :as pr]
     [clojure.inspector :as inspector]
-    [schema.core :as s]
     [dda.config.commons.map-utils :as mu]
     [org.domaindrivenarchitecture.pallet.commons.encrypted-credentials :as crypto]
     [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
@@ -40,23 +40,26 @@
    :repo-groups #{:dda-pallet}})
 
 (def test-config
-  {:file {:ubuntu-code {:path "/home/jem/code"
-                        :exist? true}}})
+  {:file '({:path "/home/jem/code"})})
 
 (defn provisioning-spec [count]
   (merge
-    (app/group-spec (app/app-configuration git-config user-config test-config))
+    (app/git-group-spec (app/app-configuration git-config user-config test-config))
     (cloud-target/node-spec "jem")
     {:count count}))
 
 (defn converge-install
   ([count]
-   (operation/do-converge-install (cloud-target/provider) (provisioning-spec count)))
+   (pr/session-summary
+    (operation/do-converge-install (cloud-target/provider) (provisioning-spec count))))
   ([key-id key-passphrase count]
-   (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (provisioning-spec count))))
+   (pr/session-summary
+    (operation/do-converge-install (cloud-target/provider key-id key-passphrase) (provisioning-spec count)))))
 
 (defn server-test
   ([count]
-   (operation/do-server-test (cloud-target/provider) (provisioning-spec count)))
+   (pr/session-summary
+    (operation/do-server-test (cloud-target/provider) (provisioning-spec count))))
   ([key-id key-passphrase count]
-   (operation/do-server-test (cloud-target/provider key-id key-passphrase) (provisioning-spec count))))
+   (pr/session-summary
+    (operation/do-server-test (cloud-target/provider key-id key-passphrase) (provisioning-spec count)))))

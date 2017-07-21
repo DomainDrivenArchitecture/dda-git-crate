@@ -16,10 +16,9 @@
 
 (ns dda.pallet.dda-git-crate.app
   (:require
-   [pallet.api :as api]
    [schema.core :as s]
-   [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
-   [dda.pallet.core.dda-crate :as dda-crate]
+   [dda.cm.group :as group]
+   [dda.config.commons.map-utils :as mu]
    [dda.pallet.dda-config-crate.infra :as config-crate]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain :as domain]))
@@ -44,8 +43,6 @@
 
 (s/defn ^:always-validate git-group-spec
   [app-config :- GitAppConfig]
-  (let [group-name (name (key (first (:group-specific-config app-config))))]
-    (api/group-spec
-      group-name
-      :extends [(config-crate/with-config app-config)
-                with-git])))
+  (group/group-spec
+    app-config [(config-crate/with-config app-config)
+                with-git]))

@@ -15,10 +15,11 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.app.instantiate-existing
   (:require
+    [pallet.repl :as pr]
     [clojure.inspector :as inspector]
-    [schema.core :as s]
-    [pallet.api :as api]
     [dda.config.commons.map-utils :as mu]
+    [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
+    [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
     [dda.pallet.dda-git-crate.app.test-app :as app]))
@@ -44,14 +45,17 @@
 
 (defn provisioning-spec []
   (merge
-    (app/group-spec (app/app-configuration git-config test-config))
+    (app/git-group-spec (app/app-configuration git-config test-config))
     (existing/node-spec provisioning-user)))
 
 (defn apply-install []
-  (operation/do-apply-install provider (provisioning-spec)))
+  (pr/session-summary
+    (operation/do-apply-install provider (provisioning-spec))))
 
 (defn apply-config []
-  (operation/do-apply-configure provider (provisioning-spec)))
+  (pr/session-summary
+    (operation/do-apply-configure provider (provisioning-spec))))
 
 (defn server-test []
-  (operation/do-server-test provider (provisioning-spec)))
+  (pr/session-summary
+    (operation/do-server-test provider (provisioning-spec))))

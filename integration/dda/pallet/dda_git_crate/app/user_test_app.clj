@@ -16,27 +16,23 @@
 (ns dda.pallet.dda-git-crate.app.user-test-app
   (:require
     [schema.core :as s]
-    [pallet.api :as api]
+    [dda.cm.group :as group]
     [dda.config.commons.map-utils :as mu]
     [dda.pallet.dda-config-crate.infra :as config-crate]
-    [dda.pallet.dda-git-crate.infra :as infra]
-    [dda.pallet.dda-git-crate.domain :as domain]
     [dda.pallet.dda-git-crate.app :as app]
     [dda.pallet.dda-user-crate.app :as user]
-    [dda.pallet.domain.dda-servertest-crate :as server-test-domain]
-    [dda.pallet.crate.dda-servertest-crate :as server-test-crate]))
+    [dda.pallet.dda-servertest-crate.app :as test]))
 
 (defn app-configuration [git-config user-config test-config]
   (mu/deep-merge
-    (user/crate-stack-configuration user-config :group-key :dda-git-group)
+    (user/app-configuration user-config :group-key :dda-git-group)
     (app/app-configuration git-config :group-key :dda-git-group)
-    (server-test-domain/crate-stack-configuration test-config :group-key :dda-git-group)))
+    (test/app-configuration test-config :group-key :dda-git-group)))
 
-(defn group-spec [app-config]
- (let []
-   (api/group-spec
-     "dda-git-group"
-     :extends [(config-crate/with-config app-config)
-               server-test-crate/with-servertest
+(s/defn ^:always-validate git-group-spec
+  [app-config]
+  (group/group-spec
+   app-config [(config-crate/with-config app-config)
+               test/with-servertest
                user/with-user
-               app/with-git])))
+               app/with-git]))
