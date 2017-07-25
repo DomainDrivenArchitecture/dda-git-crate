@@ -22,30 +22,35 @@
     [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
-    [dda.pallet.dda-git-crate.app.test-app :as app]))
+    [dda.pallet.dda-git-crate.app.user-app :as app]))
+
+(def ssh-pub-key
+  {:type "ssh-rsa"
+   :public-key "AAAAB3NzaC1yc2EAAAADAQABAAABAQCeO+eiYDonq3OfxyaUx259y/1OqbhLciD4UlCkguD5PgOuXw+kCXS1Wbdor9cvU8HnsL2j70sPSwCWkcDrrGQ0kpC0GuNO47pKawAOSv07ELpSIIp/nPK5AX2+qI1H3MADBWBE5N1L7sdgatON2A/cC3u5pzcWDaEH7/IJdOkRm8H+qqG+uva6ceFUoYFiJKDixmsmaUXhhDcfYhfpAPBUCSes+HTeT/hk6pdLTX9xXd4H5wyAc+j1e6kPq9ZcxvzZNr9qEMIFjnNL/S9w1ozxQa3sKJQHj8SyVZDlwjvepGS7fKrdlRps938A7I3Y4BaXGX//M1y2HNbUWbMOllLL"
+   :comment "test-users-key"})
+
+(def user-config
+  {:user-name {:encrypted-password "xxxx"
+               :authorized-keys [ssh-pub-key]}})
 
 (def git-config
-  {:os-user :ubuntu
-   :user-email "ubuntu@domain"
+  {:os-user :user-name
+   :user-email "user-name@some-domain.org"
    :repo-groups #{:dda-pallet}})
 
-(def test-config
-  {:file {:ubuntu-code {:path "/home/ubuntu/code"
-                        :exist? true}}})
-
 (def provisioning-ip
-     "52.28.86.52")
+     "192.168.56.104")
 
 (def provisioning-user
- {:login "ubuntu"})
-;:login "shantanu"})
+ {:login "initial"
+  :password "secure1234"})
 
 (def provider
  (existing/provider provisioning-ip "node-id" "dda-git-group"))
 
 (defn provisioning-spec []
   (merge
-    (app/git-group-spec (app/app-configuration git-config test-config))
+    (app/git-group-spec (app/app-configuration git-config user-config))
     (existing/node-spec provisioning-user)))
 
 (defn apply-install []

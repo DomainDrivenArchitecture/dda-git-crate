@@ -42,7 +42,7 @@
   git-schema/GitConfig)
 
 (s/defmethod dda-crate/dda-settings facility
-  [dda-crate partial-effective-config])
+  [dda-crate config])
                                         ;(package-fact/collect-packages-fact)
 
 (s/defn configure-user
