@@ -25,9 +25,7 @@
     [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
-    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]
-    [org.domaindrivenarchitecture.pallet.servertest.fact.packages :as package-fact]
-    [org.domaindrivenarchitecture.pallet.servertest.test.packages :as package-test]))
+    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))
 
 (def facility :dda-git)
 (def version  [0 1 0])
@@ -75,7 +73,6 @@
   [dda-crate config]
   "dda-git: install routine"
   (git/install))
-
 
 (s/defmethod dda-crate/dda-test facility
   [dda-crate partial-effective-config])

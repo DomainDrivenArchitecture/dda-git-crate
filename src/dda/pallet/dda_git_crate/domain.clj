@@ -17,7 +17,7 @@
 (ns dda.pallet.dda-git-crate.domain
   (:require
    [schema.core :as s]
-   [org.domaindrivenarchitecture.config.commons.map-utils :as map-utils]
+   [dda.config.commons.map-utils :as map-utils]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain.git-url :as git-url]
    [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
@@ -31,7 +31,7 @@
    ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet.git"
-    "https://github.com/DomainDrivenArchitecture/dda-servertest-crate.git"
+    "https://github.com/DomainDrivenArchitecture/dda-serverspec-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-user-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-backup-crate.git"

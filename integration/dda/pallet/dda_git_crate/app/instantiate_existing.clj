@@ -18,8 +18,8 @@
     [pallet.repl :as pr]
     [clojure.inspector :as inspector]
     [dda.config.commons.map-utils :as mu]
-    [org.domaindrivenarchitecture.pallet.commons.session-tools :as session-tools]
-    [org.domaindrivenarchitecture.pallet.commons.pallet-schema :as ps]
+    [dda.pallet.commons.session-tools :as session-tools]
+    [dda.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
     [dda.pallet.dda-git-crate.app.user-app :as app]))

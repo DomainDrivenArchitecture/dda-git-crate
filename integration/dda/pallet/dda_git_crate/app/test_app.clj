@@ -21,7 +21,7 @@
     [dda.pallet.dda-config-crate.infra :as config-crate]
     [dda.pallet.dda-git-crate.app :as app]
     [dda.pallet.dda-user-crate.app :as user]
-    [dda.pallet.dda-servertest-crate.app :as test]))
+    [dda.pallet.dda-serverspec-crate.app :as test]))
 
 (defn app-configuration [git-config test-config]
   (mu/deep-merge
