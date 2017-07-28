@@ -20,7 +20,7 @@
                     [[org.domaindrivenarchitecture/pallet-aws "0.2.8.2"]
                      [com.palletops/pallet "0.8.12" :classifier "tests"]
                      [dda/dda-config-commons "0.2.0"]
-                     [dda/dda-user-crate "0.5.1"]
+                     [dda/dda-user-crate "0.5.2"]
                      [ch.qos.logback/logback-classic "1.2.3"]
                      [org.slf4j/jcl-over-slf4j "1.7.25"]]
                     :plugins
