@@ -20,4 +20,4 @@ dda-pallet is compatible to the following versions
 ## Usage
 
 ## See also
-* Howto getting started: https://domaindrivenarchitecture.org/posts/2017-07-07-first-steps-with-dda-pallet/
+* Howto getting started: https://domaindrivenarchitecture.org/posts/2017-07-28-compose-crates/
