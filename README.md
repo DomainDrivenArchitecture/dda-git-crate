@@ -1,6 +1,6 @@
 # dda-git-crate
 
-[![Clojars Project](https://img.shields.io/clojars/v/dda/dda-git-crate.svg)](https://clojars.org/dda/dda-git-crate)
+![Clojars Project](https://img.shields.io/clojars/v/dda/dda-git-crate.svg)](https://clojars.org/dda/dda-git-crate)
 
 This crate is part of [dda-pallet](https://domaindrivenarchitecture.org/pages/dda-pallet/).
 
