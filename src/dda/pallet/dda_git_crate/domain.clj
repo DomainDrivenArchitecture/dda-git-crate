@@ -37,7 +37,6 @@
                         (str "/home/" (name os-user) "/code/")
                         repos)}}}))
 
-
 (def dda-projects
   {:dda-pallet
    ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
