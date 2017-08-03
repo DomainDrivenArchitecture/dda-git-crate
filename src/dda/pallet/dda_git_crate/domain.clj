@@ -26,6 +26,8 @@
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
 
+(def InfraResult {infra/facility infra/GitConfig})
+
 (defn- internal-infra-configuration
   [domain-config repos]
   (let [{:keys [os-user user-email credentials]} domain-config]
@@ -57,7 +59,7 @@
     "https://github.com/DomainDrivenArchitecture/dda-liferay-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
-(s/defn ^:always-validate infra-configuration
+(s/defn ^:always-validate infra-configuration :- InfraResult
   [domain-config :- GitDomainConfig]
   (let [{:keys [repo-groups repos]} domain-config]
     (if (contains? domain-config :repos)
