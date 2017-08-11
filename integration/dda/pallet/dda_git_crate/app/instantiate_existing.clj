@@ -22,7 +22,7 @@
     [dda.pallet.commons.pallet-schema :as ps]
     [dda.cm.operation :as operation]
     [dda.cm.existing :as existing]
-    [dda.pallet.dda-user-crate.infra.user.os-user :as os-user]
+    [dda.config.commons.user-env :as user-env]
     [dda.pallet.dda-git-crate.app.user-app :as app]))
 
 (def provisioning-ip
@@ -33,7 +33,7 @@
    :password "secure1234"})
 
 (def ssh-pub-key
-  (os-user/read-ssh-pub-key-to-config))
+  (user-env/read-ssh-pub-key-to-config))
 
 (def user-config
   {:user-name {:encrypted-password "xxxx"

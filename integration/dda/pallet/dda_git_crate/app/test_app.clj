@@ -32,5 +32,5 @@
   [app-config :- app/GitAppConfig]
   (group/group-spec
    app-config [(config-crate/with-config app-config)
-               test/with-servertest
+               test/with-serverspec
                app/with-git]))
