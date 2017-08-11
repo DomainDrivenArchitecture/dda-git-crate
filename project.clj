@@ -8,8 +8,8 @@
                  [com.palletops/pallet "0.8.12"]
                  [com.palletops/stevedore "0.8.0-beta.7"]
                  [com.palletops/git-crate "0.8.0-alpha.2" :exclusions [org.clojure/clojure]]
-                 [dda/dda-pallet "0.5.3-SNAPSHOT"]
-                 [dda/dda-serverspec-crate "0.2.1-SNAPSHOT"]]
+                 [dda/dda-pallet "0.5.3"]
+                 [dda/dda-serverspec-crate "0.2.1"]]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
   :deploy-repositories [["snapshots" :clojars]
@@ -19,8 +19,8 @@
                    :dependencies
                     [[org.domaindrivenarchitecture/pallet-aws "0.2.8.2"]
                      [com.palletops/pallet "0.8.12" :classifier "tests"]
-                     [dda/dda-config-commons "0.2.1-SNAPSHOT"]
-                     [dda/dda-user-crate "0.5.3-SNAPSHOT"]
+                     [dda/dda-config-commons "0.2.2"]
+                     [dda/dda-user-crate "0.6.0"]
                      [ch.qos.logback/logback-classic "1.2.3"]
                      [org.slf4j/jcl-over-slf4j "1.8.0-alpha2"]]
                     :plugins
