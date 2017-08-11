@@ -23,17 +23,19 @@
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain :as domain]))
 
+(def with-git infra/with-git)
+
+(def InfraResult domain/InfraResult)
+
 (def GitAppConfig
   {:group-specific-config
-   {s/Keyword {infra/facility infra/GitConfig}}})
+   {s/Keyword InfraResult}})
 
 (s/defn ^:allways-validate create-app-configuration :- GitAppConfig
  [config :- infra/GitConfig
   group-key :- s/Keyword]
  {:group-specific-config
     {group-key config}})
-
-(def with-git infra/with-git)
 
 (defn app-configuration
   [domain-config & {:keys [group-key] :or {group-key :dda-git-group}}]

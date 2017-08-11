@@ -26,6 +26,19 @@
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
 
+(def InfraResult {infra/facility infra/GitConfig})
+
+(defn- internal-infra-configuration
+  [domain-config repos]
+  (let [{:keys [os-user user-email credentials]} domain-config]
+    {infra/facility
+      {os-user {:email user-email
+                :trust (repo/collect-trust (first (vals repos)))
+                :repo  (repo/collect-repo
+                        credentials
+                        (str "/home/" (name os-user) "/code/")
+                        repos)}}}))
+
 (def dda-projects
   {:dda-pallet
    ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
@@ -46,15 +59,9 @@
     "https://github.com/DomainDrivenArchitecture/dda-liferay-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
-(s/defn ^:always-validate infra-configuration
+(s/defn ^:always-validate infra-configuration :- InfraResult
   [domain-config :- GitDomainConfig]
-  (let [{:keys [os-user user-email repo-groups credentials]} domain-config
-        repos dda-projects]
-    {infra/facility
-      {os-user {
-                :email user-email
-                :trust (repo/collect-trust (first (vals repos)))
-                :repo  (repo/collect-repo
-                        credentials
-                        (str "/home/" (name os-user) "/code/")
-                        repos)}}}))
+  (let [{:keys [repo-groups repos]} domain-config]
+    (if (contains? domain-config :repos)
+      (internal-infra-configuration domain-config repos)
+      (internal-infra-configuration domain-config dda-projects))))

@@ -1,6 +1,7 @@
 # dda-git-crate
 
 [![Clojars Project](https://img.shields.io/clojars/v/dda/dda-git-crate.svg)](https://clojars.org/dda/dda-git-crate)
+[![Build Status](https://travis-ci.org/DomainDrivenArchitecture/dda-git-crate.svg?branch=master)](https://travis-ci.org/DomainDrivenArchitecture/dda-git-crate)
 
 This crate is part of [dda-pallet](https://domaindrivenarchitecture.org/pages/dda-pallet/).
 
@@ -20,4 +21,8 @@ dda-pallet is compatible to the following versions
 ## Usage
 
 ## See also
-* Howto getting started: https://domaindrivenarchitecture.org/posts/2017-07-07-first-steps-with-dda-pallet/
+* Howto getting started: https://domaindrivenarchitecture.org/posts/2017-07-28-compose-crates/
+
+## License
+Copyright © 2015 meissa GmbH
+Licensed under the Apache License, Version 2.0 (the "License");

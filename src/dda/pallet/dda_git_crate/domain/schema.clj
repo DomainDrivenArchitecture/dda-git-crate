@@ -34,7 +34,13 @@
                               (s/optional-key :password) s/Str}})
 
 (def GitDomainConfig
+  (s/both
+     (s/pred #(or
+               (contains? %1 :repo-groups)
+               (contains? %1 :repos))
+              "Either :repo-groups or :repos has to be present.")
      {:os-user s/Keyword
       :user-email s/Str
       (s/optional-key :credentials) GitCredentials
-      :repo-groups (hash-set (s/enum :dda-pallet))})
+      (s/optional-key :repo-groups) (hash-set (s/enum :dda-pallet))
+      (s/optional-key :repos) {s/Keyword [s/Str]}}))

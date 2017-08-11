@@ -33,6 +33,6 @@
   [app-config]
   (group/group-spec
    app-config [(config-crate/with-config app-config)
-               test/with-servertest
+               test/with-serverspec
                user/with-user
                app/with-git]))
