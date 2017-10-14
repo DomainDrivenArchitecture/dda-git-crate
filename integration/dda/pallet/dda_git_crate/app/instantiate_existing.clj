@@ -36,7 +36,7 @@
   (user-env/read-ssh-pub-key-to-config))
 
 (def user-config
-  {:user-name {:encrypted-password "xxxx"
+  {:user-name {:hashed-password "xxxx"
                :authorized-keys [ssh-pub-key]}})
 
 (def git-config
