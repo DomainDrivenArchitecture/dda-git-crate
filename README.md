@@ -3,7 +3,7 @@
 [![Clojars Project](https://img.shields.io/clojars/v/dda/dda-git-crate.svg)](https://clojars.org/dda/dda-git-crate)
 [![Build Status](https://travis-ci.org/DomainDrivenArchitecture/dda-git-crate.svg?branch=master)](https://travis-ci.org/DomainDrivenArchitecture/dda-git-crate)
 
-This crate is part of [dda-pallet](https://domaindrivenarchitecture.org/pages/dda-pallet/).
+[![Slack](https://img.shields.io/badge/chat-clojurians-green.svg?style=flat)](https://clojurians.slack.com/messages/#dda-pallet/) | [<img src="https://domaindrivenarchitecture.org/img/meetup.svg" width=50 alt="DevOps Hacking with Clojure Meetup"> DevOps Hacking with Clojure](https://www.meetup.com/de-DE/preview/dda-pallet-DevOps-Hacking-with-Clojure) | [Website & Blog](https://domaindrivenarchitecture.org)
 
 ## compatability
 dda-pallet is compatible to the following versions

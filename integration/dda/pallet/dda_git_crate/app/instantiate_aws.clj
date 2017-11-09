@@ -36,7 +36,10 @@
 (def git-config
   {:os-user :user-name
    :user-email "user-name@some-domain.org"
-   :repo-groups #{:dda-pallet}})
+   :repos {:books
+           ["https://github.com/DomainDrivenArchitecture/ddaArchitecture.git"]
+           :password-store
+           ["https://github.com/DomainDrivenArchitecture/password-store-for-teams.git"]}})
 
 (def test-config
   {:file '({:path "/home/jem/code"})})

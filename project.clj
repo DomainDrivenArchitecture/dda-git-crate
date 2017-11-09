@@ -1,11 +1,11 @@
-(defproject dda/dda-git-crate "0.1.4-SNAPSHOT"
+(defproject dda/dda-git-crate "0.2.0-SNAPSHOT"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [dda/dda-pallet "0.6.1"]
-                 [dda/dda-serverspec-crate "0.2.2"]
+                 [dda/dda-pallet "0.6.2"]
+                 [dda/dda-serverspec-crate "0.4.0"]
                  [com.palletops/git-crate "0.8.0-alpha.2" :exclusions [org.clojure/clojure]]]
   :repositories [["snapshots" :clojars]
                  ["releases" :clojars]]
