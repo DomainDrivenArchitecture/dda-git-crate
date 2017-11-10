@@ -36,7 +36,7 @@
                 :trust (repo/collect-trust (first (vals repos)))
                 :repo  (repo/collect-repo
                         credentials
-                        (str "/home/" (name os-user) "/code/")
+                        (str "/home/" (name os-user) "/repo/")
                         repos)}}}))
 
 (def dda-projects

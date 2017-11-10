@@ -21,43 +21,42 @@
     [dda.pallet.commons.encrypted-credentials :as crypto]
     [dda.pallet.commons.session-tools :as session-tools]
     [dda.pallet.commons.pallet-schema :as ps]
-    [dda.config.commons.user-env :as user-env]
     [dda.pallet.commons.operation :as operation]
     [dda.pallet.commons.aws :as cloud-target]
-    [dda.pallet.dda-git-crate.app.user-test-app :as app]))
+    [dda.pallet.commons.external-config :as ext-config]
+    [dda.pallet.dda-git-crate.app :as app]))
 
-(def ssh-pub-key
-  (user-env/read-ssh-pub-key-to-config))
-
-(def user-config
-  {:user-name {:hashed-password "xxxx"
-               :authorized-keys [ssh-pub-key]}})
-
-(def git-config
-  {:os-user :user-name
-   :user-email "user-name@some-domain.org"
-   :repo-groups #{:dda-pallet}})
-
-(def test-config
-  {:file '({:path "/home/jem/code"})})
-
-(defn provisioning-spec [count]
+(defn provisioning-spec [git-config node-spec-config count]
   (merge
-    (app/git-group-spec (app/app-configuration git-config user-config test-config))
-    (cloud-target/node-spec "jem")
+    (app/git-group-spec (app/app-configuration git-config))
+    (cloud-target/node-spec node-spec-config)
     {:count count}))
+
+; TODO: tut noch nicht ...
+(defn converge-install-internal
+  [count & options]
+  (let [{:keys [gpg-key-id gpg-passphrase git targets]
+         :or {git "integration/resources/git.edn"
+              targets "integration/resources/jem-aws-target-internal.edn"}} options
+        target-config (cloud-target/load-targets targets)
+        domain-config (ext-config/parse-config git)]
+   (operation/do-converge-install
+     (cloud-target/provider gpg-key-id gpg-passphrase (:context target-config))
+     (provisioning-spec domain-config (:node-spec target-config) count)
+     :summarize-session true)))
 
 (defn converge-install
   [count & options]
-  (let [{:keys [gpg-key-id gpg-passphrase
-                summarize-session]
-         :or {summarize-session true}} options]
+  (let [{:keys [gpg-key-id gpg-passphrase git targets]
+         :or {git "integration/resources/git.edn"
+              targets "integration/resources/jem-aws-target-external.edn"}} options
+        target-config (cloud-target/load-targets targets)
+        domain-config (ext-config/parse-config git)]
    (operation/do-converge-install
-     (if (some? gpg-key-id)
-       (cloud-target/provider gpg-key-id gpg-passphrase)
-       (cloud-target/provider))
-     (provisioning-spec count)
-     :summarize-session summarize-session)))
+     (cloud-target/provider (:context target-config))
+     (provisioning-spec domain-config (:node-spec target-config) count)
+     :summarize-session true)))
+
 
 (defn configure
  [& options]

@@ -85,12 +85,23 @@
     (distinct
       (map server-trust parsed-uris))))
 
+(s/defn collect-repo-group :- [crate-schema/GitRepository]
+  [credentials :- domain-schema/GitCredentials
+   local-root :- s/Str
+   key :- s/Keyword
+   repo-group :- [s/Str]]
+  (let [parsed-uris (map pu/string->url repo-group)]
+    (map
+     #(crate-repo
+       (git-repository local-root key credentials %))
+     parsed-uris)))
+
+
 (s/defn collect-repo :- [crate-schema/GitRepository]
   [credentials :- domain-schema/GitCredentials
    local-root :- s/Str
    domain-repo-uris :- {s/Keyword [s/Str]}]
-  (let [parsed-uris (map pu/string->url (first (vals domain-repo-uris)))]
+  (flatten
     (map
-     #(crate-repo
-       (git-repository local-root (first (keys domain-repo-uris)) credentials %))
-     parsed-uris)))
+     #(collect-repo-group credentials local-root (key %) (val %))
+     domain-repo-uris)))

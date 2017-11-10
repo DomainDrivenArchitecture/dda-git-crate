@@ -31,17 +31,13 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-(s/defn ^:allways-validate create-app-configuration :- GitAppConfig
- [config :- infra/GitConfig
-  group-key :- s/Keyword]
- {:group-specific-config
-    {group-key config}})
-
-(defn app-configuration
-  [domain-config & {:keys [group-key] :or {group-key :dda-git-group}}]
-  (s/validate domain/GitDomainConfig domain-config)
-  (create-app-configuration (domain/infra-configuration domain-config)
-                            group-key))
+(s/defn ^:always-validate app-configuration :- GitAppConfig
+  [domain-config :- domain/GitDomainConfig
+   & options]
+  (let [{:keys [group-key]
+         :or {group-key :dda-git-group}} options]
+    {:group-specific-config
+       {group-key (domain/infra-configuration domain-config)}}))
 
 (s/defn ^:always-validate git-group-spec
   [app-config :- GitAppConfig]
