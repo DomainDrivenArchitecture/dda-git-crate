@@ -31,7 +31,7 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-(s/defn ^:allways-validate create-app-configuration :- GitAppConfig
+(s/defn ^:always-validate create-app-configuration :- GitAppConfig
  [config :- infra/GitConfig
   group-key :- s/Keyword]
  {:group-specific-config
