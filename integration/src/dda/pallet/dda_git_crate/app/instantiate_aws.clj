@@ -17,8 +17,6 @@
   (:require
     [pallet.repl :as pr]
     [clojure.inspector :as inspector]
-    [dda.config.commons.map-utils :as mu]
-    [dda.pallet.commons.encrypted-credentials :as crypto]
     [dda.pallet.commons.session-tools :as session-tools]
     [dda.pallet.commons.pallet-schema :as ps]
     [dda.pallet.commons.operation :as operation]
@@ -56,7 +54,6 @@
      (cloud-target/provider (:context target-config))
      (provisioning-spec domain-config (:node-spec target-config) count)
      :summarize-session true)))
-
 
 (defn configure
  [& options]
