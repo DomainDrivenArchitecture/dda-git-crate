@@ -21,32 +21,9 @@
     [dda.pallet.commons.pallet-schema :as ps]
     [dda.pallet.commons.operation :as operation]
     [dda.pallet.commons.aws :as cloud-target]
-    [dda.pallet.commons.external-config :as ext-config]
     [dda.pallet.dda-git-crate.app :as app]))
 
-<<<<<<< HEAD:integration/src/dda/pallet/dda_git_crate/app/instantiate_aws.clj
 (defn provisioning-spec [git-config node-spec-config count]
-=======
-(def ssh-pub-key
-  (user-env/read-ssh-pub-key-to-config))
-
-(def user-config
-  {:user-name {:hashed-password "xxxx"
-               :authorized-keys [ssh-pub-key]}})
-
-(def git-config
-  {:os-user :user-name
-   :user-email "user-name@some-domain.org"
-   :repos {:books
-           ["https://github.com/DomainDrivenArchitecture/ddaArchitecture.git"]
-           :password-store
-           ["https://github.com/DomainDrivenArchitecture/password-store-for-teams.git"]}})
-
-(def test-config
-  {:file '({:path "/home/jem/code"})})
-
-(defn provisioning-spec [count]
->>>>>>> origin/development:integration/src/dda/pallet/dda_git_crate/app/instantiate_aws.clj
   (merge
     (app/git-group-spec (app/app-configuration git-config))
     (cloud-target/node-spec node-spec-config)
@@ -59,7 +36,7 @@
          :or {git "integration/resources/git.edn"
               targets "integration/resources/jem-aws-target-internal.edn"}} options
         target-config (cloud-target/load-targets targets)
-        domain-config (ext-config/parse-config git)]
+        domain-config (app/load-domain git)]
    (operation/do-converge-install
      (cloud-target/provider gpg-key-id gpg-passphrase (:context target-config))
      (provisioning-spec domain-config (:node-spec target-config) count)
@@ -71,7 +48,7 @@
          :or {git "integration/resources/git.edn"
               targets "integration/resources/jem-aws-target-external.edn"}} options
         target-config (cloud-target/load-targets targets)
-        domain-config (ext-config/parse-config git)]
+        domain-config (app/load-domain git)]
    (operation/do-converge-install
      (cloud-target/provider (:context target-config))
      (provisioning-spec domain-config (:node-spec target-config) count)

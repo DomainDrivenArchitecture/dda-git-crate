@@ -19,6 +19,7 @@
    [schema.core :as s]
    [dda.cm.group :as group]
    [dda.config.commons.map-utils :as mu]
+   [dda.pallet.commons.external-config :as ext-config]
    [dda.pallet.dda-config-crate.infra :as config-crate]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain :as domain]))
@@ -31,27 +32,23 @@
   {:group-specific-config
    {s/Keyword InfraResult}})
 
-<<<<<<< HEAD:main/src/dda/pallet/dda_git_crate/app.clj
-(s/defn ^:always-validate app-configuration :- GitAppConfig
-  [domain-config :- domain/GitDomainConfig
-   & options]
-  (let [{:keys [group-key]
-         :or {group-key :dda-git-group}} options]
-    {:group-specific-config
-       {group-key (domain/infra-configuration domain-config)}}))
-=======
+(s/defn ^:always-validate load-domain :- domain/GitDomainConfig
+  [file-name :- s/Str]
+  (ext-config/parse-config file-name))
+
 (s/defn ^:always-validate create-app-configuration :- GitAppConfig
  [config :- infra/GitConfig
   group-key :- s/Keyword]
  {:group-specific-config
     {group-key config}})
 
-(defn app-configuration
-  [domain-config & {:keys [group-key] :or {group-key :dda-git-group}}]
-  (s/validate domain/GitDomainConfig domain-config)
-  (create-app-configuration (domain/infra-configuration domain-config)
-                            group-key))
->>>>>>> origin/development:main/src/dda/pallet/dda_git_crate/app.clj
+(s/defn ^:always-validate app-configuration :- GitAppConfig
+  [domain-config :- domain/GitDomainConfig
+   & options]
+  (let [{:keys [group-key] :or {group-key infra/facility}} options]
+    {:group-specific-config
+       {group-key
+        (domain/infra-configuration domain-config)}}))
 
 (s/defn ^:always-validate git-group-spec
   [app-config :- GitAppConfig]
