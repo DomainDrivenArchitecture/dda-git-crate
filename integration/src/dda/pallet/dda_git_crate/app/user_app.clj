@@ -18,18 +18,47 @@
     [schema.core :as s]
     [dda.cm.group :as group]
     [dda.config.commons.map-utils :as mu]
+    [dda.pallet.commons.secret :as secret]
+    [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-config-crate.infra :as config-crate]
+    [dda.pallet.dda-git-crate.infra :as infra]
     [dda.pallet.dda-git-crate.app :as app]
     [dda.pallet.dda-user-crate.app :as user]))
 
-(defn app-configuration [git-config user-config]
-  (mu/deep-merge
-    (user/app-configuration user-config :group-key :dda-git-group)
-    (app/app-configuration git-config :group-key :dda-git-group)))
+(def GitUserDomainConfig
+  {:git app/GitDomainConfig
+   :user user/UserDomainConfig})
 
-(s/defn ^:always-validate git-group-spec
-  [app-config]
-  (group/group-spec
-   app-config [(config-crate/with-config app-config)
-               user/with-user
-               app/with-git]))
+(def GitUserDomainConfigResolved
+  {:git app/GitDomainConfig
+   :user user/UserDomainConfigResolved})
+
+(s/defn ^:always-validate
+  app-configuration-resolved
+  [domain-config :- GitUserDomainConfigResolved]
+  (let [{:keys [git user]} domain-config]
+    (mu/deep-merge
+      (user/app-configuration user :group-key :dda-git-group)
+      (app/app-configuration git :group-key :dda-git-group))))
+
+(s/defn ^:always-validate
+  app-configuration
+  [domain-config :- GitUserDomainConfig]
+  (let [resolved-domain-config (secret/resolve-secrets domain-config GitUserDomainConfig)]
+    (apply app-configuration-resolved resolved-domain-config)))
+
+(s/defmethod ^:always-validate
+  core-app/group-spec infra/facility
+  [crate-app
+   domain-config :- GitUserDomainConfig]
+  (let [app-config (app-configuration domain-config)]
+    (group/group-spec
+     app-config [(config-crate/with-config app-config)
+                 user/with-user
+                 app/with-git])))
+
+(def crate-app (core-app/make-dda-crate-app
+                  :facility infra/facility
+                  :domain-schema GitUserDomainConfig
+                  :domain-schema-resolved GitUserDomainConfigResolved
+                  :default-domain-file "git.edn"))
