@@ -21,7 +21,7 @@
     [pallet.actions :as actions]
     [pallet.crate :as crate]
     [pallet.crate.git :as git]
-    [dda.pallet.core.dda-crate :as dda-crate]
+    [dda.pallet.core.infra :as core-infra]
     [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
@@ -39,9 +39,9 @@
 (def GitConfig
   git-schema/GitConfig)
 
-(s/defmethod dda-crate/dda-settings facility
-  [dda-crate config])
-                                        ;(package-fact/collect-packages-fact)
+(s/defmethod core-infra/dda-settings facility
+  [core-infra config])
+  ;(package-fact/collect-packages-fact)
 
 (s/defn configure-user
   "configure user setup"
@@ -64,23 +64,22 @@
             (git-repo/create-project-parent repo-parent)
             (git-repo/clone repo-element)))))))
 
-(s/defmethod dda-crate/dda-configure facility
-  [dda-crate config]
+(s/defmethod core-infra/dda-configure facility
+  [core-infra config]
   "dda-git: configure"
   (configure-user config))
 
-(s/defmethod dda-crate/dda-install facility
-  [dda-crate config]
+(s/defmethod core-infra/dda-install facility
+  [core-infra config]
   "dda-git: install routine"
   (git/install))
 
-(s/defmethod dda-crate/dda-test facility
-  [dda-crate partial-effective-config])
+(s/defmethod core-infra/dda-test facility
+  [core-infra partial-effective-config])
 
 (def dda-git-crate
-  (dda-crate/make-dda-crate
-   :facility facility
-   :version version))
+  (core-infra/make-dda-crate-infra
+   :facility facility))
 
 (def with-git
-  (dda-crate/create-server-spec dda-git-crate))
+  (core-infra/create-infra-plan dda-git-crate))

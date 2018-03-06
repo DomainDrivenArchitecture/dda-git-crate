@@ -1,0 +1,3 @@
+{:existing [{:node-name "test-git"
+             :node-ip "18.197.170.6"}]
+ :provisioning-user {:login "ubuntu"}}

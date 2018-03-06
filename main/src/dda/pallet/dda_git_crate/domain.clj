@@ -59,7 +59,8 @@
     "https://github.com/DomainDrivenArchitecture/dda-liferay-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
 
-(s/defn ^:always-validate infra-configuration :- InfraResult
+(s/defn ^:always-validate
+  infra-configuration :- InfraResult
   [domain-config :- GitDomainConfig]
   (let [{:keys [repo-groups repos]} domain-config]
     (if (contains? domain-config :repos)

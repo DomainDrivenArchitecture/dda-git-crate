@@ -18,19 +18,36 @@
     [schema.core :as s]
     [dda.cm.group :as group]
     [dda.config.commons.map-utils :as mu]
+    [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-config-crate.infra :as config-crate]
+    [dda.pallet.dda-git-crate.infra :as infra]
     [dda.pallet.dda-git-crate.app :as app]
-    [dda.pallet.dda-user-crate.app :as user]
-    [dda.pallet.dda-serverspec-crate.app :as test]))
+    [dda.pallet.dda-serverspec-crate.app :as serverspec]))
 
-(defn app-configuration [git-config test-config]
-  (mu/deep-merge
-   (app/app-configuration git-config)
-   (test/app-configuration test-config :group-key :dda-git-group)))
+(def GitServerspecDomainConfig
+  {:git app/GitDomainConfig
+   :serverspec serverspec/ServerSpecDomainConfig})
 
-(s/defn ^:always-validate git-group-spec
-  [app-config :- app/GitAppConfig]
-  (group/group-spec
-   app-config [(config-crate/with-config app-config)
-               test/with-serverspec
-               app/with-git]))
+(s/defn ^:always-validate
+  app-configuration
+  [domain-config :- GitServerspecDomainConfig]
+  (let [{:keys [git serverspec]} domain-config]
+    (mu/deep-merge
+     (app/app-configuration git)
+     (serverspec/app-configuration serverspec :group-key :dda-git-group))))
+
+(s/defmethod ^:always-validate
+  core-app/group-spec infra/facility
+  [crate-app
+   domain-config :- GitDomainConfig]
+  (let [app-config (app-configuration domain-config)]
+    (group/group-spec
+      app-config [(config-crate/with-config app-config)
+                  serverspec/with-serverspec
+                  with-git])))
+
+(def crate-app (core-app/make-dda-crate-app
+                  :facility infra/facility
+                  :domain-schema GitServerspecDomainConfig
+                  :domain-schema-resolved GitServerspecDomainConfig
+                  :default-domain-file "git.edn"))

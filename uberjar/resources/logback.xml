@@ -19,19 +19,20 @@
     </encoder>
   </appender>
 
-  <root level="DEBUG">
-    <appender-ref ref="CONSOLE" />
+  <logger name="clj-ssh.ssh" level="INFO">
     <appender-ref ref="PALLETFILE" />
-  </root>
+  </logger>
 
- <logger name="com.amazonaws" level="INFO"/>
- <logger name="pallet.algo" level="INFO"/>
- <logger name="jcloud" level="INFO" />
- <logger name="jclouds" level="INFO" />
- <logger name="clj-ssh.ssh" level="INFO" />
- <logger name="pallet.algo" level="WARN"/>
- <logger name="pallet.configure" level="INFO"/>
- <logger name="pallet.executors" level="INFO"/>
- <logger name="pallet.project" level="INFO"/>
+  <logger name="pallet" level="DEBUG">
+    <appender-ref ref="PALLETFILE" />
+  </logger>
+
+  <logger name="dda" level="DEBUG">
+    <appender-ref ref="PALLETFILE" />
+  </logger>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
 
 </configuration>
