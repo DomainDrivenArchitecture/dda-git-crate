@@ -20,9 +20,7 @@
    [pallet.api :as api]
    [pallet.actions :as actions]
    [pallet.crate :as crate]
-   [pallet.crate.git :as git]
-   [dda.pallet.core.dda-crate :as dda-crate]))
-
+   [pallet.crate.git :as git]))
 (def ServerTrust
   {(s/optional-key :pin-fqdn-or-ip) s/Str
    (s/optional-key :fingerprint) s/Str})
