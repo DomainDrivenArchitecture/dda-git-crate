@@ -16,7 +16,6 @@
 
 (ns dda.pallet.dda-git-crate.app.instantiate-aws
   (:require
-    [pallet.repl :as pr]
     [clojure.inspector :as inspector]
     [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-git-crate.app :as app]))
