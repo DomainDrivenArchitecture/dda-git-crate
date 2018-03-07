@@ -4,7 +4,7 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [dda/dda-pallet "2.0.0"]
+                 [dda/dda-pallet "2.0.1"]
                  [com.palletops/git-crate "0.8.0-alpha.2" :exclusions [org.clojure/clojure]]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
@@ -18,8 +18,8 @@
                    :resource-paths ["integration/resources"
                                     "test/resources"]
                    :dependencies
-                   [[dda/dda-serverspec-crate "0.4.0"]
-                    [dda/dda-user-crate "1.0.1"]
+                   [[dda/dda-serverspec-crate "1.0.1"]
+                    [dda/dda-user-crate "1.0.2"]
                     [org.clojure/test.check "0.10.0-alpha2"]
                     [org.domaindrivenarchitecture/pallet-aws "0.2.8.2"]
                     [com.palletops/pallet "0.8.12" :classifier "tests"]
