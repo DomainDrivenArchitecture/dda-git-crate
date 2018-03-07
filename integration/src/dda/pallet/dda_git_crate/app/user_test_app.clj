@@ -28,22 +28,22 @@
 
 (def GitServerspecUserDomainConfig
   {:git app/GitDomainConfig
-   :serverspec serverspec/ServerSpecDomainConfig
+   :serverspec serverspec/ServerspecDomainConfig
    :user user/UserDomainConfig})
 
 (def GitServerspecUserDomainConfigResolved
   {:git app/GitDomainConfig
-   :serverspec serverspec/ServerSpecDomainConfig
+   :serverspec serverspec/ServerspecDomainConfig
    :user user/UserDomainConfigResolved})
 
 (s/defn ^:always-validate
   app-configuration-resolved
   [domain-config :- GitServerspecUserDomainConfigResolved]
-  (let [{:keys [git user serverspec]} domain-config])
-  (mu/deep-merge
-    (user/app-configuration user :group-key :dda-git-group)
-    (app/app-configuration git :group-key :dda-git-group)
-    (serverspec/app-configuration serverspec :group-key :dda-git-group)))
+  (let [{:keys [git user serverspec]} domain-config]
+    (mu/deep-merge
+      (user/app-configuration user :group-key :dda-git-group)
+      (app/app-configuration git :group-key :dda-git-group)
+      (serverspec/app-configuration serverspec :group-key :dda-git-group))))
 
 (s/defn ^:always-validate
   app-configuration

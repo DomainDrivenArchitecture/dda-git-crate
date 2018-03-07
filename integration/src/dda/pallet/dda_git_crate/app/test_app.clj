@@ -26,7 +26,7 @@
 
 (def GitServerspecDomainConfig
   {:git app/GitDomainConfig
-   :serverspec serverspec/ServerSpecDomainConfig})
+   :serverspec serverspec/ServerspecDomainConfig})
 
 (s/defn ^:always-validate
   app-configuration
@@ -39,12 +39,12 @@
 (s/defmethod ^:always-validate
   core-app/group-spec infra/facility
   [crate-app
-   domain-config :- GitDomainConfig]
+   domain-config :- GitServerspecDomainConfig]
   (let [app-config (app-configuration domain-config)]
     (group/group-spec
       app-config [(config-crate/with-config app-config)
                   serverspec/with-serverspec
-                  with-git])))
+                  app/with-git])))
 
 (def crate-app (core-app/make-dda-crate-app
                   :facility infra/facility
