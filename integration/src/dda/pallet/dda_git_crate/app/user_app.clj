@@ -16,7 +16,6 @@
 (ns dda.pallet.dda-git-crate.app.user-app
   (:require
     [schema.core :as s]
-    [dda.cm.group :as group]
     [dda.config.commons.map-utils :as mu]
     [dda.pallet.commons.secret :as secret]
     [dda.pallet.core.app :as core-app]
@@ -52,7 +51,7 @@
   [crate-app
    domain-config :- GitUserDomainConfig]
   (let [app-config (app-configuration domain-config)]
-    (group/group-spec
+    (core-app/pallet-group-spec
      app-config [(config-crate/with-config app-config)
                  user/with-user
                  app/with-git])))

@@ -16,7 +16,6 @@
 (ns dda.pallet.dda-git-crate.app.test-app
   (:require
     [schema.core :as s]
-    [dda.cm.group :as group]
     [dda.config.commons.map-utils :as mu]
     [dda.pallet.core.app :as core-app]
     [dda.pallet.dda-config-crate.infra :as config-crate]
@@ -41,7 +40,7 @@
   [crate-app
    domain-config :- GitServerspecDomainConfig]
   (let [app-config (app-configuration domain-config)]
-    (group/group-spec
+    (core-app/pallet-group-spec
       app-config [(config-crate/with-config app-config)
                   serverspec/with-serverspec
                   app/with-git])))
