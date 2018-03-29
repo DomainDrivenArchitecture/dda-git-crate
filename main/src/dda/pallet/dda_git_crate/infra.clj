@@ -49,11 +49,11 @@
   (doseq [user (keys config)]
     (let [user-config (user config)
           user-name (name user)
-          {:keys [email repo trust]} user-config]
+          {:keys [config repo trust]} user-config]
       (pallet.action/with-action-options
         {:sudo-user user-name
          :script-env {:HOME (str "/home/" user-name "/")}}
-        (git-config/configure-user user-name email)
+        (git-config/configure-user user-name config)
         (doseq [trust-element trust]
           (when (contains? trust-element :pin-fqdn-or-ip)
             (server-trust/add-node-to-known-hosts (:pin-fqdn-or-ip trust-element)))

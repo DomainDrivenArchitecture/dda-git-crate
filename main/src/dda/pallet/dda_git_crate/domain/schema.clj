@@ -41,6 +41,8 @@
               "Either :repo-groups or :repos has to be present.")
      {:os-user s/Keyword
       :user-email s/Str
+      (s/optional-key :signing-key) s/Str
+      (s/optional-key :diff-tool) s/Str
       (s/optional-key :credentials) GitCredentials
       (s/optional-key :repo-groups) (hash-set (s/enum :dda-pallet))
       (s/optional-key :repos) {s/Keyword [s/Str]}}))

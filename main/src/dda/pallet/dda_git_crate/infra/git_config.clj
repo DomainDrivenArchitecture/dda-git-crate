@@ -16,13 +16,28 @@
 
 (ns dda.pallet.dda-git-crate.infra.git-config
   (:require
+   [schema.core :as s]
    [pallet.actions :as actions]))
 
-;todo: git config --global --add diff.tool meld
+(def UserGlobalConfig {:email s/Str
+                       (s/optional-key :signing-key) s/Str
+                       (s/optional-key :diff-tool) s/Str})
 
-(defn configure-user [user-name email]
-  (actions/exec-checked-script
-    "configures git globally for user"
-    ("git" "config" "--global" "push.default" "simple")
-    ("git" "config" "--global" "user.name" ~user-name)
-    ("git" "config" "--global" "user.email" ~email)))
+(s/defn
+  configure-user
+  [user-name :- s/Str
+   git-config :- UserGlobalConfig]
+  (let [{:keys [email signing-key diff-tool]} git-config]
+    (actions/exec-checked-script
+      "configures git globally for user: username & email"
+      ("git" "config" "--global" "push.default" "simple")
+      ("git" "config" "--global" "user.name" ~user-name)
+      ("git" "config" "--global" "user.email" ~email))
+    (when (contains? git-config :signing-key)
+      (actions/exec-checked-script
+        "configures git globally for user: signing-key"
+        ("git" "config" "--global" "user.signingkey" ~signing-key)))
+    (when (contains? git-config :diff-tool)
+      (actions/exec-checked-script
+        "configures git globally for user: diff-tool"
+        ("git" "config" "--global" "--add" "diff.tool" ~diff-tool)))))

@@ -1,5 +1,7 @@
 {:os-user :ubuntu
  :user-email "ubuntu@some-domain.org"
+ :signing-key "xxx"
+ :diff-tool "meld"
  :repos {:books
          ["https://github.com/DomainDrivenArchitecture/ddaArchitecture.git"]
          :password-store

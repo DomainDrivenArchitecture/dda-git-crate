@@ -30,9 +30,15 @@
 
 (defn- internal-infra-configuration
   [domain-config repos]
-  (let [{:keys [os-user user-email credentials]} domain-config]
+  (let [{:keys [os-user user-email signing-key diff-tool credentials]} domain-config]
     {infra/facility
-      {os-user {:email user-email
+      {os-user {:config
+                (merge
+                  {:email user-email}
+                  (when (contains? domain-config :signing-key)
+                    {:signing-key signing-key})
+                  (when (contains? domain-config :diff-tool)
+                    {:diff-tool diff-tool}))
                 :trust (repo/collect-trust (first (vals repos)))
                 :repo  (repo/collect-repo
                         credentials

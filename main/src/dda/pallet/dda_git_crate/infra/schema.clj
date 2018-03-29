@@ -15,12 +15,10 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.infra.schema
   (:require
-   [clojure.tools.logging :as logging]
    [schema.core :as s]
-   [pallet.api :as api]
-   [pallet.actions :as actions]
-   [pallet.crate :as crate]
-   [pallet.crate.git :as git]))
+   [dda.pallet.dda-git-crate.infra.git-config :as config]))
+
+
 (def ServerTrust
   {(s/optional-key :pin-fqdn-or-ip) s/Str
    (s/optional-key :fingerprint) s/Str})
@@ -30,10 +28,10 @@
    :local-dir s/Str})
 
 (def UserGitConfig
-  {:email s/Str
+  {:config config/UserGlobalConfig
    :trust [ServerTrust]
    :repo [GitRepository]})
 
 (def GitConfig
-  ;TODO: Docu, Keyword is user-name
-  {s/Keyword UserGitConfig})
+  {s/Keyword      ; Keyword is user-name
+   UserGitConfig})
