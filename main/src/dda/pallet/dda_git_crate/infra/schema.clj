@@ -25,10 +25,12 @@
 
 (def GitRepository repo/GitRepository)
 
+(def UserGlobalConfig config/UserGlobalConfig)
+
 (def UserGitConfig
-  {:config config/UserGlobalConfig
+  {:config UserGlobalConfig
    :trust [ServerTrust]
-   :repo [repo/GitRepository]})
+   :repo [GitRepository]})
 
 (def GitConfig
   {s/Keyword      ; Keyword is user-name
