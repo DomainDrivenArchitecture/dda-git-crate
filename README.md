@@ -42,7 +42,8 @@ Example content of file `targets.edn`:
 {:existing [{:node-name "test-vm1"            ; semantic name
              :node-ip "35.157.19.218"}]       ; the ip4 address of the machine to be provisioned
  :provisioning-user {:login "initial"         ; account used to provision
-                     :password "secure1234"}} ; optional password, if no ssh key is authorized
+                     :password
+                     {:plain "secure1234"}}} ; optional password, if no ssh key is authorized
 ```
 
 #### VM config example
