@@ -20,20 +20,46 @@
     [schema.core :as s]
     [pallet.actions :as actions]
     [pallet.crate.git :as git]
-    [dda.pallet.dda-git-crate.infra.schema :as git-schema]))
+    [selmer.parser :as selmer]
+    [dda.config.commons.user-home :as user-home]))
 
-(s/defn project-parent-path
-  [repo :- git-schema/GitRepository]
+(def GitRepository
+  {:repo s/Str
+   :local-dir s/Str
+   :settings (hash-set (s/enum :sync))})
+
+(s/defn
+  project-parent-path
+  [repo :- GitRepository]
   (let [{:keys [local-dir]} repo]
     (st/join "/" (drop-last (st/split local-dir #"/")))))
 
-(s/defn create-project-parent
+(s/defn
+  create-project-parent
   [path :- s/Str]
   (actions/directory path))
 
-(s/defn clone
-  [crate-repo :- git-schema/GitRepository]
+(s/defn
+  clone
+  [crate-repo :- GitRepository]
   (let [{:keys [local-dir repo]} crate-repo]
     (git/clone
       repo
       :checkout-dir local-dir)))
+
+(s/defn
+  configure-git-sync
+  "autosync git repositories"
+  [user :- s/Str
+   repo :- GitRepository]
+  (let [{:keys [local-dir settings]} repo]
+    (when (contains? settings :sync)
+      (actions/remote-file
+        (str "/etc/cron.d/90_" (user-home/flatten-user-home-path local-dir))
+        :literal true
+        :owner "root"
+        :group "root"
+        :mode "664"
+        :content (selmer/render-file
+                   "gitsync.templ" {:user-name user
+                                    :git-repo local-dir})))))

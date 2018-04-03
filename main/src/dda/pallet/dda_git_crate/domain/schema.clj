@@ -16,22 +16,12 @@
 
 (ns dda.pallet.dda-git-crate.domain.schema
   (:require
-   [schema.core :as s]))
+   [schema.core :as s]
+   [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
-(def GitRepository
-  {:user-credentials {(s/optional-key :user) s/Str
-                      (s/optional-key :password) s/Str}
-   :fqdn s/Str
-   (s/optional-key :ssh-port) s/Str
-   (s/optional-key :orga) s/Str
-   :repo s/Str
-   :local-dir s/Str
-   :transport-type (s/enum :ssh :https-public :https-private)
-   :server-type (s/enum :gitblit :github)})
+(def GitRepository repo/GitRepository)
 
-(def GitCredentials
-  {(s/enum :gitblit :github) {:user s/Str
-                              (s/optional-key :password) s/Str}})
+(def GitCredentials repo/GitCredentials)
 
 (def GitDomainConfig
   (s/both
@@ -45,4 +35,5 @@
       (s/optional-key :diff-tool) s/Str
       (s/optional-key :credentials) GitCredentials
       (s/optional-key :repo-groups) (hash-set (s/enum :dda-pallet))
-      (s/optional-key :repos) {s/Keyword [s/Str]}}))
+      (s/optional-key :repos) {s/Keyword [s/Str]}
+      (s/optional-key :synced-repos) {s/Keyword [s/Str]}}))

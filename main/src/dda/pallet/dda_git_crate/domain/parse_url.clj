@@ -8,7 +8,6 @@
    [pallet.actions :as actions]
    [pallet.api :as api]
    [schema.core :as s]
-   [dda.pallet.dda-git-crate.infra.schema :as schema]
    [dda.pallet.dda-git-crate.infra :as git-crate]))
 
 (defn- maybe

@@ -16,21 +16,19 @@
 (ns dda.pallet.dda-git-crate.infra.schema
   (:require
    [schema.core :as s]
-   [dda.pallet.dda-git-crate.infra.git-config :as config]))
-
+   [dda.pallet.dda-git-crate.infra.git-config :as config]
+   [dda.pallet.dda-git-crate.infra.git-repo :as repo]))
 
 (def ServerTrust
   {(s/optional-key :pin-fqdn-or-ip) s/Str
    (s/optional-key :fingerprint) s/Str})
 
-(def GitRepository
-  {:repo s/Str
-   :local-dir s/Str})
+(def GitRepository repo/GitRepository)
 
 (def UserGitConfig
   {:config config/UserGlobalConfig
    :trust [ServerTrust]
-   :repo [GitRepository]})
+   :repo [repo/GitRepository]})
 
 (def GitConfig
   {s/Keyword      ; Keyword is user-name

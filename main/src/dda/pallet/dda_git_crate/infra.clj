@@ -43,6 +43,16 @@
   [core-infra config])
   ;(package-fact/collect-packages-fact)
 
+(s/defn configure-system
+  "configure the system setup"
+  [config :- GitConfig]
+  (doseq [user (keys config)]
+    (let [user-config (user config)
+          user-name (name user)
+          {:keys [repo ]} user-config]
+      (doseq [repo-element repo]
+        (git-repo/configure-git-sync user-name repo-element)))))
+
 (s/defn configure-user
   "configure user setup"
   [config :- GitConfig]
@@ -67,6 +77,7 @@
 (s/defmethod core-infra/dda-configure facility
   [core-infra config]
   "dda-git: configure"
+  (configure-system config)
   (configure-user config))
 
 (s/defmethod core-infra/dda-install facility

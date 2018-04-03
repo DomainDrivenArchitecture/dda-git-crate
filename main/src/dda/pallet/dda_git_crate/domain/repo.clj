@@ -17,24 +17,37 @@
 (ns dda.pallet.dda-git-crate.domain.repo
   (:require
    [clojure.string :as string]
-   [clojure.walk :refer (keywordize-keys)]
-   [pallet.actions :as actions]
-   [pallet.api :as api]
    [schema.core :as s]
+   [pallet.actions :as actions]
    [dda.pallet.dda-git-crate.infra :as crate-schema]
-   [dda.pallet.dda-git-crate.domain.git-url :as git-url]
-   [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
    [dda.pallet.dda-git-crate.domain.parse-url :as pu]))
 
-(s/defn ^:private server-trust :- crate-schema/ServerTrust
+(def GitRepository
+  {:user-credentials {(s/optional-key :user) s/Str
+                      (s/optional-key :password) s/Str}
+   :fqdn s/Str
+   (s/optional-key :ssh-port) s/Str
+   (s/optional-key :orga) s/Str
+   :repo s/Str
+   :local-dir s/Str
+   :transport-type (s/enum :ssh :https-public :https-private)
+   :server-type (s/enum :gitblit :github)})
+
+(def GitCredentials
+  {(s/enum :gitblit :github) {:user s/Str
+                              (s/optional-key :password) s/Str}})
+
+(s/defn ^:private
+  server-trust :- crate-schema/ServerTrust
   [elem]
   (let [host (:host elem)]
     {:pin-fqdn-or-ip (first (string/split host #":"))}))
 
-(s/defn ^:private git-repository :- domain-schema/GitRepository
+(s/defn ^:private
+  git-repository :- GitRepository
   [local-root :- s/Str
    repo-group :- s/Keyword
-   credentials :- domain-schema/GitCredentials
+   credentials :- GitCredentials
    elem :- s/Any]
   (let [{:keys [host scheme path port user]} elem
         parsed-host (first (string/split host #":"))
@@ -74,34 +87,76 @@
      port-map
      credentials-map)))
 
-(s/defn crate-repo :- crate-schema/GitRepository
-  [domain-repo :- domain-schema/GitRepository]
-  {:repo (git-url/git-url domain-repo)
-   :local-dir (:local-dir domain-repo)})
+(s/defn
+  git-url :- s/Str
+  [repository :- GitRepository]
+  (let [{:keys [user-credentials fqdn ssh-port repo local-dir
+                transport-type server-type orga]} repository
+        cred (cond
+               (= :https-public transport-type) ""
+               (= :https-private transport-type) (str
+                                                   (:user user-credentials) ":"
+                                                   (:password user-credentials) "@")
+               (= :ssh transport-type) (str (:user user-credentials) "@"))
+        protocol (if (= :ssh transport-type)
+                   "ssh://" "https://")
+        base-path (cond
+                    (and
+                      (= :gitblit server-type)
+                      (not (= :ssh transport-type))) "/r"
+                    (and
+                      (= :github server-type)
+                      (= :ssh transport-type)) (str ":" orga)
+                    (and
+                      (= :github server-type)
+                      (not (= :ssh transport-type))) (str "/" orga)
+                    :default "")
+        server (if (and
+                     (= :ssh transport-type)
+                     (contains? repository :ssh-port))
+                 (str fqdn ":" ssh-port) fqdn)]
+    (str protocol cred server base-path "/" repo)))
 
-(s/defn collect-trust :- [crate-schema/ServerTrust]
+
+(s/defn
+  crate-repo :- crate-schema/GitRepository
+  [synced :- s/Bool
+   domain-repo :- GitRepository]
+  {:repo (git-url domain-repo)
+   :local-dir (:local-dir domain-repo)
+   :settings (if synced
+               #{:sync}
+               #{})})
+
+(s/defn
+  collect-trust :- [crate-schema/ServerTrust]
   [domain-repo-uris :- [s/Str]]
   (let [parsed-uris (map pu/string->url domain-repo-uris)]
     (distinct
       (map server-trust parsed-uris))))
 
-(s/defn collect-repo-group :- [crate-schema/GitRepository]
-  [credentials :- domain-schema/GitCredentials
+(s/defn
+  collect-repo-group :- [crate-schema/GitRepository]
+  [credentials :- GitCredentials
+   synced :- s/Bool
    local-root :- s/Str
    key :- s/Keyword
    repo-group :- [s/Str]]
   (let [parsed-uris (map pu/string->url repo-group)]
     (map
      #(crate-repo
+       synced
        (git-repository local-root key credentials %))
      parsed-uris)))
 
 
-(s/defn collect-repo :- [crate-schema/GitRepository]
-  [credentials :- domain-schema/GitCredentials
+(s/defn
+  collect-repo :- [crate-schema/GitRepository]
+  [credentials :- GitCredentials
+   synced :- s/Bool
    local-root :- s/Str
    domain-repo-uris :- {s/Keyword [s/Str]}]
   (flatten
     (map
-     #(collect-repo-group credentials local-root (key %) (val %))
+     #(collect-repo-group credentials synced local-root (key %) (val %))
      domain-repo-uris)))
