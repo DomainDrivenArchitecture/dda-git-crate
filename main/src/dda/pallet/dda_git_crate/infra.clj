@@ -60,8 +60,7 @@
           user-name (name user)
           {:keys [config repo trust]} user-config]
       (pallet.action/with-action-options
-        {:sudo-user user-name
-         :script-env {:HOME (str "/home/" user-name "/")}}
+        {:sudo-user user-name}
         (git-config/configure-user user-name config)
         (doseq [trust-element trust]
           (when (contains? trust-element :pin-fqdn-or-ip)
@@ -82,7 +81,7 @@
 (s/defmethod core-infra/dda-install facility
   [core-infra config]
   "dda-git: install routine"
-  (actions/packages ["git-core" "git-email"]))
+  (actions/packages :aptitude ["git-core" "git-email"]))
 
 (s/defmethod core-infra/dda-test facility
   [core-infra partial-effective-config])
