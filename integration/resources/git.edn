@@ -1,4 +1,4 @@
-{:os-user :ubuntu
+{:os-user :root
  :user-email "ubuntu@some-domain.org"
  :signing-key "xxx"
  :diff-tool "meld"
