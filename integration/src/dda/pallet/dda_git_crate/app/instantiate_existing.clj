@@ -20,7 +20,7 @@
     [dda.pallet.dda-git-crate.app :as app]))
 
 (defn install
-  [count & options]
+  [& options]
   (let [{:keys [domain targets summarize-session]
          :or {domain "integration/resources/git.edn"
               targets "integration/resources/existing-targets.edn"
