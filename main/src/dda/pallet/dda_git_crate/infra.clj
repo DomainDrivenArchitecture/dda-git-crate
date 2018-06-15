@@ -20,7 +20,6 @@
     [pallet.api :as api]
     [pallet.actions :as actions]
     [pallet.crate :as crate]
-    [pallet.crate.git :as git]
     [dda.pallet.core.infra :as core-infra]
     [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
@@ -83,7 +82,7 @@
 (s/defmethod core-infra/dda-install facility
   [core-infra config]
   "dda-git: install routine"
-  (git/install))
+  (actions/packages ["git-core" "git-email"]))
 
 (s/defmethod core-infra/dda-test facility
   [core-infra partial-effective-config])

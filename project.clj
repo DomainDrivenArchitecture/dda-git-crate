@@ -1,11 +1,9 @@
-(defproject dda/dda-git-crate "1.1.1"
+(defproject dda/dda-git-crate "1.1.2-SNAPSHOT"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[dda/dda-pallet "2.2.0"]
-                 [com.palletops/git-crate "0.8.0-alpha.2"
-                  :exclusions [org.clojure/clojure]]]
+  :dependencies [[dda/dda-pallet "2.2.0"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
@@ -18,8 +16,8 @@
                    :resource-paths ["integration/resources"
                                     "test/resources"]
                    :dependencies
-                   [[dda/dda-serverspec-crate "1.0.4-SNAPSHOT"]
-                    [dda/dda-user-crate "1.0.3-SNAPSHOT"]
+                   [[dda/dda-serverspec-crate "1.1.0"]
+                    [dda/dda-user-crate "1.0.5"]
                     [org.clojure/test.check "0.10.0-alpha2"]
                     [org.domaindrivenarchitecture/pallet-aws "0.2.8.2"
                      :exclusions [com.palletops/pallet]]
@@ -39,7 +37,7 @@
                        :resource-paths ["uberjar/resources"]
                        :aot :all
                        :main dda.pallet.dda-git-crate.main
-                       :dependencies [[org.clojure/tools.cli "0.3.5"]
+                       :dependencies [[org.clojure/tools.cli "0.3.7"]
                                       [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                                       [org.slf4j/jcl-over-slf4j "1.8.0-beta2"]]}}
   :release-tasks [["vcs" "assert-committed"]

@@ -19,7 +19,7 @@
     [clojure.string :as st]
     [schema.core :as s]
     [pallet.actions :as actions]
-    [pallet.crate.git :as git]
+    [pallet.crate :as crate]
     [selmer.parser :as selmer]
     [dda.config.commons.user-home :as user-home]))
 
@@ -39,11 +39,28 @@
   [path :- s/Str]
   (actions/directory path))
 
+(defn repo-name [repo-uri]
+  "Find a repository name from a repo uri string"
+  (-> (st/split repo-uri #"/") last (st/replace #"\.git$" "")))
+
+(crate/defplan clone
+  "Clone a repository from `repo-uri`, a uri string.
+By default the `:checkout-dir` option is found from the `repo-uri`.
+`:args` can be used to pass a sequence of arbitrary arguments to the
+clone command."
+  [repo-uri & {:keys [checkout-dir args]
+               :or {checkout-dir (repo-name repo-uri)}
+               :as options}]
+  (actions/exec-checked-script
+   (str "Clone " repo-uri " into " checkout-dir)
+   (if (not (file-exists? ~(str checkout-dir "/.git/config")))
+     ("git" clone ~@(or (seq args) [""]) ~repo-uri ~checkout-dir))))
+
 (s/defn
   clone
   [crate-repo :- GitRepository]
   (let [{:keys [local-dir repo]} crate-repo]
-    (git/clone
+    (clone
       repo
       :checkout-dir local-dir)))
 
