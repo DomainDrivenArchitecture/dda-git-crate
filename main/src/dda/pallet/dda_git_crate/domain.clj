@@ -59,7 +59,6 @@
                          (if (contains? domain-config :repos)
                            repos
                            []))]
-    (println unsynced-repos)
     {infra/facility
       {os-user {:config
                 (merge
