@@ -36,8 +36,8 @@
 
 (s/defn
   create-project-parent
-  [path :- s/Str]
-  (actions/directory path))
+  [user-name path :- s/Str]
+  (actions/directory path :owner user-name :group user-name))
 
 (defn repo-name [repo-uri]
   "Find a repository name from a repo uri string"
@@ -45,12 +45,12 @@
 
 (s/defn
   clone
-  [crate-repo :- GitRepository]
+  [user-name crate-repo :- GitRepository]
   (let [{:keys [local-dir repo]} crate-repo]
     (actions/exec-checked-script
      (str "Clone " repo " into " local-dir)
      (if (not (file-exists? ~(str local-dir "/.git/config")))
-       ("git" clone ~repo ~local-dir)))))
+       ("su" ~user-name "-c" "\"git" "clone" ~repo ~local-dir "\"")))))
 
 (s/defn
   configure-git-sync

@@ -19,14 +19,14 @@
 
 (defn add-fingerprint-to-known-hosts
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [fingerprint]
+  [user-name fingerprint]
   (actions/exec-checked-script
     "add fingerprint to known_hosts"
-    ("echo" ~fingerprint ">>" "~/.ssh/known_hosts")))
+    ("su" ~user-name "-c" "\"echo " ~fingerprint " >> ~/.ssh/known_hosts\"")))
 
 (defn add-node-to-known-hosts
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [fqdn-or-ip & {:keys [port] :or {port 22}}]
+  [user-name fqdn-or-ip & {:keys [port] :or {port 22}}]
   (actions/exec-checked-script
     "add delivered key to known_hosts"
-    ("ssh-keyscan" "-p" ~port "-H" ~fqdn-or-ip ">>" "~/.ssh/known_hosts")))
+    ("su" ~user-name "-c" "\"ssh-keyscan -p " ~port "-H" ~fqdn-or-ip ">> ~/.ssh/known_hosts\"")))

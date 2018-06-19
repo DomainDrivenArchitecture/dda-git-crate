@@ -60,17 +60,17 @@
           user-name (name user)
           {:keys [config repo trust]} user-config]
       (pallet.action/with-action-options
-        {:sudo-user user-name}
+        {:sudo-user "root"}
         (git-config/configure-user user-name config)
         (doseq [trust-element trust]
           (when (contains? trust-element :pin-fqdn-or-ip)
-            (server-trust/add-node-to-known-hosts (:pin-fqdn-or-ip trust-element)))
+            (server-trust/add-node-to-known-hosts user-name (:pin-fqdn-or-ip trust-element)))
           (when (contains? trust-element :fingerprint)
-            (server-trust/add-fingerprint-to-known-hosts (:fingerprint trust-element))))
+            (server-trust/add-fingerprint-to-known-hosts user-name (:fingerprint trust-element))))
         (doseq [repo-element repo]
           (let [repo-parent (git-repo/project-parent-path repo-element)]
-            (git-repo/create-project-parent repo-parent)
-            (git-repo/clone repo-element)))))))
+            (git-repo/create-project-parent user-name repo-parent)
+            (git-repo/clone user-name repo-element)))))))
 
 (s/defmethod core-infra/dda-configure facility
   [core-infra config]

@@ -29,15 +29,15 @@
    git-config :- UserGlobalConfig]
   (let [{:keys [email signing-key diff-tool]} git-config]
     (actions/exec-checked-script
-      "configures git globally for user: username & email"
-      ("git" "config" "--global" "push.default" "simple")
-      ("git" "config" "--global" "user.name" ~user-name)
-      ("git" "config" "--global" "user.email" ~email))
+      (str "configures git globally for user:" user-name " & " email)
+      ("su" ~user-name "-c" "\"git config --global push.default simple\"")
+      ("su" ~user-name "-c" "\"git config --global user.name" ~user-name "\"")
+      ("su" ~user-name "-c" "\"git config --global user.email" ~email "\""))
     (when (contains? git-config :signing-key)
       (actions/exec-checked-script
-        "configures git globally for user: signing-key"
-        ("git" "config" "--global" "user.signingkey" ~signing-key)))
+        (str "configures git globally for user: " signing-key)
+        ("su" ~user-name "-c" "\"git config --global user.signingkey" ~signing-key "\"")))
     (when (contains? git-config :diff-tool)
       (actions/exec-checked-script
-        "configures git globally for user: diff-tool"
-        ("git" "config" "--global" "--add" "diff.tool" ~diff-tool)))))
+        (str "configures git globally for user: "diff-tool)
+        ("su" ~user-name "-c" "\"git config --global --add diff.tool" ~diff-tool "\"")))))
