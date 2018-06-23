@@ -9,7 +9,7 @@
 dda-pallet is compatible to the following versions
  * pallet 0.9
  * clojure 1.9
- * (x)ubuntu 16.04
+ * (x)ubuntu 18.04
 
 ## Features
  This crate can clone & manage git repositories in name of defined users on target systems. Features are:
@@ -135,10 +135,18 @@ The "targets.edn" uses this schema.
                        (s/optional-key :signing-key) s/Str
                        (s/optional-key :diff-tool) s/Str})
 
+
 (def UserGitConfig
   {:config UserGlobalConfig
    :trust [ServerTrust]
    :repo [GitRepository]})
+
+(def PinElement
+ {:host s/Str :port s/Num})
+
+ (def ServerTrust
+   {(s/optional-key :pin-fqdn-or-ip) PinElement
+    (s/optional-key :fingerprint) s/Str})
 
 (def GitConfig
   {s/Keyword      ; Keyword is user-name

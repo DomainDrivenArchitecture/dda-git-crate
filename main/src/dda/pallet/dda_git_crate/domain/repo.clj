@@ -40,8 +40,12 @@
 (s/defn ^:private
   server-trust :- crate-schema/ServerTrust
   [elem]
-  (let [host (:host elem)]
-    {:pin-fqdn-or-ip (first (string/split host #":"))}))
+  (let [{:keys [host port scheme]} elem
+        resolved-port (if (some? port)
+                          port
+                          (cond (= scheme "ssh") 22
+                                (= scheme "https") 443))]
+    {:pin-fqdn-or-ip {:host (first (string/split host #":")) :port resolved-port}}))
 
 (s/defn ^:private
   git-repository :- GitRepository

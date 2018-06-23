@@ -64,9 +64,11 @@
         (git-config/configure-user user-name config)
         (doseq [trust-element trust]
           (when (contains? trust-element :pin-fqdn-or-ip)
-            (server-trust/add-node-to-known-hosts user-name (:pin-fqdn-or-ip trust-element)))
+            (server-trust/pin-fqdn-or-ip
+              user-name (:pin-fqdn-or-ip trust-element)))
           (when (contains? trust-element :fingerprint)
-            (server-trust/add-fingerprint-to-known-hosts user-name (:fingerprint trust-element))))
+            (server-trust/add-fingerprint-to-known-hosts
+              user-name (:fingerprint trust-element))))
         (doseq [repo-element repo]
           (let [repo-parent (git-repo/project-parent-path repo-element)]
             (git-repo/create-project-parent user-name repo-parent)

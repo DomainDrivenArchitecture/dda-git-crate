@@ -16,11 +16,12 @@
 (ns dda.pallet.dda-git-crate.infra.schema
   (:require
    [schema.core :as s]
+   [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]
    [dda.pallet.dda-git-crate.infra.git-config :as config]
    [dda.pallet.dda-git-crate.infra.git-repo :as repo]))
 
 (def ServerTrust
-  {(s/optional-key :pin-fqdn-or-ip) s/Str
+  {(s/optional-key :pin-fqdn-or-ip) server-trust/PinElement
    (s/optional-key :fingerprint) s/Str})
 
 (def GitRepository repo/GitRepository)

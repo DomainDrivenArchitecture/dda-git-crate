@@ -15,7 +15,11 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.infra.server-trust
   (:require
+    [schema.core :as s]
     [pallet.actions :as actions]))
+
+(def PinElement
+  {:host s/Str :port s/Num})
 
 (defn add-fingerprint-to-known-hosts
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
@@ -24,9 +28,12 @@
     "add fingerprint to known_hosts"
     ("su" ~user-name "-c" "\"echo " ~fingerprint " >> ~/.ssh/known_hosts\"")))
 
-(defn add-node-to-known-hosts
+(s/defn
+  pin-fqdn-or-ip
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [user-name fqdn-or-ip & {:keys [port] :or {port 22}}]
-  (actions/exec-checked-script
-    "add delivered key to known_hosts"
-    ("su" ~user-name "-c" "\"ssh-keyscan -p " ~port "-H" ~fqdn-or-ip ">> ~/.ssh/known_hosts\"")))
+  [user-name
+   pin-element :- PinElement]
+  (let [{:keys [host port]} pin-element]
+    (actions/exec-checked-script
+      "add delivered key to known_hosts"
+      ("su" ~user-name "-c" "\"ssh-keyscan -p " ~port "-H" ~host ">> ~/.ssh/known_hosts\""))))

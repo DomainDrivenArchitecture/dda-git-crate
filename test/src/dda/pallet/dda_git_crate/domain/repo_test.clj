@@ -37,8 +37,11 @@
   (testing
     "test plan-def"
       (is (=
-           [{:pin-fqdn-or-ip "fqdn"}
-            {:pin-fqdn-or-ip "github.com"}]
+           '(
+             {:pin-fqdn-or-ip {:host "fqdn" :port 29418}}
+             {:pin-fqdn-or-ip {:host "fqdn" :port 443}}
+             {:pin-fqdn-or-ip {:host "github.com" :port 443}}
+             {:pin-fqdn-or-ip {:host "github.com" :port 22}})
            (sut/collect-trust domain-repos)))))
 
 (deftest collect-repo-test
