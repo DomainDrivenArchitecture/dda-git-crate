@@ -29,7 +29,9 @@
   :user-email "jem@domain"
   :repos {:dda-pallet
           ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
-           "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"]}})
+           "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"]
+          :else
+          ["ssh://user@fqdn:29418/repo1.git"]}})
 
 (def git-config-3
   {:os-user :jem

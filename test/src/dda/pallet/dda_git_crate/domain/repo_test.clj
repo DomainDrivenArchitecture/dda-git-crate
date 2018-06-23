@@ -27,7 +27,11 @@
 
 (def repo-credentials {:gitblit {:user "user" :password "pass"}})
 
-(def domain-repos [gitblit-ssh gitblit-private-https github-public-https github-ssh gitblit-public-https])
+(def domain-repos
+     [gitblit-ssh
+      gitblit-private-https
+      github-public-https
+      github-ssh gitblit-public-https])
 
 (deftest collect-trust-test
   (testing

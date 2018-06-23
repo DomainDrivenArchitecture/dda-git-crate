@@ -67,7 +67,9 @@
                     {:signing-key signing-key})
                   (when (contains? domain-config :diff-tool)
                     {:diff-tool diff-tool}))
-                :trust (repo/collect-trust (first (vals repos)))
+                :trust (into
+                         (repo/collect-trust (flatten (vals unsynced-repos)))
+                         (repo/collect-trust (flatten (vals synced-repos))))
                 :repo  (into
                          (repo/collect-repo
                            credentials
