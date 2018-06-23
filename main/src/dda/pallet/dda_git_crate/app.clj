@@ -17,6 +17,7 @@
 (ns dda.pallet.dda-git-crate.app
   (:require
    [schema.core :as s]
+   [dda.pallet.commons.secret :as secret]
    [dda.pallet.core.app :as core-app]
    [dda.pallet.dda-config-crate.infra :as config-crate]
    [dda.pallet.dda-git-crate.infra :as infra]
@@ -28,20 +29,29 @@
 
 (def GitDomainConfig domain/GitDomainConfig)
 
+(def GitDomainConfigResolved (secret/create-resolved-schema GitDomainConfig))
+
 (def GitAppConfig
   {:group-specific-config {s/Keyword InfraResult}})
 
 (s/defn ^:always-validate
-  app-configuration :- GitAppConfig
-  [domain-config :- GitDomainConfig
+  app-configuration-resolved :- GitAppConfig
+  [domain-config :- GitDomainConfigResolved
    & options]
   (let [{:keys [group-key] :or {group-key infra/facility}} options]
     {:group-specific-config {group-key (domain/infra-configuration domain-config)}}))
 
+(s/defn ^:always-validate
+  app-configuration :- GitDomainConfig
+  [domain-config :- GitAppConfig
+   & options]
+  (let [resolved-domain-config (secret/resolve-secrets domain-config GitDomainConfig)]
+    (apply app-configuration-resolved resolved-domain-config options)))
+
 (s/defmethod ^:always-validate
   core-app/group-spec infra/facility
   [crate-app
-   domain-config :- GitDomainConfig]
+   domain-config :- GitDomainConfigResolved]
   (let [app-config (app-configuration domain-config)]
     (core-app/pallet-group-spec
       app-config [(config-crate/with-config app-config)
@@ -50,5 +60,5 @@
 (def crate-app (core-app/make-dda-crate-app
                   :facility infra/facility
                   :domain-schema GitDomainConfig
-                  :domain-schema-resolved GitDomainConfig
+                  :domain-schema-resolved GitDomainConfigResolved
                   :default-domain-file "git.edn"))

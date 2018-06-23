@@ -19,6 +19,7 @@
    [clojure.string :as string]
    [schema.core :as s]
    [pallet.actions :as actions]
+   [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as crate-schema]
    [dda.pallet.dda-git-crate.domain.parse-url :as pu]))
 
@@ -35,7 +36,9 @@
 
 (def GitCredentials
   {(s/enum :gitblit :github) {:user s/Str
-                              (s/optional-key :password) s/Str}})
+                              (s/optional-key :password) secret/Secret}})
+
+(def GitCredentialsResolved (secret/create-resolved-schema GitCredentials))
 
 (s/defn ^:private
   server-trust :- crate-schema/ServerTrust
@@ -51,7 +54,7 @@
   git-repository :- GitRepository
   [local-root :- s/Str
    repo-group :- s/Keyword
-   credentials :- GitCredentials
+   credentials :- GitCredentialsResolved
    elem :- s/Any]
   (let [{:keys [host scheme path port user]} elem
         parsed-host (first (string/split host #":"))
@@ -141,7 +144,7 @@
 
 (s/defn
   collect-repo-group :- [crate-schema/GitRepository]
-  [credentials :- GitCredentials
+  [credentials :- GitCredentialsResolved
    synced :- s/Bool
    local-root :- s/Str
    key :- s/Keyword
@@ -156,7 +159,7 @@
 
 (s/defn
   collect-repo :- [crate-schema/GitRepository]
-  [credentials :- GitCredentials
+  [credentials :- GitCredentialsResolved
    synced :- s/Bool
    local-root :- s/Str
    domain-repo-uris :- {s/Keyword [s/Str]}]

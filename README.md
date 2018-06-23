@@ -103,7 +103,7 @@ The "targets.edn" uses this schema.
 
 (def GitCredentials
   {(s/enum :gitblit :github) {:user s/Str
-                              (s/optional-key :password) s/Str}})
+                              (s/optional-key :password) secret/Secret}})
 (def GitDomainConfig
   (s/both
      (s/pred #(or
