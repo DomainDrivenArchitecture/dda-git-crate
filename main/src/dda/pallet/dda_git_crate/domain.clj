@@ -45,7 +45,7 @@
     "https://github.com/DomainDrivenArchitecture/dda-mariadb-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-serverspec-crate.git"
     "https://github.com/DomainDrivenArchitecture/dda-tomcat-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-pallet-masterbuild.git"]})
+    "https://github.com/DomainDrivenArchitecture/dda-cloudspec.git"]})
 
 (defn- internal-infra-configuration
   [domain-config]
