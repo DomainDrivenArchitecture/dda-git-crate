@@ -1,3 +1,4 @@
 {:existing [{:node-name "test-git"
-             :node-ip "159.69.38.22"}]
- :provisioning-user {:login "root"}}
+             :node-ip "192.168.56.104"}]
+ :provisioning-user {:login "initial"
+                     :password {:plain "test1234"}}}

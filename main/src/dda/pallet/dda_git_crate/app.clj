@@ -42,8 +42,8 @@
     {:group-specific-config {group-key (domain/infra-configuration domain-config)}}))
 
 (s/defn ^:always-validate
-  app-configuration :- GitDomainConfig
-  [domain-config :- GitAppConfig
+  app-configuration :- GitAppConfig
+  [domain-config :- GitDomainConfig
    & options]
   (let [resolved-domain-config (secret/resolve-secrets domain-config GitDomainConfig)]
     (apply app-configuration-resolved resolved-domain-config options)))
