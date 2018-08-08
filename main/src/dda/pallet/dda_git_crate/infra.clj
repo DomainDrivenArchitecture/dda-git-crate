@@ -29,14 +29,19 @@
 (def facility :dda-git)
 (def version  [0 1 0])
 
-(def ServerTrust
-  git-schema/ServerTrust)
+(def ServerTrust server-trust/ServerTrust)
 
 (def GitRepository
   git-schema/GitRepository)
 
+(def UserGitConfig
+  {:config git-schema/UserGlobalConfig
+   :trust [server-trust/ServerTrust]
+   :repo [GitRepository]})
+
 (def GitConfig
-  git-schema/GitConfig)
+  {s/Keyword      ; Keyword is user-name
+   UserGitConfig})
 
 (s/defmethod core-infra/dda-settings facility
   [core-infra config])
@@ -62,13 +67,7 @@
       (pallet.action/with-action-options
         {:sudo-user "root"}
         (git-config/configure-user user-name config)
-        (doseq [trust-element trust]
-          (when (contains? trust-element :pin-fqdn-or-ip)
-            (server-trust/pin-fqdn-or-ip
-              user-name (:pin-fqdn-or-ip trust-element)))
-          (when (contains? trust-element :fingerprint)
-            (server-trust/add-fingerprint-to-known-hosts
-              user-name (:fingerprint trust-element))))
+        (server-trust/configure-user facility user-name trust)
         (doseq [repo-element repo]
           (let [repo-parent (git-repo/project-parent-path repo-element)]
             (git-repo/create-project-parent user-name repo-parent)

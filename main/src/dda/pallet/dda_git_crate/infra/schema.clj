@@ -20,19 +20,8 @@
    [dda.pallet.dda-git-crate.infra.git-config :as config]
    [dda.pallet.dda-git-crate.infra.git-repo :as repo]))
 
-(def ServerTrust
-  {(s/optional-key :pin-fqdn-or-ip) server-trust/PinElement
-   (s/optional-key :fingerprint) s/Str})
+(def ServerTrust server-trust/ServerTrust)
 
 (def GitRepository repo/GitRepository)
 
 (def UserGlobalConfig config/UserGlobalConfig)
-
-(def UserGitConfig
-  {:config UserGlobalConfig
-   :trust [ServerTrust]
-   :repo [GitRepository]})
-
-(def GitConfig
-  {s/Keyword      ; Keyword is user-name
-   UserGitConfig})

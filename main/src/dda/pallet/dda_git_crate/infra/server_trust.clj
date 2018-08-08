@@ -15,25 +15,53 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.infra.server-trust
   (:require
+    [clojure.tools.logging :as logging]
     [schema.core :as s]
-    [pallet.actions :as actions]))
+    [pallet.actions :as actions]
+    [dda.config.commons.user-home :as user-home]))
 
 (def PinElement
   {:host s/Str :port s/Num})
 
-(defn add-fingerprint-to-known-hosts
+(def ServerTrust
+  {(s/optional-key :pin-fqdn-or-ip) PinElement
+   (s/optional-key :fingerprint) s/Str})
+
+(s/defn
+  add-fingerprint-to-known-hosts
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [user-name fingerprint]
+  [facility :- s/Keyword
+   user-name  :- s/Str
+   fingerprint]
+  (actions/as-action
+    (logging/info (str facility "-configure user: add-fingerprint-to-known-hosts")))
   (actions/exec-checked-script
     "add fingerprint to known_hosts"
     ("su" ~user-name "-c" "\"echo " ~fingerprint " >> ~/.ssh/known_hosts\"")))
 
 (s/defn
-  pin-fqdn-or-ip
+  add-pinned-fqdn-or-ip
   "add a node qualified by ip or fqdn to the users ~/.ssh/known_hosts file."
-  [user-name
+  [facility :- s/Keyword
+   user-name :- s/Str
    pin-element :- PinElement]
   (let [{:keys [host port]} pin-element]
+    (actions/as-action
+      (logging/info (str facility "-configure user: add-pinned-fqdn-or-ip")))
     (actions/exec-checked-script
       "add delivered key to known_hosts"
       ("su" ~user-name "-c" "\"ssh-keyscan -p " ~port "-H" ~host ">> ~/.ssh/known_hosts\""))))
+
+(s/defn configure-user
+  [facility :- s/Keyword
+   user-name :- s/Str
+   trusts :- [ServerTrust]]
+  (doseq [trust-element trusts]
+    (let [{:keys [pin-fqdn-or-ip fingerprint]} trust-element]
+      (actions/directory
+        (str (user-home/user-home-dir user-name) "/.ssh")
+        :owner user-name :group user-name)
+      (when (contains? trust-element :pin-fqdn-or-ip)
+        (add-pinned-fqdn-or-ip facility user-name pin-fqdn-or-ip))
+      (when (contains? trust-element :fingerprint)
+        (add-fingerprint-to-known-hosts facility user-name fingerprint)))))
