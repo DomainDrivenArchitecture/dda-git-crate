@@ -29,7 +29,7 @@
                    :leiningen/reply
                    {:dependencies [[org.slf4j/jcl-over-slf4j "1.8.0-beta0"]]
                     :exclusions [commons-logging]}
-                   :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-aws}}
+                   :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-existing}}
              :test {:test-paths ["test/src"]
                     :resource-paths ["test/resources"]
                     :dependencies [[dda/pallet "0.9.0" :classifier "tests"]]}
