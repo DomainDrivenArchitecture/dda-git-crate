@@ -27,12 +27,11 @@
     [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))
 
 (def facility :dda-git)
-(def version  [0 1 0])
 
 (def ServerTrust server-trust/ServerTrust)
 
 (def GitRepository
-  git-schema/GitRepository)
+  git-repo/GitRepository)
 
 (def UserGitConfig
   {:config git-schema/UserGlobalConfig
@@ -47,16 +46,6 @@
   [core-infra config])
   ;(package-fact/collect-packages-fact)
 
-(s/defn configure-system
-  "configure the system setup"
-  [config :- GitConfig]
-  (doseq [user (keys config)]
-    (let [user-config (user config)
-          user-name (name user)
-          {:keys [repo ]} user-config]
-      (doseq [repo-element repo]
-        (git-repo/configure-git-sync user-name repo-element)))))
-
 (s/defn configure-user
   "configure user setup"
   [config :- GitConfig]
@@ -68,15 +57,11 @@
         {:sudo-user "root"}
         (git-config/configure-user user-name config)
         (server-trust/configure-user facility user-name trust)
-        (doseq [repo-element repo]
-          (let [repo-parent (git-repo/project-parent-path repo-element)]
-            (git-repo/create-project-parent user-name repo-parent)
-            (git-repo/clone user-name repo-element)))))))
+        (git-repo/configure-user facility user-name repo)))))
 
 (s/defmethod core-infra/dda-configure facility
   [core-infra config]
   "dda-git: configure"
-  (configure-system config)
   (configure-user config))
 
 (s/defmethod core-infra/dda-install facility

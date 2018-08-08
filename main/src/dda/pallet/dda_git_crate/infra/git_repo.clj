@@ -36,8 +36,16 @@
 
 (s/defn
   create-project-parent
-  [user-name path :- s/Str]
-  (actions/directory path :owner user-name :group user-name))
+  [facility :- s/Keyword
+   user-name :- s/Str
+   path :- s/Str]
+  (actions/as-action
+    (logging/info (str facility "-configure user: create-project-parent")))
+  (actions/as-action
+    (logging/info (str path " " user-name)))
+  (actions/exec-checked-script
+    "create repo parrent folders"
+    ("su" ~user-name "-c" "\"mkdir" "-p" ~path "\"")))
 
 (defn repo-name [repo-uri]
   "Find a repository name from a repo uri string"
@@ -45,8 +53,12 @@
 
 (s/defn
   clone
-  [user-name crate-repo :- GitRepository]
+  [facility :- s/Keyword
+   user-name :- s/Str
+   crate-repo :- GitRepository]
   (let [{:keys [local-dir repo]} crate-repo]
+    (actions/as-action
+      (logging/info (str facility "-configure user: clone")))
     (actions/exec-checked-script
      (str "Clone " repo " into " local-dir)
      (if (not (file-exists? ~(str local-dir "/.git/config")))
@@ -55,10 +67,13 @@
 (s/defn
   configure-git-sync
   "autosync git repositories"
-  [user :- s/Str
+  [facility :- s/Keyword
+   user-name :- s/Str
    repo :- GitRepository]
   (let [{:keys [local-dir settings]} repo]
     (when (contains? settings :sync)
+      (actions/as-action
+        (logging/info (str facility "-configure user: configure-git-sync")))
       (actions/remote-file
         (str "/etc/cron.d/90_" (user-home/flatten-user-home-path local-dir))
         :literal true
@@ -66,5 +81,17 @@
         :group "root"
         :mode "664"
         :content (selmer/render-file
-                   "gitsync.templ" {:user-name user
+                   "gitsync.templ" {:user-name user-name
                                     :git-repo local-dir})))))
+
+
+(s/defn configure-user
+  "configure user setup"
+  [facility :- s/Keyword
+   user-name :- s/Str
+   repo :- [GitRepository]]
+  (doseq [repo-element repo]
+    (let [repo-parent (project-parent-path repo-element)]
+      (create-project-parent facility user-name repo-parent)
+      (clone facility user-name repo-element)
+      (configure-git-sync facility user-name repo-element))))
