@@ -154,5 +154,5 @@ The "targets.edn" uses this schema.
 ```
 
 ## License
-Copyright © 2015 meissa GmbH
+Copyright © 2015-2018 meissa GmbH
 Licensed under the Apache License, Version 2.0 (the "License");
