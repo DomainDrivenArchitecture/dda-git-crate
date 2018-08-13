@@ -19,6 +19,7 @@
    [schema.core :as s]
    [dda.config.commons.map-utils :as map-utils]
    [dda.config.commons.user-home :as user-home]
+   [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
@@ -38,75 +39,56 @@
     (s/optional-key :user-name) secret/Secret   ;needed for none-public access
     (s/optional-key :password) secret/Secret}]) ;needed for none-public & none-key access
 
+(def GitConfig
+  {:user-email s/Str
+   (s/optional-key :signing-key) s/Str
+   (s/optional-key :diff-tool) s/Str
+   (s/optional-key :credentials) GitCredentials
+   (s/optional-key :repos) {s/Keyword [s/Str]}
+   (s/optional-key :synced-repos) {s/Keyword [s/Str]}})
+
 (def GitDomainConfig
   {s/Keyword                 ;represents the user-name
-   {:user-email s/Str
-    (s/optional-key :signing-key) s/Str
-    (s/optional-key :diff-tool) s/Str
-    (s/optional-key :credentials) GitCredentials
-    (s/optional-key :repos) {s/Keyword [s/Str]}
-    (s/optional-key :synced-repos) {s/Keyword [s/Str]}}})
+   GitConfig})
 
 (def InfraResult {infra/facility infra/GitConfig})
 
-(def dda-projects
-  {:dda-pallet
-   ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
-    "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"
-    "https://github.com/DomainDrivenArchitecture/dda-pallet.git"
-    "https://github.com/DomainDrivenArchitecture/dda-user-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-backup-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-hardening-crate.git"
-    "https://github.com/DomainDrivenArchitecture/httpd-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-httpd-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-liferay-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-managed-vm.git"
-    "https://github.com/DomainDrivenArchitecture/dda-managed-ide.git"
-    "https://github.com/DomainDrivenArchitecture/dda-mariadb-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-serverspec-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-tomcat-crate.git"
-    "https://github.com/DomainDrivenArchitecture/dda-cloudspec.git"]})
+(defn-
+  configuration
+  [user-config]
+  (let [{:keys [user-email signing-key diff-tool]} user-config]
+    (merge
+      {:email user-email}
+      (when (contains? user-config :signing-key)
+        {:signing-key signing-key})
+      (when (contains? user-config :diff-tool)
+        {:diff-tool diff-tool}))))
 
-(defn- internal-infra-configuration
-  [domain-config]
-  (let [{:keys [os-user user-email signing-key diff-tool credentials
-                repo-groups repos synced-repos]} domain-config
-        unsynced-repos (into
-                         (if (contains? domain-config :repo-groups)
-                           dda-projects
-                           [])
-                         (if (contains? domain-config :repos)
-                           repos
-                           []))]
-    {infra/facility
-      {os-user {:config
-                (merge
-                  {:email user-email}
-                  (when (contains? domain-config :signing-key)
-                    {:signing-key signing-key})
-                  (when (contains? domain-config :diff-tool)
-                    {:diff-tool diff-tool}))
-                :trust (into
-                         (repo/collect-trust (flatten (vals unsynced-repos)))
-                         (repo/collect-trust (flatten (vals synced-repos))))
-                :repo  (into
-                         (repo/collect-repo
-                           credentials
-                           false
-                           (str (user-home/user-home-dir (name os-user)) "/repo/")
-                           unsynced-repos)
-                         (repo/collect-repo
-                           credentials
-                           true
-                           (str (user-home/user-home-dir (name os-user)) "/repo/")
-                           synced-repos))}}}))
+(defn-
+  trust
+  [user-config]
+  (let [{:keys [repos synced-repos]} user-config]
+    (merge
+      {:email user-email}
+      (when (contains? user-config :signing-key)
+        {:signing-key signing-key})
+      (when (contains? user-config :diff-tool)
+        {:diff-tool diff-tool}))))
+
+(defn-
+  infra-configuration-per-user
+  [user-config]
+  (let [{:keys [user-email signing-key diff-tool credentials
+                repo-groups repos synced-repos]} user-config]
+    {:config (configuration user-config)
+     :trust []
+     :repo []}))
 
 (s/defn ^:always-validate
   infra-configuration :- InfraResult
   [domain-config :- GitDomainConfig]
-  (if (or
-        (contains? domain-config :repo-groups)
-        (contains? domain-config :repos)
-        (contains? domain-config :synced-repos))
-   (internal-infra-configuration domain-config)))
+  {infra/facility
+    (into {}
+      (map
+        (fn [[k v]] [k (infra-configuration-per-user v)])
+        domain-config))})
