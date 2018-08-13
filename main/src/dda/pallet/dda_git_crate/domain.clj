@@ -23,6 +23,30 @@
    [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
+(def GitRepository
+  {:fqdn s/Str
+   (s/optional-key :port) s/Str
+   (s/optional-key :orga-path) s/Str
+   :repo-name s/Str
+   :transport-type (s/enum :ssh :https)
+   :server-type (s/enum :gitblit :github :gitlab)})
+
+(def GitCredentials
+  [{:server-fqdn s/Str                          ;identifyer for repo matching
+    (s/optional-key :server-port) s/Str         ;identifyer for repo matching, defaults to 22 or 443 based on access-type
+    :acces-type (s/enum :ssh :https)            ;used for repo url-generation
+    (s/optional-key :user-name) secret/Secret   ;needed for none-public access
+    (s/optional-key :password) secret/Secret}]) ;needed for none-public & none-key access
+
+(def GitDomainConfig
+  {s/Keyword                 ;represents the user-name
+   {:user-email s/Str
+    (s/optional-key :signing-key) s/Str
+    (s/optional-key :diff-tool) s/Str
+    (s/optional-key :credentials) GitCredentials
+    (s/optional-key :repos) {s/Keyword [s/Str]}
+    (s/optional-key :synced-repos) {s/Keyword [s/Str]}}})
+
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
 
