@@ -47,9 +47,6 @@
     (s/optional-key :repos) {s/Keyword [s/Str]}
     (s/optional-key :synced-repos) {s/Keyword [s/Str]}}})
 
-(def GitDomainConfig
-  domain-schema/GitDomainConfig)
-
 (def InfraResult {infra/facility infra/GitConfig})
 
 (def dda-projects
