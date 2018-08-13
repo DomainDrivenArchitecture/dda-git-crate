@@ -14,10 +14,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.dda-git-crate.domain.schema
+(ns dda.pallet.dda-git-crate.domain.schema-2-0
   (:require
    [schema.core :as s]
-   [dda.pallet.dda-git-crate.domain.repo :as repo]))
+   [dda.pallet.dda-git-crate.domain.repo-2-0 :as repo]))
 
 (def GitRepository repo/GitRepository)
 

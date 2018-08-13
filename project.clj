@@ -1,4 +1,4 @@
-(defproject dda/dda-git-crate "2.0.3-SNAPSHOT"
+(defproject dda/dda-git-crate "2.1.0-SNAPSHOT"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
@@ -16,9 +16,9 @@
                    :resource-paths ["integration/resources"
                                     "test/resources"]
                    :dependencies
-                   [[dda/dda-serverspec-crate "1.1.3"]
+                   [[dda/dda-serverspec-crate "1.2.1"]
                     [dda/dda-user-crate "1.0.5"]
-                    [org.clojure/test.check "0.10.0-alpha2"]
+                    [org.clojure/test.check "0.10.0-alpha3"]
                     [dda/pallet "0.9.0" :classifier "tests"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                     [org.slf4j/jcl-over-slf4j "1.8.0-beta2"]]

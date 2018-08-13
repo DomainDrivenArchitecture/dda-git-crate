@@ -1,7 +1,7 @@
 ; Copyright (c) meissa GmbH. All rights reserved.
 ; You must not remove this notice, or any other, from this software.
 
-(ns dda.pallet.dda-git-crate.domain.parse-url
+(ns dda.pallet.dda-git-crate.domain.parse-url-2-0
   (:require
    [clojure.string :as string]
    [clojure.walk :refer (keywordize-keys)]

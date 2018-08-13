@@ -14,14 +14,14 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.dda-git-crate.domain.repo
+(ns dda.pallet.dda-git-crate.domain.repo-2-0
   (:require
    [clojure.string :as string]
    [schema.core :as s]
    [pallet.actions :as actions]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as crate-schema]
-   [dda.pallet.dda-git-crate.domain.parse-url :as pu]))
+   [dda.pallet.dda-git-crate.domain.parse-url-2-0 :as pu]))
 
 (def GitRepository
   {:user-credentials {(s/optional-key :user) s/Str
