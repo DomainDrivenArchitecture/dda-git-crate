@@ -42,16 +42,16 @@
   {:domain-input
    {:test-user
      {:user-email "test-user@domain"
-      :repo {:fqdn "github.com"
-             :port "443"
-             :orga-path "DomainDrivenArchitecture"
-             :repo-name "dda-git-crate"
-             :transport-type :https
-             :server-type :github}}}
+      :repo {:folder [{:host "github.com"
+                       :port 443
+                       :orga-path "DomainDrivenArchitecture"
+                       :repo-name "dda-git-crate"
+                       :access-type :https
+                       :server-type :github}]}}}
    :infra {:dda-git
            {:test-user
             {:config {:email "test-user@domain"},
-             :trust [:pin-fqdn-or-ip {:port 443 :host "github.com"},] 
+             :trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}]
              :repo []}}}})
 
 

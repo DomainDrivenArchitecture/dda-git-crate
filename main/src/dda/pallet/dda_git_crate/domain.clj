@@ -21,31 +21,15 @@
    [dda.config.commons.user-home :as user-home]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
-   [dda.pallet.dda-git-crate.domain.schema :as domain-schema]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
-
-(def GitRepository
-  {:fqdn s/Str
-   (s/optional-key :port) s/Str
-   (s/optional-key :orga-path) s/Str
-   :repo-name s/Str
-   :transport-type (s/enum :ssh :https)
-   :server-type (s/enum :gitblit :github :gitlab)})
-
-(def GitCredentials
-  [{:server-fqdn s/Str                          ;identifyer for repo matching
-    (s/optional-key :server-port) s/Str         ;identifyer for repo matching, defaults to 22 or 443 based on access-type
-    :acces-type (s/enum :ssh :https)            ;used for repo url-generation
-    (s/optional-key :user-name) secret/Secret   ;needed for none-public access
-    (s/optional-key :password) secret/Secret}]) ;needed for none-public & none-key access
 
 (def GitConfig
   {:user-email s/Str
    (s/optional-key :signing-key) s/Str
    (s/optional-key :diff-tool) s/Str
-   (s/optional-key :credentials) GitCredentials
-   (s/optional-key :repos) {s/Keyword [s/Str]}
-   (s/optional-key :synced-repos) {s/Keyword [s/Str]}})
+   (s/optional-key :credential) repo/GitCredentials
+   (s/optional-key :repo) {s/Keyword [repo/GitRepository]}
+   (s/optional-key :synced-repo) {s/Keyword [repo/GitRepository]}})
 
 (def GitDomainConfig
   {s/Keyword                 ;represents the user-name
@@ -65,23 +49,12 @@
         {:diff-tool diff-tool}))))
 
 (defn-
-  trust
-  [user-config]
-  (let [{:keys [repos synced-repos]} user-config]
-    (merge
-      {:email user-email}
-      (when (contains? user-config :signing-key)
-        {:signing-key signing-key})
-      (when (contains? user-config :diff-tool)
-        {:diff-tool diff-tool}))))
-
-(defn-
   infra-configuration-per-user
   [user-config]
-  (let [{:keys [user-email signing-key diff-tool credentials
-                repo-groups repos synced-repos]} user-config]
+  (let [{:keys [user-email signing-key diff-tool credential
+                repo synced-repo]} user-config]
     {:config (configuration user-config)
-     :trust []
+     :trust (repo/trust repo synced-repo)
      :repo []}))
 
 (s/defn ^:always-validate
