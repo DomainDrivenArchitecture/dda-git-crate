@@ -42,26 +42,31 @@
   {:domain-input
    {:test-user
      {:user-email "test-user@domain"
-      :repo {:folder [{:host "github.com"
-                       :port 443
-                       :orga-path "DomainDrivenArchitecture"
-                       :repo-name "dda-git-crate"
-                       :access-type :https
-                       :server-type :github}
-                      {:host "github.com"
-                       :orga-path "DomainDrivenArchitecture"
-                       :repo-name "dda-serverspec-crate"
-                       :access-type :https
-                       :server-type :github}
-                      {:host "github.com"
-                       :orga-path "DomainDrivenArchitecture"
-                       :repo-name "dda-managed-ide"
-                       :access-type :ssh
-                       :server-type :github}]}}}
+      :repo {:folder1 [{:host "github.com"
+                        :port 443
+                        :orga-path "DomainDrivenArchitecture"
+                        :repo-name "dda-git-crate"
+                        :access-type :https
+                        :server-type :github}
+                       {:host "github.com"
+                        :orga-path "DomainDrivenArchitecture"
+                        :repo-name "dda-serverspec-crate"
+                        :access-type :https
+                        :server-type :github}]
+              :folder2 [{:host "github.com"
+                         :orga-path "DomainDrivenArchitecture"
+                         :repo-name "dda-managed-ide"
+                         :access-type :ssh
+                         :server-type :github}]}
+      :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
+                               :repo-name "a-private-repo"
+                               :access-type :ssh
+                               :server-type :gitblit}]}}}
    :infra {:dda-git
            {:test-user
             {:config {:email "test-user@domain"},
              :trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
+                     {:pin-fqdn-or-ip {:port 22 :host "repo.meissa-gmbh.de"}}
                      {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]
              :repo []}}}})
 
