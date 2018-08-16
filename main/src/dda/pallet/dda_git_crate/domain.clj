@@ -17,7 +17,7 @@
 (ns dda.pallet.dda-git-crate.domain
   (:require
    [schema.core :as s]
-   [dda.config.commons.map-utils :as map-utils]
+   [dda.config.commons.map-utils :as mu]
    [dda.config.commons.user-home :as user-home]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
@@ -54,7 +54,11 @@
   (let [{:keys [user-email signing-key diff-tool credential
                 repo synced-repo]} user-config]
     {:config (configuration user-config)
-     :trust (repo/trust repo synced-repo)
+     :trust (repo/trust
+              (reduce-kv
+                (fn [c k v] (into c v))
+                []
+                (mu/deep-merge repo synced-repo)))
      :repo []}))
 
 (s/defn ^:always-validate
