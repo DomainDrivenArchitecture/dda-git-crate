@@ -47,11 +47,22 @@
                        :orga-path "DomainDrivenArchitecture"
                        :repo-name "dda-git-crate"
                        :access-type :https
+                       :server-type :github}
+                      {:host "github.com"
+                       :orga-path "DomainDrivenArchitecture"
+                       :repo-name "dda-serverspec-crate"
+                       :access-type :https
+                       :server-type :github}
+                      {:host "github.com"
+                       :orga-path "DomainDrivenArchitecture"
+                       :repo-name "dda-managed-ide"
+                       :access-type :ssh
                        :server-type :github}]}}}
    :infra {:dda-git
            {:test-user
             {:config {:email "test-user@domain"},
-             :trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}]
+             :trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
+                     {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]
              :repo []}}}})
 
 
