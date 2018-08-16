@@ -16,7 +16,9 @@
 
 (ns dda.pallet.dda-git-crate.domain.repo
   (:require
-   [schema.core :as s]))
+    [clojure.tools.logging :as logging]
+    [schema.core :as s]
+    [dda.pallet.commons.secret :as secret]))
 
 (def ServerIdentity
   {:host s/Str                                 ;identifyer for repo matching
@@ -30,11 +32,11 @@
      :repo-name s/Str
      :server-type (s/enum :gitblit :github :gitlab)}))
 
-(def GitCredentials
-  [(merge
+(def GitCredential
+  (merge
      ServerIdentity
      {(s/optional-key :user-name) secret/Secret    ;needed for none-public access
-      (s/optional-key :password) secret/Secret})]) ;needed for none-public & none-key access
+      (s/optional-key :password) secret/Secret})) ;needed for none-public & none-key access
 
 (s/defn
   server-identity-port
@@ -46,13 +48,22 @@
       (= access-type :https) 443)))
 
 (s/defn
+  reduce-trust-map
+  [trust-map
+   ordinal
+   server-identity]
+  (let [host (:host server-identity)
+        port (server-identity-port server-identity)]
+    (merge
+      trust-map
+      {(keyword (str host "_" port))
+       {:host host :port port}})))
+
+(s/defn
   trust
   [repos :- [GitRepository]]
-  (reduce-kv
-    (fn [m k v]
-      (merge
-        m
-        {(str (:host v) "_" (server-identity-port v))
-         {:host (:host v) :port (server-identity-port v)}})))
-  {}
-  repos)
+  (into
+    []
+    (map
+      (fn [v] {:pin-fqdn-or-ip v})
+      (vals (reduce-kv reduce-trust-map {} repos)))))

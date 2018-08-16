@@ -30,11 +30,21 @@
    (is (= 22
          (sut/server-identity-port {:access-type :ssh})))))
 
+(deftest test-reduce-trust-map
+ (testing
+   (is (= {:github.com_443 {:port 443 :host "github.com"}}
+          (sut/reduce-trust-map
+            {}
+            0
+            {:host "github.com"
+             :repo-name ""
+             :access-type :https
+             :server-type :github})))))
 
-(deftest test-server-identity-port
+(deftest test-trust
  (testing
    (is (= [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}]
-          (sut/server-identity-port [{:host "github.com"
-                                      :repo-name ""
-                                      :access-type :https
-                                      :server-type :github}])))))
+          (sut/trust [{:host "github.com"
+                       :repo-name ""
+                       :access-type :https
+                       :server-type :github}])))))

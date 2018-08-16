@@ -27,7 +27,7 @@
   {:user-email s/Str
    (s/optional-key :signing-key) s/Str
    (s/optional-key :diff-tool) s/Str
-   (s/optional-key :credential) repo/GitCredentials
+   (s/optional-key :credential) [repo/GitCredential]
    (s/optional-key :repo) {s/Keyword [repo/GitRepository]}
    (s/optional-key :synced-repo) {s/Keyword [repo/GitRepository]}})
 
