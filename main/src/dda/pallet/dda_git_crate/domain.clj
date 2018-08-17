@@ -27,9 +27,9 @@
   {:user-email s/Str
    (s/optional-key :signing-key) s/Str
    (s/optional-key :diff-tool) s/Str
-   (s/optional-key :credential) [repo/GitCredential]
-   (s/optional-key :repo) {s/Keyword [repo/Repository]}
-   (s/optional-key :synced-repo) {s/Keyword [repo/Repository]}})
+   (s/optional-key :credential) repo/GitCredentials
+   (s/optional-key :repo) repo/OrganizedRepositories
+   (s/optional-key :synced-repo) repo/OrganizedRepositories})
 
 (def GitDomain
   {s/Keyword                 ;represents the user-name
@@ -59,7 +59,11 @@
                 (fn [c k v] (into c v))
                 []
                 (mu/deep-merge repo synced-repo)))
-     :repo []}))
+     :repo (into
+             []
+             (mu/deep-merge
+               (repo/repos false credential repo)
+               (repo/repos true credential synced-repo)))}))
 
 (s/defn ^:always-validate
   infra-configuration :- InfraResult

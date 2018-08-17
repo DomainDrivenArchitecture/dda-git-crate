@@ -32,11 +32,15 @@
      :repo-name s/Str
      :server-type (s/enum :gitblit :github :gitlab)}))
 
+(def OrganizedRepositories {s/Keyword [Repository]})
+
 (def GitCredential
   (merge
      ServerIdentity
      {(s/optional-key :user-name) secret/Secret    ;needed for none-public access
       (s/optional-key :password) secret/Secret})) ;needed for none-public & none-key access
+
+(def GitCredentials [GitCredential])
 
 (s/defn
   server-identity-port
@@ -48,6 +52,12 @@
       (= access-type :https) 443)))
 
 (s/defn
+  server-identity
+  [server-identity]
+  (let [{:keys [host]} server-identity]
+    (keyword (str host "_" (server-identity-port server-identity)))))
+
+(s/defn
   reduce-trust-map
   [trust-map
    ordinal
@@ -56,7 +66,7 @@
         port (server-identity-port server-identity)]
     (merge
       trust-map
-      {(keyword (str host "_" port))
+      {(server-identity server-identity)
        {:host host :port port}})))
 
 (s/defn
@@ -67,3 +77,8 @@
     (map
       (fn [v] {:pin-fqdn-or-ip v})
       (vals (reduce-kv reduce-trust-map {} repos)))))
+
+(s/defn repo
+  [is-synced :- s/Bool
+   credentials :- GitCredentials
+   repos :- OrganizedRepositories])
