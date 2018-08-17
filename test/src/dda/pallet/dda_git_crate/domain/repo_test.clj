@@ -49,19 +49,37 @@
                        :access-type :https
                        :server-type :github}])))))
 
+(def minimal-https-github
+  {:repo-input {:host "github.com" :port 443
+                :orga-path "DomainDrivenArchitecture"
+                :repo-name "dda-git-crate"
+                :access-type :https :server-type :github}
+   :credential-input nil
+   :expected {:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :settings #{}}})
+
+(def minimal-https-giblit
+  {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
+                :orga-path "meissa/group" :access-type :https
+                :server-type :gitblit}
+   :credential-input nil
+   :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
+                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :settings #{:sync}}})
+
+
 (deftest test-repo
  (testing
-   (is (= {:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
-           :local-dir "/home/test-user/repos/folder1/dda-git-crate"
-           :settings #{}}
+   (is (= (:expected minimal-https-github)
           (sut/infra-repo
               :test-user
               false
               :folder1
-              nil
-              {:host "github.com"
-               :port 443
-               :orga-path "DomainDrivenArchitecture"
-               :repo-name "dda-git-crate"
-               :access-type :https
-               :server-type :github})))))
+              (:credential-input minimal-https-github)
+              (:repo-input minimal-https-github))))
+   (is (= (:expected minimal-https-giblit)
+          (sut/infra-repo
+              :test-user true :folder1
+              (:credential-input minimal-https-giblit)
+              (:repo-input minimal-https-giblit))))))

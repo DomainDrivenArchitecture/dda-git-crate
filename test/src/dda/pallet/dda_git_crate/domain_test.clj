@@ -97,13 +97,13 @@
                                :access-type :ssh
                                :server-type :gitblit}]}}}
    :infra-repo-expectation
-   [{:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
+   [{:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
      :local-dir "/home/test-user/repos/folder1/dda-git-crate"
      :settings #{}}
-    {:repo "https://github.com/DomainDrivenArchitecture/dda-serverspec-crate.git"
+    {:repo "https://github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
      :local-dir "/home/test-user/repos/folder2/dda-serverspec-crate"
      :settings #{}}
-    {:repo "https://jem@repo.meissa-gmbh.de/r/meissa/group/a-private-repo.git"
+    {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
      :local-dir "/home/test-user/repos/folder1/a-private-repo"
      :settings #{:sync}}]})
 

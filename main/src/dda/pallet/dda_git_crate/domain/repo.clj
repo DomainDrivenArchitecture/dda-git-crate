@@ -18,7 +18,8 @@
   (:require
     [clojure.tools.logging :as logging]
     [schema.core :as s]
-    [dda.pallet.commons.secret :as secret]))
+    [dda.pallet.commons.secret :as secret]
+    [dda.config.commons.user-home :as user-home]))
 
 (def ServerIdentity
   {:host s/Str                                 ;identifyer for repo matching
@@ -78,6 +79,20 @@
       (fn [v] {:pin-fqdn-or-ip v})
       (vals (reduce-kv reduce-trust-map {} repos)))))
 
+(s/defn github-url
+  [credential :- GitCredential
+   repo :- Repository]
+  (let [{:keys [host orga-path repo-name access-type server-type]} repo]
+    (str (name access-type) "://" host ":" (server-identity-port repo)
+      "/" orga-path "/" repo-name ".git")))
+
+(s/defn gitblit-url
+  [credential :- GitCredential
+   repo :- Repository]
+  (let [{:keys [host orga-path repo-name access-type server-type]} repo]
+    (str (name access-type) "://" host ":" (server-identity-port repo)
+      "/r/" orga-path "/" repo-name ".git")))
+
 (s/defn infra-repo
   [user :- s/Keyword
    is-synced? :- s/Bool
@@ -85,9 +100,19 @@
    credentials :- GitCredentials
    repo :- Repository]
   (let [{:keys [host port orga-path repo-name access-type server-type]} repo]
-    {:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
-     :local-dir "/home/test-user/repos/folder1/dda-git-crate"
-     :settings #{}}))
+    {:repo
+     (cond (= :github server-type) (github-url nil repo)
+           (= :gitblit server-type) (gitblit-url nil repo))
+     :local-dir
+     (str (user-home/user-home-dir (name user))
+          "/repos/"
+          (name orga-group)
+          "/"
+          repo-name)
+     :settings
+      (if is-synced?
+        #{:sync}
+        #{})}))
 
 (s/defn infra-repos
   [user :- s/Keyword
@@ -96,9 +121,6 @@
    repos :- OrganizedRepositories]
   (reduce-kv
     (fn [col k v]
-      (println col)
-      (println k)
-      (println v)
       (into
         col
         (map
