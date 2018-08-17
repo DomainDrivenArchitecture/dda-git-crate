@@ -24,11 +24,23 @@
   {:domain-input {:test-user {:invalid 42}}
    :infra {}})
 
+(deftest invalid-test
+ (testing
+   "test infra-configuration"
+    (is (thrown? Exception (sut/infra-configuration
+                             (:domain-input invalid))))))
+
 (def git-minimal
   {:domain-input {:test-user {:user-email "test-user@domain"}}
    :infra {:dda-git
            {:test-user
             {:config {:email "test-user@domain"}, :trust [], :repo []}}}})
+
+(deftest minimal-test
+ (testing
+   (is (= (:infra git-minimal)
+          (sut/infra-configuration
+            (:domain-input git-minimal))))))
 
 (def git-multiuser
   {:domain-input {:test-user1 {:user-email "test-user1@domain"}
@@ -38,6 +50,12 @@
             {:config {:email "test-user1@domain"}, :trust [], :repo []}
             :test-user2
             {:config {:email "test-user2@domain"}, :trust [], :repo []}}}})
+
+(deftest multiuser-test
+ (testing
+   (is (= (:infra git-multiuser)
+          (sut/infra-configuration
+            (:domain-input git-multiuser))))))
 
 (def trust
   {:domain-input
@@ -63,13 +81,17 @@
                                :repo-name "a-private-repo"
                                :protocol :ssh
                                :server-type :gitblit}]}}}
-   :infra {:dda-git
-           {:test-user
-            {:config {:email "test-user@domain"},
-             :trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
-                     {:pin-fqdn-or-ip {:port 22 :host "repo.meissa-gmbh.de"}}
-                     {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]
-             :repo []}}}})
+   :infra-trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
+                 {:pin-fqdn-or-ip {:port 22 :host "repo.meissa-gmbh.de"}}
+                 {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]})
+
+(deftest trust-test
+ (testing
+   (is (= (:infra-trust trust)
+          (get-in
+            (sut/infra-configuration
+              (:domain-input trust))
+            [:dda-git :test-user :trust])))))
 
 (def repos
   {:domain-input
@@ -94,44 +116,21 @@
       :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
                                :repo-name "a-private-repo"
                                :orga-path "meissa/group"
-                               :protocol :ssh
+                               :protocol :https
                                :server-type :gitblit}]}}}
    :infra-repo-expectation
    [{:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
      :local-dir "/home/test-user/repos/folder1/dda-git-crate"
      :settings #{}}
     {:repo "https://github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
-     :local-dir "/home/test-user/repos/folder2/dda-serverspec-crate"
+     :local-dir "/home/test-user/repos/folder1/dda-serverspec-crate"
+     :settings #{}}
+    {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"
+     :local-dir "/home/test-user/repos/folder2/dda-managed-ide"
      :settings #{}}
     {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
      :local-dir "/home/test-user/repos/folder1/a-private-repo"
      :settings #{:sync}}]})
-
-
-
-(deftest invalid-test
- (testing
-   "test infra-configuration"
-    (is (thrown? Exception (sut/infra-configuration
-                             (:domain-input invalid))))))
-
-(deftest minimal-test
- (testing
-   (is (= (:infra git-minimal)
-          (sut/infra-configuration
-            (:domain-input git-minimal))))))
-
-(deftest multiuser-test
- (testing
-   (is (= (:infra git-multiuser)
-          (sut/infra-configuration
-            (:domain-input git-multiuser))))))
-
-(deftest trust-test
- (testing
-   (is (= (:infra trust)
-          (sut/infra-configuration
-            (:domain-input trust))))))
 
 (deftest repo-test
   (testing
