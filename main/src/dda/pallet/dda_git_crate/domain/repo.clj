@@ -90,7 +90,10 @@
     (str (name protocol) "://"
          (when (some? credential)
            (str (:user-name credential)
-                (some->> (:password credential) (str ":"))
+                (when (and
+                        (= :https protocol)
+                        (some? (:password credential)))
+                      (str ":" (:password credential)))
                 "@"))
          host ":" (server-identity-port repo))))
 
@@ -98,15 +101,32 @@
   [credential :- GitCredential
    repo :- Repository]
   (let [{:keys [host orga-path repo-name protocol server-type]} repo]
-    (str (server-url credential repo)
-      "/" orga-path "/" repo-name ".git")))
+    (cond (= :https protocol)
+          (str (server-url credential repo) "/"
+               orga-path "/" repo-name ".git")
+          (= :ssh protocol)
+          (str "git@github.com:"
+               orga-path "/" repo-name ".git"))))
 
 (s/defn gitblit-url
   [credential :- GitCredentialResolved
    repo :- Repository]
   (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (str (server-url credential repo)
-      "/r/" orga-path "/" repo-name ".git")))
+      "/"
+      (when (= :https protocol) "r/")
+      orga-path "/" repo-name ".git")))
+
+(s/defn gitlab-url
+  [credential :- GitCredential
+   repo :- Repository]
+  (let [{:keys [host orga-path repo-name protocol server-type]} repo]
+    (cond (= :https protocol)
+          (str (server-url credential repo) "/"
+               orga-path "/" repo-name ".git")
+          (= :ssh protocol)
+          (str "ssh://git@" host ":"
+               orga-path "/" repo-name ".git"))))
 
 (s/defn infra-repo
   [user :- s/Keyword
@@ -118,7 +138,8 @@
         credential (get credentials (server-identity-key repo))]
     {:repo
      (cond (= :github server-type) (github-url credential repo)
-           (= :gitblit server-type) (gitblit-url credential repo))
+           (= :gitblit server-type) (gitblit-url credential repo)
+           (= :gitlab server-type) (gitlab-url credential repo))
      :local-dir
      (str (user-home/user-home-dir (name user))
           "/repos/"
