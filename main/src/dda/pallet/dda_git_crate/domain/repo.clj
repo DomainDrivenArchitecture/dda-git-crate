@@ -52,7 +52,7 @@
       (= access-type :https) 443)))
 
 (s/defn
-  server-identity
+  server-identity-key
   [server-identity]
   (let [{:keys [host]} server-identity]
     (keyword (str host "_" (server-identity-port server-identity)))))
@@ -66,7 +66,7 @@
         port (server-identity-port server-identity)]
     (merge
       trust-map
-      {(server-identity server-identity)
+      {(server-identity-key server-identity)
        {:host host :port port}})))
 
 (s/defn
@@ -78,7 +78,31 @@
       (fn [v] {:pin-fqdn-or-ip v})
       (vals (reduce-kv reduce-trust-map {} repos)))))
 
-(s/defn repo
-  [is-synced :- s/Bool
+(s/defn infra-repo
+  [user :- s/Keyword
+   is-synced? :- s/Bool
+   orga-group :- s/Keyword
    credentials :- GitCredentials
-   repos :- OrganizedRepositories])
+   repo :- Repository]
+  (let [{:keys [host port orga-path repo-name access-type server-type]} repo]
+    {:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
+     :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+     :settings #{}}))
+
+(s/defn infra-repos
+  [user :- s/Keyword
+   is-synced? :- s/Bool
+   credentials :- GitCredentials
+   repos :- OrganizedRepositories]
+  (reduce-kv
+    (fn [col k v]
+      (println col)
+      (println k)
+      (println v)
+      (into
+        col
+        (map
+          #(infra-repo user is-synced? k credentials %)
+          v)))
+    []
+    repos))

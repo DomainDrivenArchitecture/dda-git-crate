@@ -50,7 +50,8 @@
 
 (defn-
   infra-configuration-per-user
-  [user-config]
+  [user
+   user-config]
   (let [{:keys [user-email signing-key diff-tool credential
                 repo synced-repo]} user-config]
     {:config (configuration user-config)
@@ -60,10 +61,8 @@
                 []
                 (mu/deep-merge repo synced-repo)))
      :repo (into
-             []
-             (mu/deep-merge
-               (repo/repos false credential repo)
-               (repo/repos true credential synced-repo)))}))
+             (repo/infra-repos user false credential repo)
+             (repo/infra-repos user true credential synced-repo))}))
 
 (s/defn ^:always-validate
   infra-configuration :- InfraResult
@@ -71,5 +70,5 @@
   {infra/facility
     (into {}
       (map
-        (fn [[k v]] [k (infra-configuration-per-user v)])
+        (fn [[k v]] [k (infra-configuration-per-user k v)])
         domain-config))})

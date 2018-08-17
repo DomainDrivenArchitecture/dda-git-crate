@@ -48,3 +48,20 @@
                        :repo-name ""
                        :access-type :https
                        :server-type :github}])))))
+
+(deftest test-repo
+ (testing
+   (is (= {:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
+           :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+           :settings #{}}
+          (sut/infra-repo
+              :test-user
+              false
+              :folder1
+              nil
+              {:host "github.com"
+               :port 443
+               :orga-path "DomainDrivenArchitecture"
+               :repo-name "dda-git-crate"
+               :access-type :https
+               :server-type :github})))))
