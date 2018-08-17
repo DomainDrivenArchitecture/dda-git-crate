@@ -23,8 +23,8 @@
 
 (def ServerIdentity
   {:host s/Str                                 ;identifyer for repo matching
-   (s/optional-key :port) s/Num                ;identifyer for repo matching, defaults to 22 or 443 based on access-type
-   :access-type (s/enum :ssh :https)})
+   (s/optional-key :port) s/Num                ;identifyer for repo matching, defaults to 22 or 443 based on protocol
+   :protocol (s/enum :ssh :https)})
 
 (def Repository
   (merge
@@ -50,11 +50,11 @@
 (s/defn
   server-identity-port
   [server-identity]
-  (let [{:keys [port access-type]} server-identity]
+  (let [{:keys [port protocol]} server-identity]
     (cond
       (contains? server-identity :port) port
-      (= access-type :ssh) 22
-      (= access-type :https) 443)))
+      (= protocol :ssh) 22
+      (= protocol :https) 443)))
 
 (s/defn
   server-identity-key
@@ -86,8 +86,8 @@
 (s/defn server-url
   [credential :- GitCredential
    repo :- Repository]
-  (let [{:keys [host access-type]} repo]
-    (str (name access-type) "://"
+  (let [{:keys [host protocol]} repo]
+    (str (name protocol) "://"
          (when (some? credential)
            (str (:user-name credential)
                 (some->> (:password credential) (str ":"))
@@ -97,14 +97,14 @@
 (s/defn github-url
   [credential :- GitCredential
    repo :- Repository]
-  (let [{:keys [host orga-path repo-name access-type server-type]} repo]
+  (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (str (server-url credential repo)
       "/" orga-path "/" repo-name ".git")))
 
 (s/defn gitblit-url
   [credential :- GitCredentialResolved
    repo :- Repository]
-  (let [{:keys [host orga-path repo-name access-type server-type]} repo]
+  (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (str (server-url credential repo)
       "/r/" orga-path "/" repo-name ".git")))
 
@@ -114,7 +114,7 @@
    orga-group :- s/Keyword
    credentials :- GitCredentialsResolved
    repo :- Repository]
-  (let [{:keys [host port orga-path repo-name access-type server-type]} repo
+  (let [{:keys [host port orga-path repo-name protocol server-type]} repo
         credential (get credentials (server-identity-key repo))]
     {:repo
      (cond (= :github server-type) (github-url credential repo)

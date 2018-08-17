@@ -47,21 +47,21 @@
                         :port 443
                         :orga-path "DomainDrivenArchitecture"
                         :repo-name "dda-git-crate"
-                        :access-type :https
+                        :protocol :https
                         :server-type :github}
                        {:host "github.com"
                         :orga-path "DomainDrivenArchitecture"
                         :repo-name "dda-serverspec-crate"
-                        :access-type :https
+                        :protocol :https
                         :server-type :github}]
               :folder2 [{:host "github.com"
                          :orga-path "DomainDrivenArchitecture"
                          :repo-name "dda-managed-ide"
-                         :access-type :ssh
+                         :protocol :ssh
                          :server-type :github}]}
       :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
                                :repo-name "a-private-repo"
-                               :access-type :ssh
+                               :protocol :ssh
                                :server-type :gitblit}]}}}
    :infra {:dda-git
            {:test-user
@@ -79,22 +79,22 @@
                         :port 443
                         :orga-path "DomainDrivenArchitecture"
                         :repo-name "dda-git-crate"
-                        :access-type :https
+                        :protocol :https
                         :server-type :github}
                        {:host "github.com"
                         :orga-path "DomainDrivenArchitecture"
                         :repo-name "dda-serverspec-crate"
-                        :access-type :https
+                        :protocol :https
                         :server-type :github}]
               :folder2 [{:host "github.com"
                          :orga-path "DomainDrivenArchitecture"
                          :repo-name "dda-managed-ide"
-                         :access-type :ssh
+                         :protocol :ssh
                          :server-type :github}]}
       :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
                                :repo-name "a-private-repo"
                                :orga-path "meissa/group"
-                               :access-type :ssh
+                               :protocol :ssh
                                :server-type :gitblit}]}}}
    :infra-repo-expectation
    [{:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"

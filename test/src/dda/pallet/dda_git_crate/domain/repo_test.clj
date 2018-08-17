@@ -22,13 +22,13 @@
 (deftest test-server-identity-port
  (testing
    (is (= 42
-         (sut/server-identity-port {:port 42 :access-type :ssh})))
+         (sut/server-identity-port {:port 42 :protocol :ssh})))
    (is (= 42
-         (sut/server-identity-port {:port 42 :access-type :https})))
+         (sut/server-identity-port {:port 42 :protocol :https})))
    (is (= 443
-         (sut/server-identity-port {:access-type :https})))
+         (sut/server-identity-port {:protocol :https})))
    (is (= 22
-         (sut/server-identity-port {:access-type :ssh})))))
+         (sut/server-identity-port {:protocol :ssh})))))
 
 (deftest test-reduce-trust-map
  (testing
@@ -38,7 +38,7 @@
             0
             {:host "github.com"
              :repo-name ""
-             :access-type :https
+             :protocol :https
              :server-type :github})))))
 
 (deftest test-trust
@@ -46,14 +46,14 @@
    (is (= [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}]
           (sut/trust [{:host "github.com"
                        :repo-name ""
-                       :access-type :https
+                       :protocol :https
                        :server-type :github}])))))
 
 (def minimal-https-github
   {:repo-input {:host "github.com" :port 443
                 :orga-path "DomainDrivenArchitecture"
                 :repo-name "dda-git-crate"
-                :access-type :https :server-type :github}
+                :protocol :https :server-type :github}
    :credential-input nil
    :expected {:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
               :local-dir "/home/test-user/repos/folder1/dda-git-crate"
@@ -63,7 +63,7 @@
   {:repo-input {:host "github.com" :port 443
                 :orga-path "DomainDrivenArchitecture"
                 :repo-name "dda-git-crate"
-                :access-type :https :server-type :github}
+                :protocol :https :server-type :github}
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}}
    :expected {:repo "https://test:pwd@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
               :local-dir "/home/test-user/repos/folder1/dda-git-crate"
@@ -71,7 +71,7 @@
 
 (def minimal-https-giblit
   {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
-                :orga-path "meissa/group" :access-type :https
+                :orga-path "meissa/group" :protocol :https
                 :server-type :gitblit}
    :credential-input nil
    :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"

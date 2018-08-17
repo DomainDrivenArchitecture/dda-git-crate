@@ -1,8 +1,8 @@
 ```clojure
 (def ServerIdentity
   {:host s/Str                                 ;identifyer for repo matching
-   (s/optional-key :port) s/Num                ;identifyer for repo matching, defaults to 22 or 443 based on access-type
-   :access-type (s/enum :ssh :https)})
+   (s/optional-key :port) s/Num                ;identifyer for repo matching, defaults to 22 or 443 based on protocol
+   :protocol (s/enum :ssh :https)})
 
 (def Repository
   (merge
