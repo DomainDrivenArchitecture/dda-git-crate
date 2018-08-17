@@ -16,6 +16,7 @@
 (ns dda.pallet.dda-git-crate.domain-test
   (:require
     [clojure.test :refer :all]
+    [expectations.clojure.test :as ex]
     [schema.core :as s]
     [dda.pallet.dda-git-crate.domain :as sut]))
 
@@ -70,6 +71,43 @@
                      {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]
              :repo []}}}})
 
+(def repos
+  {:domain-input
+   {:test-user
+     {:user-email "test-user@domain"
+      :repo {:folder1 [{:host "github.com"
+                        :port 443
+                        :orga-path "DomainDrivenArchitecture"
+                        :repo-name "dda-git-crate"
+                        :access-type :https
+                        :server-type :github}
+                       {:host "github.com"
+                        :orga-path "DomainDrivenArchitecture"
+                        :repo-name "dda-serverspec-crate"
+                        :access-type :https
+                        :server-type :github}]
+              :folder2 [{:host "github.com"
+                         :orga-path "DomainDrivenArchitecture"
+                         :repo-name "dda-managed-ide"
+                         :access-type :ssh
+                         :server-type :github}]}
+      :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
+                               :repo-name "a-private-repo"
+                               :orga-path "meissa/group"
+                               :access-type :ssh
+                               :server-type :gitblit}]}}}
+   :infra-repo-expectation
+   [{:repo "https://github.com/DomainDrivenArchitecture/dda-git-crate.git"
+     :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+     :settings #{}}
+    {:repo "https://github.com/DomainDrivenArchitecture/dda-serverspec-crate.git"
+     :local-dir "/home/test-user/repos/folder2/dda-serverspec-crate"
+     :settings #{}}
+    {:repo "https://jem@repo.meissa-gmbh.de/r/meissa/group/a-private-repo.git"
+     :local-dir "/home/test-user/repos/folder1/a-private-repo"
+     :settings #{:sync}}]})
+
+
 
 (deftest invalid-test
  (testing
@@ -94,3 +132,10 @@
    (is (= (:infra trust)
           (sut/infra-configuration
             (:domain-input trust))))))
+
+(deftest repo-test
+  (testing
+    (is (= (:infra-repo-expectation repos)
+           (get-in (sut/infra-configuration
+                     (:domain-input repos))
+                   [:dda-git :test-user :repo])))))

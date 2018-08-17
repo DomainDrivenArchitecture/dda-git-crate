@@ -19,6 +19,7 @@
                    [[dda/dda-serverspec-crate "1.2.1"]
                     [dda/dda-user-crate "1.0.5"]
                     [org.clojure/test.check "0.10.0-alpha3"]
+                    [expectations "2.2.0-rc3"]
                     [dda/pallet "0.9.0" :classifier "tests"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                     [org.slf4j/jcl-over-slf4j "1.8.0-beta2"]]
@@ -30,7 +31,8 @@
                    :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-existing}}
              :test {:test-paths ["test/src"]
                     :resource-paths ["test/resources"]
-                    :dependencies [[dda/pallet "0.9.0" :classifier "tests"]]}
+                    :dependencies [[dda/pallet "0.9.0" :classifier "tests"]
+                                   [expectations "2.2.0-rc3"]]}
              :uberjar {:source-paths ["uberjar/src"]
                        :resource-paths ["uberjar/resources"]
                        :aot :all
