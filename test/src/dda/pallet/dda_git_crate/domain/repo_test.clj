@@ -59,6 +59,16 @@
               :local-dir "/home/test-user/repos/folder1/dda-git-crate"
               :settings #{}}})
 
+(def autoriezd-https-github
+  {:repo-input {:host "github.com" :port 443
+                :orga-path "DomainDrivenArchitecture"
+                :repo-name "dda-git-crate"
+                :access-type :https :server-type :github}
+   :credential-input {:github.com_443 {:user-name "test" :password "pwd"}}
+   :expected {:repo "https://test:pwd@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :settings #{}}})
+
 (def minimal-https-giblit
   {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
                 :orga-path "meissa/group" :access-type :https
@@ -78,6 +88,11 @@
               :folder1
               (:credential-input minimal-https-github)
               (:repo-input minimal-https-github))))
+   (is (= (:expected autoriezd-https-github)
+          (sut/infra-repo
+              :test-user false :folder1
+              (:credential-input autoriezd-https-github)
+              (:repo-input autoriezd-https-github))))
    (is (= (:expected minimal-https-giblit)
           (sut/infra-repo
               :test-user true :folder1

@@ -38,10 +38,14 @@
 (def GitCredential
   (merge
      ServerIdentity
-     {(s/optional-key :user-name) secret/Secret    ;needed for none-public access
-      (s/optional-key :password) secret/Secret})) ;needed for none-public & none-key access
+     {:user-name secret/Secret                     ;needed for none-public access
+      (s/optional-key :password) secret/Secret}))  ;needed for none-public & none-key access
+
+(def GitCredentialResolved (secret/create-resolved-schema GitCredential))
 
 (def GitCredentials [GitCredential])
+
+(def GitCredentialsResolved (secret/create-resolved-schema GitCredentials))
 
 (s/defn
   server-identity-port
@@ -79,30 +83,42 @@
       (fn [v] {:pin-fqdn-or-ip v})
       (vals (reduce-kv reduce-trust-map {} repos)))))
 
+(s/defn server-url
+  [credential :- GitCredential
+   repo :- Repository]
+  (let [{:keys [host access-type]} repo]
+    (str (name access-type) "://"
+         (when (some? credential)
+           (str (:user-name credential)
+                (some->> (:password credential) (str ":"))
+                "@"))
+         host ":" (server-identity-port repo))))
+
 (s/defn github-url
   [credential :- GitCredential
    repo :- Repository]
   (let [{:keys [host orga-path repo-name access-type server-type]} repo]
-    (str (name access-type) "://" host ":" (server-identity-port repo)
+    (str (server-url credential repo)
       "/" orga-path "/" repo-name ".git")))
 
 (s/defn gitblit-url
-  [credential :- GitCredential
+  [credential :- GitCredentialResolved
    repo :- Repository]
   (let [{:keys [host orga-path repo-name access-type server-type]} repo]
-    (str (name access-type) "://" host ":" (server-identity-port repo)
+    (str (server-url credential repo)
       "/r/" orga-path "/" repo-name ".git")))
 
 (s/defn infra-repo
   [user :- s/Keyword
    is-synced? :- s/Bool
    orga-group :- s/Keyword
-   credentials :- GitCredentials
+   credentials :- GitCredentialsResolved
    repo :- Repository]
-  (let [{:keys [host port orga-path repo-name access-type server-type]} repo]
+  (let [{:keys [host port orga-path repo-name access-type server-type]} repo
+        credential (get credentials (server-identity-key repo))]
     {:repo
-     (cond (= :github server-type) (github-url nil repo)
-           (= :gitblit server-type) (gitblit-url nil repo))
+     (cond (= :github server-type) (github-url credential repo)
+           (= :gitblit server-type) (gitblit-url credential repo))
      :local-dir
      (str (user-home/user-home-dir (name user))
           "/repos/"
@@ -117,7 +133,7 @@
 (s/defn infra-repos
   [user :- s/Keyword
    is-synced? :- s/Bool
-   credentials :- GitCredentials
+   credentials :- GitCredentialsResolved
    repos :- OrganizedRepositories]
   (reduce-kv
     (fn [col k v]
