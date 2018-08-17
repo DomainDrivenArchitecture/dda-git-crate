@@ -3,20 +3,14 @@
   {(s/optional-key :pin-fqdn-or-ip) s/Str
    (s/optional-key :fingerprint) s/Str})
 
-(def GitRepository
+(def Repository
  {:repo s/Str
   :local-dir s/Str
   :settings (hash-set (s/enum :sync))})
 
-(def UserGlobalConfig {:email s/Str
+(def Config {:email s/Str
                        (s/optional-key :signing-key) s/Str
                        (s/optional-key :diff-tool) s/Str})
-
-
-(def UserGitConfig
-  {:config UserGlobalConfig
-   :trust [ServerTrust]
-   :repo [GitRepository]})
 
 (def PinElement
  {:host s/Str :port s/Num})
@@ -25,7 +19,12 @@
    {(s/optional-key :pin-fqdn-or-ip) PinElement
     (s/optional-key :fingerprint) s/Str})
 
-(def GitConfig
+(def Config
+  {:config Config
+   :trust [ServerTrust]
+   :repo [Repository]})
+
+(def GitInfra
   {s/Keyword      ; Keyword is user-name
-   UserGitConfig})
+   Config})
 ```

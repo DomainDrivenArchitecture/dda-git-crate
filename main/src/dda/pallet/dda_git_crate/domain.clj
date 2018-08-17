@@ -23,19 +23,19 @@
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
-(def GitConfig
+(def UserGit
   {:user-email s/Str
    (s/optional-key :signing-key) s/Str
    (s/optional-key :diff-tool) s/Str
    (s/optional-key :credential) [repo/GitCredential]
-   (s/optional-key :repo) {s/Keyword [repo/GitRepository]}
-   (s/optional-key :synced-repo) {s/Keyword [repo/GitRepository]}})
+   (s/optional-key :repo) {s/Keyword [repo/Repository]}
+   (s/optional-key :synced-repo) {s/Keyword [repo/Repository]}})
 
-(def GitDomainConfig
+(def GitDomain
   {s/Keyword                 ;represents the user-name
-   GitConfig})
+   UserGit})
 
-(def InfraResult {infra/facility infra/GitConfig})
+(def InfraResult {infra/facility infra/GitInfra})
 
 (defn-
   configuration
@@ -63,7 +63,7 @@
 
 (s/defn ^:always-validate
   infra-configuration :- InfraResult
-  [domain-config :- GitDomainConfig]
+  [domain-config :- GitDomain]
   {infra/facility
     (into {}
       (map

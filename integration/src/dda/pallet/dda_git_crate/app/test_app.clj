@@ -24,7 +24,7 @@
     [dda.pallet.dda-serverspec-crate.app :as serverspec]))
 
 (def GitServerspecDomainConfig
-  {:git app/GitDomainConfig
+  {:git app/GitDomain
    :serverspec serverspec/ServerspecDomainConfig})
 
 (s/defn ^:always-validate

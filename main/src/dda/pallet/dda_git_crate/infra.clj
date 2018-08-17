@@ -30,17 +30,17 @@
 
 (def ServerTrust server-trust/ServerTrust)
 
-(def GitRepository
-  git-repo/GitRepository)
+(def Repository
+  git-repo/Repository)
 
-(def UserGitConfig
-  {:config git-schema/UserGlobalConfig
+(def Config
+  {:config git-schema/Config
    :trust [server-trust/ServerTrust]
-   :repo [GitRepository]})
+   :repo [Repository]})
 
-(def GitConfig
+(def GitInfra
   {s/Keyword      ; Keyword is user-name
-   UserGitConfig})
+   Config})
 
 (s/defmethod core-infra/dda-settings facility
   [core-infra config])
@@ -48,7 +48,7 @@
 
 (s/defn configure-user
   "configure user setup"
-  [config :- GitConfig]
+  [config :- GitInfra]
   (doseq [user (keys config)]
     (let [user-config (user config)
           user-name (name user)

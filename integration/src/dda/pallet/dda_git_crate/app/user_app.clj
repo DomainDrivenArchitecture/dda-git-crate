@@ -25,11 +25,11 @@
     [dda.pallet.dda-user-crate.app :as user]))
 
 (def GitUserDomainConfig
-  {:git app/GitDomainConfig
+  {:git app/GitDomain
    :user user/UserDomainConfig})
 
 (def GitUserDomainConfigResolved
-  {:git app/GitDomainConfig
+  {:git app/GitDomain
    :user user/UserDomainConfigResolved})
 
 (s/defn ^:always-validate

@@ -126,7 +126,7 @@
 
 
 (s/defn
-  crate-repo :- crate-schema/GitRepository
+  crate-repo :- crate-schema/Repository
   [synced :- s/Bool
    domain-repo :- GitRepository]
   {:repo (git-url domain-repo)
@@ -143,7 +143,7 @@
       (map server-trust parsed-uris))))
 
 (s/defn
-  collect-repo-group :- [crate-schema/GitRepository]
+  collect-repo-group :- [crate-schema/Repository]
   [credentials :- GitCredentialsResolved
    synced :- s/Bool
    local-root :- s/Str
@@ -158,7 +158,7 @@
 
 
 (s/defn
-  collect-repo :- [crate-schema/GitRepository]
+  collect-repo :- [crate-schema/Repository]
   [credentials :- GitCredentialsResolved
    synced :- s/Bool
    local-root :- s/Str

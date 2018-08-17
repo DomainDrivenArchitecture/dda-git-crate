@@ -26,7 +26,7 @@
 (def GitDomainConfig
   domain-schema/GitDomainConfig)
 
-(def InfraResult {infra/facility infra/GitConfig})
+(def InfraResult {infra/facility infra/GitInfra})
 
 (def dda-projects
   {:dda-pallet

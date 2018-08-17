@@ -19,14 +19,14 @@
    [schema.core :as s]
    [pallet.actions :as actions]))
 
-(def UserGlobalConfig {:email s/Str
+(def Config {:email s/Str
                        (s/optional-key :signing-key) s/Str
                        (s/optional-key :diff-tool) s/Str})
 
 (s/defn
   configure-user
   [user-name :- s/Str
-   git-config :- UserGlobalConfig]
+   git-config :- Config]
   (let [{:keys [email signing-key diff-tool]} git-config]
     (actions/exec-checked-script
       (str "configures git globally for user:" user-name " & " email)

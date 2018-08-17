@@ -23,14 +23,14 @@
     [selmer.parser :as selmer]
     [dda.config.commons.user-home :as user-home]))
 
-(def GitRepository
+(def Repository
   {:repo s/Str
    :local-dir s/Str
    :settings (hash-set (s/enum :sync))})
 
 (s/defn
   project-parent-path
-  [repo :- GitRepository]
+  [repo :- Repository]
   (let [{:keys [local-dir]} repo]
     (st/join "/" (drop-last (st/split local-dir #"/")))))
 
@@ -55,7 +55,7 @@
   clone
   [facility :- s/Keyword
    user-name :- s/Str
-   crate-repo :- GitRepository]
+   crate-repo :- Repository]
   (let [{:keys [local-dir repo]} crate-repo]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
@@ -69,7 +69,7 @@
   "autosync git repositories"
   [facility :- s/Keyword
    user-name :- s/Str
-   repo :- GitRepository]
+   repo :- Repository]
   (let [{:keys [local-dir settings]} repo]
     (when (contains? settings :sync)
       (actions/as-action
@@ -89,7 +89,7 @@
   "configure user setup"
   [facility :- s/Keyword
    user-name :- s/Str
-   repo :- [GitRepository]]
+   repo :- [Repository]]
   (doseq [repo-element repo]
     (let [repo-parent (project-parent-path repo-element)]
       (create-project-parent facility user-name repo-parent)

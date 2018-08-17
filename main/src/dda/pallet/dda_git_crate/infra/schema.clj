@@ -22,6 +22,6 @@
 
 (def ServerTrust server-trust/ServerTrust)
 
-(def GitRepository repo/GitRepository)
+(def Repository repo/Repository)
 
-(def UserGlobalConfig config/UserGlobalConfig)
+(def Config config/Config)

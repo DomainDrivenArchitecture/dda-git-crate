@@ -25,7 +25,7 @@
    (s/optional-key :port) s/Num                ;identifyer for repo matching, defaults to 22 or 443 based on access-type
    :access-type (s/enum :ssh :https)})
 
-(def GitRepository
+(def Repository
   (merge
     ServerIdentity
     {(s/optional-key :orga-path) s/Str
@@ -61,7 +61,7 @@
 
 (s/defn
   trust
-  [repos :- [GitRepository]]
+  [repos :- [Repository]]
   (into
     []
     (map

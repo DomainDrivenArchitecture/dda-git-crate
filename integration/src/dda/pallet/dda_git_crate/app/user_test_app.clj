@@ -26,12 +26,12 @@
     [dda.pallet.dda-serverspec-crate.app :as serverspec]))
 
 (def GitServerspecUserDomainConfig
-  {:git app/GitDomainConfig
+  {:git app/GitDomain
    :serverspec serverspec/ServerspecDomainConfig
    :user user/UserDomainConfig})
 
 (def GitServerspecUserDomainConfigResolved
-  {:git app/GitDomainConfig
+  {:git app/GitDomain
    :serverspec serverspec/ServerspecDomainConfig
    :user user/UserDomainConfigResolved})
 
