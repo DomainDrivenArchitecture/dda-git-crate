@@ -4,6 +4,19 @@
 
 [![Slack](https://img.shields.io/badge/chat-clojurians-green.svg?style=flat)](https://clojurians.slack.com/messages/#dda-pallet/) | [<img src="https://domaindrivenarchitecture.org/img/meetup.svg" width=50 alt="DevOps Hacking with Clojure Meetup"> DevOps Hacking with Clojure](https://www.meetup.com/de-DE/preview/dda-pallet-DevOps-Hacking-with-Clojure) | [Website & Blog](https://domaindrivenarchitecture.org)
 
+## Jump to
+[Compatibility](#compatibility)  
+[Features](#features)  
+[Usage Summary](#usage-summary)  
+[Detailed How-to](#detailed-how-to)  
+[Configuration](#configuration)  
+[Targets config example](#targets-config-example)  
+[Git config example](#git-config-example)  
+[Reference-Targets](#targets)  
+[Reference-Domain-API](#domain-api)  
+[Reference-Infra-API](#infra-api)  
+[License](#license)  
+
 ## Compatability
 
 dda-pallet is compatible to the following versions
@@ -21,16 +34,16 @@ dda-pallet is compatible to the following versions
  * support ssh, https public, https user/password transport
  * reconfigure origin remote url of existing repositories
 
-## Usage
+## Usage Summary
 
-1. Download the jar-file from the releases page of this repository (e.g. `curl -L -o dda-git-crate.jar https://github.com/DomainDrivenArchitecture/dda-git-crate/releases/download/2.1.0/dda-git-crate-2.1.0-standalone.jar`).
+1. **Download the jar-file** from the releases page of this repository (e.g. `curl -L -o dda-git-crate.jar https://github.com/DomainDrivenArchitecture/dda-git-crate/releases/download/2.1.0/dda-git-crate-2.1.0-standalone.jar`).
 2. Create the files `git.edn` (Domain-Schema for your desktop) and `target.edn` (Schema for Targets to be provisioned) according to the reference and our example configurations. Please create them in the same folder where you've saved the jar-file. For more information about these files refer to the corresponding information below.
 3. Start the installation:
 ```bash
 java -jar dda-git-crate.jar --targets targets.edn git.edn
 ```
 
-### Detailed Howto
+### Detailed How-to
 
 You can find a more detailed howto here: https://domaindrivenarchitecture.org/posts/2017-07-28-compose-crates/
 
@@ -40,8 +53,11 @@ The configuration consists of two files defining both WHERE to install the softw
 * `targets.edn`: describes on which target system(s) the software will be installed
 * `git.edn`: describes which repositories will be installed
 
-### Targets config example
+You can download examples of these configuration files from  
+[example-targets.edn](example-targets.edn) and   
+[example-serverspec.edn](example-serverspec.edn) respectively.
 
+#### Targets config example
 Example content of file `targets.edn`:
 ```clojure
 {:existing [{:node-name "test-vm1"            ; semantic name
@@ -51,20 +67,30 @@ Example content of file `targets.edn`:
                      {:plain "secure1234"}}} ; optional password, if no ssh key is authorized
 ```
 
-### Git config example
+#### Git config example
 
-Example content of file `vm.edn`:
+Example content of file `git.edn`:
 ```clojure
-{:os-user :ubuntu
- :user-email "ubuntu@some-domain.org"
- :repos {:books
-         ["https://github.com/DomainDrivenArchitecture/ddaArchitecture.git"]
-         :dda-pallet
-         ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
-          "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"]}
-  :synced-repos {
-          :password-store
-          ["https://github.com/DomainDrivenArchitecture/password-store-for-teams.git"]}}
+{:initial
+ {:user-email "initial@some-domain.org"
+  :repo  {:books
+          [{:host "github.com"
+            :orga-path "DomainDrivenArchitecture"
+            :repo-name "ddaArchitecture"
+            :protocol :https
+            :server-type :github}]
+          :dda-pallet
+          [{:host "github.com"
+            :orga-path "DomainDrivenArchitecture"
+            :repo-name "dda-serverspec-crate"
+            :protocol :https
+            :server-type :github}
+  :synced-repo  {:password-store
+                 [{:host "github.com"
+                   :orga-path "DomainDrivenArchitecture"
+                   :repo-name "password-store-for-teams"
+                   :protocol :https
+                   :server-type :github}]}}}
 ```
 
 ### Watch log for debug reasons
@@ -74,7 +100,9 @@ In case any problems occur, you may want to have a look at the log-file:
 
 ## Reference
 
-Some details about the architecture: We provide two levels of API. **Domain** is a high-level API with many build in conventions. If this conventions don't fit your needs, you can use our low-level **infra** API and realize your own conventions.
+Some details about the architecture: We provide two levels of API.  
+* **Domain-Level-API**: Domain is a high-level API with many build in conventions.
+* **Infra-Level-API:**: If this conventions don't fit your needs, you can use our low-level infra API and realize your own conventions.
 
 ### Targets
 
