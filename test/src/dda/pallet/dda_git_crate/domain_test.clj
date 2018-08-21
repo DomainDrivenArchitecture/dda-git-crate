@@ -97,6 +97,10 @@
   {:domain-input
    {:test-user
      {:user-email "test-user@domain"
+      :credential [{:host "github.com"
+                    :protocol :https
+                    :username {:plain "githubtest"}
+                    :password {:plain "secure1234"}}]
       :repo {:folder1 [{:host "github.com"
                         :port 443
                         :orga-path "DomainDrivenArchitecture"
@@ -119,10 +123,10 @@
                                :protocol :https
                                :server-type :gitblit}]}}}
    :infra-repo-expectation
-   [{:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+   [{:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
      :local-dir "/home/test-user/repos/folder1/dda-git-crate"
      :settings #{}}
-    {:repo "https://github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
+    {:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
      :local-dir "/home/test-user/repos/folder1/dda-serverspec-crate"
      :settings #{}}
     {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"

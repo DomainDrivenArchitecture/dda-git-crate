@@ -16,8 +16,8 @@
 (def GitCredential
   (merge
      ServerIdentity
-     {:user-name secret/Secret                    ;needed for none-public access
-      (s/optional-key :password) secret/Secret})) ;needed for none-public & none-key access
+     {:user-name secret/Secret                     ;needed for none-public access
+      (s/optional-key :password) secret/Secret}))  ;needed for none-public & none-key access
 
 (def GitCredentials [GitCredential])
 
