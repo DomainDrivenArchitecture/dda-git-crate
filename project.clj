@@ -4,7 +4,8 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "2.2.1"]
-                 [com.stuartsierra/component "0.3.2"]]
+                 [com.stuartsierra/component "0.3.2"]
+                 [dda/dda-serverspec-crate "1.2.1"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
@@ -17,9 +18,7 @@
                    :resource-paths ["integration/resources"
                                     "test/resources"]
                    :dependencies
-                   [[dda/dda-serverspec-crate "1.2.1"]
-                    [dda/dda-user-crate "1.0.5"]
-                    [org.clojure/test.check "0.10.0-alpha3"]
+                   [[org.clojure/test.check "0.10.0-alpha3"]
                     [expectations "2.2.0-rc3"]
                     [dda/pallet "0.9.0" :classifier "tests"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]

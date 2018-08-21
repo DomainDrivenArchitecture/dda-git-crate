@@ -21,7 +21,8 @@
     [pallet.actions :as actions]
     [pallet.crate :as crate]
     [selmer.parser :as selmer]
-    [dda.config.commons.user-home :as user-home]))
+    [dda.config.commons.user-home :as user-home]
+    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact]))
 
 (def Repository
   {:repo s/Str
@@ -56,7 +57,10 @@
   [facility :- s/Keyword
    user-name :- s/Str
    crate-repo :- Repository]
-  (let [{:keys [local-dir repo]} crate-repo]
+  (let [{:keys [local-dir repo]} crate-repo
+        all-facts (crate/get-settings
+                          fact/fact-facility
+                          {:instance-id (crate/target-node)})]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
     (actions/exec-checked-script
