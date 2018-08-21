@@ -52,7 +52,7 @@
   core-app/group-spec infra/facility
   [crate-app
    domain-config :- GitDomainResolved]
-  (let [app-config (app-configuration domain-config)]
+  (let [app-config (app-configuration-resolved domain-config)]
     (core-app/pallet-group-spec
       app-config [(config-crate/with-config app-config)
                   with-git])))

@@ -16,7 +16,6 @@
 (ns dda.pallet.dda-git-crate.domain-test
   (:require
     [clojure.test :refer :all]
-    [expectations.clojure.test :as ex]
     [schema.core :as s]
     [dda.pallet.dda-git-crate.domain :as sut]))
 
