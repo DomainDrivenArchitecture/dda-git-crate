@@ -38,7 +38,7 @@
 (def GitCredential
   (merge
      ServerIdentity
-     {:username secret/Secret                     ;needed for none-public access
+     {:user-name secret/Secret                     ;needed for none-public access
       (s/optional-key :password) secret/Secret}))  ;needed for none-public & none-key access
 
 (def GitCredentialResolved (secret/create-resolved-schema GitCredential))
@@ -128,6 +128,16 @@
           (str "ssh://git@" host ":"
                orga-path "/" repo-name ".git"))))
 
+(s/defn credential-map
+  [credentials :- GitCredentialsResolved]
+  (reduce-kv
+    (fn [col k v]
+      (merge col
+             {(server-identity-key v)
+              (select-keys v [:user-name :password])}))
+    {}
+    credentials))
+
 (s/defn infra-repo
   [user :- s/Keyword
    is-synced? :- s/Bool
@@ -161,7 +171,7 @@
       (into
         col
         (map
-          #(infra-repo user is-synced? k credentials %)
+          #(infra-repo user is-synced? k (credential-map credentials) %)
           v)))
     []
     repos))

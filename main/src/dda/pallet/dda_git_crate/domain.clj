@@ -35,6 +35,8 @@
   {s/Keyword                 ;represents the user-name
    UserGit})
 
+(def GitDomainResolved (secret/create-resolved-schema GitDomain))
+
 (def InfraResult {infra/facility infra/GitInfra})
 
 (defn-
@@ -66,7 +68,7 @@
 
 (s/defn ^:always-validate
   infra-configuration :- InfraResult
-  [domain-config :- GitDomain]
+  [domain-config :- GitDomainResolved]
   {infra/facility
     (into {}
       (map

@@ -74,8 +74,9 @@
                 :orga-path "DomainDrivenArchitecture"
                 :repo-name "dda-git-crate"
                 :protocol :https :server-type :github}
-   :credential-input {:github.com_443 {:user-name "test"}}
-   :expected {:repo "https://test@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+   :credential-input {:github.com_443 {:user-name "test"
+                                       :password "pwd"}}
+   :expected {:repo "https://test:pwd@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
               :local-dir "/home/test-user/repos/folder1/dda-git-crate"
               :settings #{}}})
 

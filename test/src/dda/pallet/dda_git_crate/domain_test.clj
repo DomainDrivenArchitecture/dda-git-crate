@@ -99,8 +99,8 @@
      {:user-email "test-user@domain"
       :credential [{:host "github.com"
                     :protocol :https
-                    :username {:plain "githubtest"}
-                    :password {:plain "secure1234"}}]
+                    :user-name "githubtest"
+                    :password "secure1234"}]
       :repo {:folder1 [{:host "github.com"
                         :port 443
                         :orga-path "DomainDrivenArchitecture"
