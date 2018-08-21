@@ -19,6 +19,7 @@
     [schema.core :as s]
     [dda.pallet.dda-git-crate.domain :as sut]))
 
+
 (def invalid
   {:domain-input {:test-user {:invalid 42}}
    :infra {}})
@@ -123,16 +124,16 @@
                                :server-type :gitblit}]}}}
    :infra-repo-expectation
    [{:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
-     :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+     :local-dir "/home/test-user/repo/folder1/dda-git-crate"
      :settings #{}}
     {:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
-     :local-dir "/home/test-user/repos/folder1/dda-serverspec-crate"
+     :local-dir "/home/test-user/repo/folder1/dda-serverspec-crate"
      :settings #{}}
     {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"
-     :local-dir "/home/test-user/repos/folder2/dda-managed-ide"
+     :local-dir "/home/test-user/repo/folder2/dda-managed-ide"
      :settings #{}}
     {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
-     :local-dir "/home/test-user/repos/folder1/a-private-repo"
+     :local-dir "/home/test-user/repo/folder1/a-private-repo"
      :settings #{:sync}}]})
 
 (deftest repo-test

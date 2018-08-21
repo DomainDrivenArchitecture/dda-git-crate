@@ -56,7 +56,7 @@
                 :protocol :https :server-type :github}
    :credential-input nil
    :expected {:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
-              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :local-dir "/home/test-user/repo/folder1/dda-git-crate"
               :settings #{}}})
 
 (def pwd-authoriezd-https-github
@@ -66,7 +66,7 @@
                 :protocol :https :server-type :github}
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}}
    :expected {:repo "https://test:pwd@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
-              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :local-dir "/home/test-user/repo/folder1/dda-git-crate"
               :settings #{}}})
 
 (def uname-https-github
@@ -77,7 +77,7 @@
    :credential-input {:github.com_443 {:user-name "test"
                                        :password "pwd"}}
    :expected {:repo "https://test:pwd@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
-              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :local-dir "/home/test-user/repo/folder1/dda-git-crate"
               :settings #{}}})
 
 (def ssh-github
@@ -87,7 +87,7 @@
                 :protocol :ssh :server-type :github}
    :credential-input {:github.com_22 {:user-name "ssh_test"}}
    :expected {:repo "git@github.com:DomainDrivenArchitecture/dda-git-crate.git"
-              :local-dir "/home/test-user/repos/folder1/dda-git-crate"
+              :local-dir "/home/test-user/repo/folder1/dda-git-crate"
               :settings #{}}})
 
 (def minimal-https-gitblit
@@ -96,7 +96,7 @@
                 :server-type :gitblit}
    :credential-input nil
    :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
-                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (deftest test-github-repo
@@ -130,7 +130,7 @@
                 :server-type :gitblit}
    :credential-input nil
    :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
-                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (def pwd-authoriezd-https-gitblit
@@ -140,7 +140,7 @@
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
                       :repo.meissa-gmbh.de_443 {:user-name "test2" :password "pwd2"}}
    :expected   {:repo "https://test2:pwd2@repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
-                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (def ssh-gitblit
@@ -150,7 +150,7 @@
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
                       :repo.meissa-gmbh.de_29418 {:user-name "test2" :password "pwd2"}}
    :expected   {:repo "ssh://test2@repo.meissa-gmbh.de:29418/meissa/group/a-private-repo.git"
-                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (deftest test-gitblit-repo
@@ -177,7 +177,7 @@
                 :server-type :gitlab}
    :credential-input nil
    :expected   {:repo "https://gitlab.com:443/gitlab-org/gitlab-ce.git"
-                :local-dir "/home/test-user/repos/folder1/gitlab-ce"
+                :local-dir "/home/test-user/repo/folder1/gitlab-ce"
                 :settings #{}}})
 
 (def ssh-gitlab
@@ -187,7 +187,7 @@
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
                       :gitlab.meissa-gmbh.de_22 {:user-name "test2" :password "pwd2"}}
    :expected   {:repo "ssh://git@gitlab.meissa-gmbh.de:group/a-private-repo.git"
-                :local-dir "/home/test-user/repos/folder1/a-private-repo"
+                :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{}}})
 
 (deftest test-gitlab-repo

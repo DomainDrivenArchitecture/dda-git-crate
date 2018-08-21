@@ -152,7 +152,7 @@
            (= :gitlab server-type) (gitlab-url credential repo))
      :local-dir
      (str (user-home/user-home-dir (name user))
-          "/repos/"
+          "/repo/"
           (name orga-group)
           "/"
           repo-name)
