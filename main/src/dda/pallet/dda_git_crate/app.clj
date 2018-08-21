@@ -20,6 +20,7 @@
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.core.app :as core-app]
    [dda.pallet.dda-config-crate.infra :as config-crate]
+   [dda.pallet.dda-serverspec-crate.app :as serverspec]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-git-crate.domain :as domain]))
 
@@ -55,6 +56,7 @@
   (let [app-config (app-configuration-resolved domain-config)]
     (core-app/pallet-group-spec
       app-config [(config-crate/with-config app-config)
+                  serverspec/with-serverspec
                   with-git])))
 
 (def crate-app (core-app/make-dda-crate-app

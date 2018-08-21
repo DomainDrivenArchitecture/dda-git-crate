@@ -63,6 +63,8 @@
                           {:instance-id (crate/target-node)})]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
+    (actions/as-action
+      (logging/info all-facts))
     (actions/exec-checked-script
      (str "Clone " repo " into " local-dir)
      (if (not (file-exists? ~(str local-dir "/.git/config")))

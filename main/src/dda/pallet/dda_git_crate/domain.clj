@@ -21,6 +21,7 @@
    [dda.config.commons.user-home :as user-home]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
+   [dda.pallet.dda-serverspec-crate.domain :as spec-domain]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
 (def UserGit
@@ -37,7 +38,10 @@
 
 (def GitDomainResolved (secret/create-resolved-schema GitDomain))
 
-(def InfraResult {infra/facility infra/GitInfra})
+(def InfraResult
+     (merge
+       {infra/facility infra/GitInfra}
+       spec-domain/InfraResult))
 
 (defn-
   configuration
@@ -73,4 +77,6 @@
     (into {}
       (map
         (fn [[k v]] [k (infra-configuration-per-user k v)])
-        domain-config))})
+        domain-config))
+   dda.pallet.dda-serverspec-crate.infra/facility
+    (repo/infra-facts nil nil nil nil)})

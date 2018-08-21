@@ -175,3 +175,17 @@
           v)))
     []
     repos))
+
+
+(s/defn infra-facts
+  [user :- s/Keyword
+   is-synced? :- s/Bool
+   credentials :- GitCredentialsResolved
+   repos :- OrganizedRepositories]
+  {:file-fact
+    {:1 {:path "/home/initial/repo/dda-pallet/dda-config-commons"}}})
+
+  ; (apply merge
+  ;        (map
+  ;         #(let [path (:path %)] {(infra/path-to-keyword path) {:path path}})
+  ;         file-domain-config)))
