@@ -147,9 +147,9 @@
           "/"
           repo-name)
      :settings
-      (if is-synced?
-        #{:sync}
-        #{})}))
+     (if is-synced?
+       #{:sync}
+       #{})}))
 
 (s/defn infra-repos
   [user :- s/Keyword

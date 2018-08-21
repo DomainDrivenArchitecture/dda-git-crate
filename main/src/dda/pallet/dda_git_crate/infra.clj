@@ -24,7 +24,7 @@
     [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
-    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))
+    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))    
 
 (def facility :dda-git)
 
