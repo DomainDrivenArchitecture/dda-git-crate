@@ -1,9 +1,0 @@
-{:os-user :ubuntu
- :user-email "ubuntu@some-domain.org"
- :repos {:books
-         ["https://github.com/DomainDrivenArchitecture/ddaArchitecture.git"]
-         :dda-pallet
-         ["https://github.com/DomainDrivenArchitecture/dda-config-commons.git"
-          "https://github.com/DomainDrivenArchitecture/dda-pallet-commons.git"]}
- :synced-repos {:password-store
-                ["https://github.com/DomainDrivenArchitecture/password-store-for-teams.git"]}}

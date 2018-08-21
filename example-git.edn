@@ -1,0 +1,35 @@
+{:initial
+ {:user-email "initial@some-domain.org"
+  :repo  {:books
+          [{:host "github.com"
+            :orga-path "DomainDrivenArchitecture"
+            :repo-name "ddaArchitecture"
+            :protocol :https
+            :server-type :github}]
+          :dda-pallet
+          [{:host "github.com"
+            :orga-path "DomainDrivenArchitecture"
+            :repo-name "dda-config-commons"
+            :protocol :https
+            :server-type :github}
+           {:host "github.com"
+             :orga-path "DomainDrivenArchitecture"
+             :repo-name "dda-pallet-commons"
+             :protocol :https
+             :server-type :github}
+           {:host "github.com"
+             :orga-path "DomainDrivenArchitecture"
+             :repo-name "dda-pallet"
+             :protocol :https
+             :server-type :github}
+           {:host "github.com"
+             :orga-path "DomainDrivenArchitecture"
+             :repo-name "dda-user-crate"
+             :protocol :https
+             :server-type :github}]}
+  :synced-repo  {:password-store
+                 [{:host "github.com"
+                   :orga-path "DomainDrivenArchitecture"
+                   :repo-name "password-store-for-teams"
+                   :protocol :https
+                   :server-type :github}]}}}
