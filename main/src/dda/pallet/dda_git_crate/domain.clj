@@ -70,6 +70,16 @@
              (repo/infra-repos user false credential repo)
              (repo/infra-repos user true credential synced-repo))}))
 
+(defn-
+  infra-facts-per-user
+  [user
+   user-config]
+  (let [{:keys [user-email signing-key diff-tool credential
+                repo synced-repo]} user-config]
+    {:file-fact (into
+                  (repo/infra-facts user repo)
+                  (repo/infra-facts user synced-repo))}))
+
 (s/defn ^:always-validate
   infra-configuration :- InfraResult
   [domain-config :- GitDomainResolved]
@@ -79,4 +89,7 @@
         (fn [[k v]] [k (infra-configuration-per-user k v)])
         domain-config))
    dda.pallet.dda-serverspec-crate.infra/facility
-    (repo/infra-facts nil nil nil nil)})
+    (into {}
+      (map
+        (fn [[k v]] [k (infra-facts-per-user k v)])
+        domain-config))})

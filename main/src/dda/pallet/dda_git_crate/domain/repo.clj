@@ -138,6 +138,17 @@
     {}
     credentials))
 
+(s/defn repo-directory-name
+  [user :- s/Keyword
+   orga-group :- s/Keyword
+   repo :- Repository]
+  (let [{:keys [repo-name]} repo]
+     (str (user-home/user-home-dir (name user))
+          "/repo/"
+          (name orga-group)
+          "/"
+          repo-name)))
+
 (s/defn infra-repo
   [user :- s/Keyword
    is-synced? :- s/Bool
@@ -151,11 +162,7 @@
            (= :gitblit server-type) (gitblit-url credential repo)
            (= :gitlab server-type) (gitlab-url credential repo))
      :local-dir
-     (str (user-home/user-home-dir (name user))
-          "/repo/"
-          (name orga-group)
-          "/"
-          repo-name)
+     (repo-directory-name user orga-group repo)
      :settings
      (if is-synced?
        #{:sync}
@@ -168,6 +175,20 @@
    repos :- OrganizedRepositories]
   (reduce-kv
     (fn [col k v]
+      (merge
+        col
+        (map
+          (fn [v] {(keyword (repo-directory-name user k v))
+                   {:path (repo-directory-name user k v)}})
+          v)))
+    {}
+    repos))
+
+(s/defn infra-facts
+  [user :- s/Keyword
+   repos :- OrganizedRepositories]
+  (reduce-kv
+    (fn [col k v]
       (into
         col
         (map
@@ -175,17 +196,3 @@
           v)))
     []
     repos))
-
-
-(s/defn infra-facts
-  [user :- s/Keyword
-   is-synced? :- s/Bool
-   credentials :- GitCredentialsResolved
-   repos :- OrganizedRepositories]
-  {:file-fact
-    {:1 {:path "/home/initial/repo/dda-pallet/dda-config-commons"}}})
-
-  ; (apply merge
-  ;        (map
-  ;         #(let [path (:path %)] {(infra/path-to-keyword path) {:path path}})
-  ;         file-domain-config)))
