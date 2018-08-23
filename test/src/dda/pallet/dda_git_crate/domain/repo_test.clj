@@ -202,3 +202,19 @@
               :test-user false :folder1
               (:credential-input ssh-gitlab)
               (:repo-input ssh-gitlab))))))
+
+(deftest test-infra-fact
+ (testing
+   (is (= ""
+          (sut/infra-fact
+              :test-user
+              :folder1
+              (:repo-input minimal-https-gitlab))))))
+
+(deftest test-infra-facts
+ (testing
+   (is (= ""
+          (sut/infra-facts
+              :test-user
+              {:folder1 [(:repo-input minimal-https-gitlab)
+                         (:repo-input minimal-https-gitblit)]})))))

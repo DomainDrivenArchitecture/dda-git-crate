@@ -168,24 +168,17 @@
        #{:sync}
        #{})}))
 
+(s/defn infra-fact
+  [user :- s/Keyword
+   orga-group :- s/Keyword
+   repo :- Repository]
+  {(keyword (repo-directory-name user orga-group repo))
+   {:path (repo-directory-name user orga-group repo)}})
+
 (s/defn infra-repos
   [user :- s/Keyword
    is-synced? :- s/Bool
    credentials :- GitCredentialsResolved
-   repos :- OrganizedRepositories]
-  (reduce-kv
-    (fn [col k v]
-      (merge
-        col
-        (map
-          (fn [v] {(keyword (repo-directory-name user k v))
-                   {:path (repo-directory-name user k v)}})
-          v)))
-    {}
-    repos))
-
-(s/defn infra-facts
-  [user :- s/Keyword
    repos :- OrganizedRepositories]
   (reduce-kv
     (fn [col k v]
@@ -195,4 +188,17 @@
           #(infra-repo user is-synced? k (credential-map credentials) %)
           v)))
     []
+    repos))
+
+(s/defn infra-facts
+  [user :- s/Keyword
+   repos :- OrganizedRepositories]
+  (reduce-kv
+    (fn [col k v]
+      (merge
+        col
+        (map
+          #(infra-fact user k %)
+          v)))
+    {}
     repos))
