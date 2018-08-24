@@ -30,11 +30,14 @@
    :local-dir s/Str
    :settings (hash-set (s/enum :sync))})
 
-(s/defn
-  project-parent-path
+(s/defn project-parent-path
   [repo :- Repository]
   (let [{:keys [local-dir]} repo]
     (st/join "/" (drop-last (st/split local-dir #"/")))))
+
+(s/defn path-to-keyword :- s/Keyword
+  [path :- s/Str]
+  (keyword (st/replace path #"[/-]" "_")))
 
 (s/defn
   create-project-parent
@@ -81,9 +84,7 @@
                           fact/fact-facility
                           {:instance-id (crate/target-node)})
         file-fact (:dda.pallet.dda-serverspec-crate.infra.fact.file/file all-facts)
-        path (keyword (st/replace local-dir #"/" "_"))]
-    (actions/as-action
-      (logging/info (str repo "!!!!!!!!!!!!!!!")))
+        path (path-to-keyword local-dir)]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
     (actions/plan-when (:fact-exist? (path (:out @file-fact))) (set-url user-name repo local-dir))

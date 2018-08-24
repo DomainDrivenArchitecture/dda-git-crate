@@ -17,6 +17,7 @@
   (:require
     [clojure.tools.logging :as logging]
     [schema.core :as s]
+    [clojure.string :as st]
     [pallet.api :as api]
     [pallet.actions :as actions]
     [pallet.crate :as crate]
@@ -24,7 +25,7 @@
     [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
-    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))    
+    [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))
 
 (def facility :dda-git)
 

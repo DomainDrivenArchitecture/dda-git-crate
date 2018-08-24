@@ -20,7 +20,8 @@
     [clojure.tools.logging :as logging]
     [schema.core :as s]
     [dda.pallet.commons.secret :as secret]
-    [dda.config.commons.user-home :as user-home]))
+    [dda.config.commons.user-home :as user-home]
+    [dda.pallet.dda-git-crate.infra.git-repo :as repo]))
 
 (def ServerIdentity
   {:host s/Str                                 ;identifyer for repo matching
@@ -169,17 +170,12 @@
        #{:sync}
        #{})}))
 
-(s/defn
-  path-to-keyword :- s/Keyword
-  [path :- s/Str]
-  (keyword (st/replace path #"[/-]" "_")))
-
 (s/defn infra-fact
   [user :- s/Keyword
    orga-group :- s/Keyword
    repo :- Repository]
   (let [dir (repo-directory-name user orga-group repo)]
-    {(path-to-keyword dir) {:path dir}}))
+    {(repo/path-to-keyword dir) {:path dir}}))
 
 (s/defn infra-repos
   [user :- s/Keyword
