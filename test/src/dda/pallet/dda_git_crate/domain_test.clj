@@ -34,7 +34,8 @@
   {:domain-input {:test-user {:user-email "test-user@domain"}}
    :infra {:dda-git
            {:test-user
-            {:config {:email "test-user@domain"}, :trust [], :repo []}}}})
+            {:config {:email "test-user@domain"}, :trust [], :repo []}}
+           :dda-servertest {:file-fact {}}}})
 
 (deftest minimal-test
  (testing
@@ -49,7 +50,8 @@
            {:test-user1
             {:config {:email "test-user1@domain"}, :trust [], :repo []}
             :test-user2
-            {:config {:email "test-user2@domain"}, :trust [], :repo []}}}})
+            {:config {:email "test-user2@domain"}, :trust [], :repo []}}
+           :dda-servertest {:file-fact {}}}})
 
 (deftest multiuser-test
  (testing
@@ -134,11 +136,26 @@
      :settings #{}}
     {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
      :local-dir "/home/test-user/repo/folder1/a-private-repo"
-     :settings #{:sync}}]})
+     :settings #{:sync}}]
+   :infra-fact-expectation
+   {:file-fact
+    {:_home_test_user_repo_folder1_dda_git_crate
+     {:path "/home/test-user/repo/folder1/dda-git-crate"},
+     :_home_test_user_repo_folder1_dda_serverspec_crate
+     {:path
+      "/home/test-user/repo/folder1/dda-serverspec-crate"},
+     :_home_test_user_repo_folder2_dda_managed_ide
+     {:path "/home/test-user/repo/folder2/dda-managed-ide"},
+     :_home_test_user_repo_folder1_a_private_repo
+     {:path "/home/test-user/repo/folder1/a-private-repo"}}}})
 
 (deftest repo-test
   (testing
     (is (= (:infra-repo-expectation repos)
            (get-in (sut/infra-configuration
                      (:domain-input repos))
-                   [:dda-git :test-user :repo])))))
+                   [:dda-git :test-user :repo])))
+    (is (= (:infra-fact-expectation repos)
+           (get-in (sut/infra-configuration
+                     (:domain-input repos))
+                   [:dda-servertest])))))

@@ -76,12 +76,12 @@
    user-config]
   (let [{:keys [user-email signing-key diff-tool credential
                 repo synced-repo]} user-config]
-    {:file-fact (into
+    {:file-fact (merge
                   (repo/infra-facts user repo)
                   (repo/infra-facts user synced-repo))}))
 
 (s/defn ^:always-validate
-  infra-configuration :- InfraResult
+  infra-configuration
   [domain-config :- GitDomainResolved]
   {infra/facility
     (into {}
@@ -89,7 +89,7 @@
         (fn [[k v]] [k (infra-configuration-per-user k v)])
         domain-config))
    dda.pallet.dda-serverspec-crate.infra/facility
-    (into {}
+    (apply merge {}
       (map
-        (fn [[k v]] [k (infra-facts-per-user k v)])
+        (fn [[k v]] (infra-facts-per-user k v))
         domain-config))})
