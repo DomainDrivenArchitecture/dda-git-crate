@@ -22,7 +22,8 @@
     [pallet.crate :as crate]
     [selmer.parser :as selmer]
     [dda.config.commons.user-home :as user-home]
-    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact]))
+    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact]
+    [clojure.pprint :as pp]))
 
 (def Repository
   {:repo s/Str
@@ -52,6 +53,24 @@
   "Find a repository name from a repo uri string"
   (-> (st/split repo-uri #"/") last (st/replace #"\.git$" "")))
 
+(s/defn clone-repo
+  [user-name :- s/Str
+   repo :- s/Str
+   local-dir :- s/Str]
+  (actions/exec-checked-script
+   (str "Clone " repo " into " local-dir)
+   (if (not (file-exists? ~(str local-dir "/.git/config")))
+     ("su" ~user-name "-c" "\"git" "clone" ~repo ~local-dir "\""))))
+
+(s/defn set-url
+  [user-name :- s/Str
+   repo :- s/Str
+   local-dir :- s/Str]
+  (actions/exec-checked-script
+   (str "Set URL")
+   ("cd" ~local-dir)
+   ("su" ~user-name "-c" "\"git" "remote" "set-url" "origin" ~repo "\"")))
+
 (s/defn
   clone
   [facility :- s/Keyword
@@ -60,15 +79,15 @@
   (let [{:keys [local-dir repo]} crate-repo
         all-facts (crate/get-settings
                           fact/fact-facility
-                          {:instance-id (crate/target-node)})]
+                          {:instance-id (crate/target-node)})
+        file-fact (:dda.pallet.dda-serverspec-crate.infra.fact.file/file all-facts)
+        path (keyword (st/replace local-dir #"/" "_"))]
+    (actions/as-action
+      (logging/info (str repo "!!!!!!!!!!!!!!!")))
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
-    (actions/as-action
-      (logging/info all-facts))
-    (actions/exec-checked-script
-     (str "Clone " repo " into " local-dir)
-     (if (not (file-exists? ~(str local-dir "/.git/config")))
-       ("su" ~user-name "-c" "\"git" "clone" ~repo ~local-dir "\"")))))
+    (actions/plan-when (:fact-exist? (path (:out @file-fact))) (set-url user-name repo local-dir))
+    (actions/plan-when (not (:fact-exist? (path (:out @file-fact)))) (clone-repo user-name repo local-dir))))
 
 (s/defn
   configure-git-sync
