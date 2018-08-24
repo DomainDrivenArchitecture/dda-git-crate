@@ -16,6 +16,7 @@
 
 (ns dda.pallet.dda-git-crate.domain.repo
   (:require
+    [clojure.string :as st]
     [clojure.tools.logging :as logging]
     [schema.core :as s]
     [dda.pallet.commons.secret :as secret]
@@ -168,12 +169,17 @@
        #{:sync}
        #{})}))
 
+(s/defn
+  path-to-keyword :- s/Keyword
+  [path :- s/Str]
+  (keyword (st/replace path #"[/-]" "_")))
+
 (s/defn infra-fact
   [user :- s/Keyword
    orga-group :- s/Keyword
    repo :- Repository]
-  {(keyword (repo-directory-name user orga-group repo))
-   {:path (repo-directory-name user orga-group repo)}})
+  (let [dir (repo-directory-name user orga-group repo)]
+    {(path-to-keyword dir) {:path dir}}))
 
 (s/defn infra-repos
   [user :- s/Keyword
@@ -195,7 +201,7 @@
    repos :- OrganizedRepositories]
   (reduce-kv
     (fn [col k v]
-      (merge
+      (apply merge
         col
         (map
           #(infra-fact user k %)

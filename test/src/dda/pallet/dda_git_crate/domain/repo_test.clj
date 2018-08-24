@@ -205,7 +205,8 @@
 
 (deftest test-infra-fact
  (testing
-   (is (= ""
+   (is (= {:_home_test_user_repo_folder1_gitlab_ce
+             {:path "/home/test-user/repo/folder1/gitlab-ce"}}
           (sut/infra-fact
               :test-user
               :folder1
@@ -213,7 +214,10 @@
 
 (deftest test-infra-facts
  (testing
-   (is (= ""
+   (is (= {:_home_test_user_repo_folder1_gitlab_ce
+           {:path "/home/test-user/repo/folder1/gitlab-ce"},
+           :_home_test_user_repo_folder1_a_private_repo
+           {:path "/home/test-user/repo/folder1/a-private-repo"}}
           (sut/infra-facts
               :test-user
               {:folder1 [(:repo-input minimal-https-gitlab)
