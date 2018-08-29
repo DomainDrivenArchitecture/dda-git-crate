@@ -36,11 +36,12 @@
 
 (def Config
   {:config git-schema/Config
+   :file-fact-keyword s/Keyword
    :trust [server-trust/ServerTrust]
    :repo [Repository]})
 
 (def GitInfra
-  {s/Keyword      ; Keyword is user-name
+  {s/Keyword      ;Keyword is user-name
    Config})
 
 (s/defmethod core-infra/dda-settings facility
@@ -53,12 +54,12 @@
   (doseq [user (keys config)]
     (let [user-config (user config)
           user-name (name user)
-          {:keys [config repo trust]} user-config]
+          {:keys [config repo trust file-fact-keyword]} user-config]
       (pallet.action/with-action-options
         {:sudo-user "root"}
         (git-config/configure-user user-name config)
         (server-trust/configure-user facility user-name trust)
-        (git-repo/configure-user facility user-name repo)))))
+        (git-repo/configure-user facility user-name repo file-fact-keyword)))))
 
 (s/defmethod core-infra/dda-configure facility
   [core-infra config]

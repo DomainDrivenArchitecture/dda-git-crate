@@ -78,12 +78,13 @@
   clone
   [facility :- s/Keyword
    user-name :- s/Str
-   crate-repo :- Repository]
+   crate-repo :- Repository
+   file-fact-keyword :- s/Keyword]
   (let [{:keys [local-dir repo]} crate-repo
         all-facts (crate/get-settings
                           fact/fact-facility
                           {:instance-id (crate/target-node)})
-        file-fact (:dda.pallet.dda-serverspec-crate.infra.fact.file/file all-facts)
+        file-fact (file-fact-keyword all-facts)
         path (path-to-keyword local-dir)]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
@@ -115,9 +116,10 @@
   "configure user setup"
   [facility :- s/Keyword
    user-name :- s/Str
-   repo :- [Repository]]
+   repo :- [Repository]
+   file-fact-keyword :- s/Keyword]
   (doseq [repo-element repo]
     (let [repo-parent (project-parent-path repo-element)]
       (create-project-parent facility user-name repo-parent)
-      (clone facility user-name repo-element)
+      (clone facility user-name repo-element file-fact-keyword)
       (configure-git-sync facility user-name repo-element))))
