@@ -22,7 +22,7 @@
     [pallet.crate :as crate]
     [selmer.parser :as selmer]
     [dda.config.commons.user-home :as user-home]
-    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact]
+    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact] ; TODO: usage of infra.core.fact is forbidden as infra is the boundary
     [clojure.pprint :as pp]))
 
 (def Repository
@@ -88,8 +88,10 @@
         path (path-to-keyword local-dir)]
     (actions/as-action
       (logging/info (str facility "-configure user: clone")))
-    (actions/plan-when (:fact-exist? (path (:out @file-fact))) (set-url user-name repo local-dir))
-    (actions/plan-when (not (:fact-exist? (path (:out @file-fact)))) (clone-repo user-name repo local-dir))))
+    (actions/plan-when (:fact-exist? (path (:out @file-fact)))
+      (set-url user-name repo local-dir))
+    (actions/plan-when (not (:fact-exist? (path (:out @file-fact))))
+      (clone-repo user-name repo local-dir))))
 
 (s/defn
   configure-git-sync
