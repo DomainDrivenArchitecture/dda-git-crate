@@ -22,7 +22,6 @@
     [pallet.actions :as actions]
     [pallet.crate :as crate]
     [dda.pallet.core.infra :as core-infra]
-    [dda.pallet.dda-git-crate.infra.schema :as git-schema]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
     [dda.pallet.dda-git-crate.infra.server-trust :as server-trust]))
@@ -35,7 +34,7 @@
   git-repo/Repository)
 
 (def Config
-  {:config git-schema/Config
+  {:config git-config/Config
    :file-fact-keyword s/Keyword
    :trust [server-trust/ServerTrust]
    :repo [Repository]})
@@ -43,10 +42,6 @@
 (def GitInfra
   {s/Keyword      ;Keyword is user-name
    Config})
-
-(s/defmethod core-infra/dda-settings facility
-  [core-infra config])
-  ;(package-fact/collect-packages-fact)
 
 (s/defn configure-user
   "configure user setup"
