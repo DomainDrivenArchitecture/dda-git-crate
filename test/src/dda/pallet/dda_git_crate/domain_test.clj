@@ -34,7 +34,8 @@
   {:domain-input {:test-user {:user-email "test-user@domain"}}
    :infra {:dda-git
            {:test-user
-            {:config {:email "test-user@domain"}, :trust [], :repo []}}
+            {:config {:email "test-user@domain"}, :trust [], :repo []
+             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}}
            :dda-servertest {:file-fact {}}}})
 
 (deftest minimal-test
@@ -48,9 +49,11 @@
                   :test-user2 {:user-email "test-user2@domain"}}
    :infra {:dda-git
            {:test-user1
-            {:config {:email "test-user1@domain"}, :trust [], :repo []}
+            {:config {:email "test-user1@domain"}, :trust [], :repo []
+             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}
             :test-user2
-            {:config {:email "test-user2@domain"}, :trust [], :repo []}}
+            {:config {:email "test-user2@domain"}, :trust [], :repo []
+             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}}
            :dda-servertest {:file-fact {}}}})
 
 (deftest multiuser-test

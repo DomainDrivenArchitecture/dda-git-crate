@@ -66,6 +66,7 @@
                     {:signing-key signing-key})
                   (when (contains? domain-config :diff-tool)
                     {:diff-tool diff-tool}))
+                :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file
                 :trust (into
                          (repo/collect-trust (flatten (vals unsynced-repos)))
                          (repo/collect-trust (flatten (vals synced-repos))))
