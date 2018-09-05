@@ -61,7 +61,7 @@
   (let [{:keys [user-email signing-key diff-tool credential
                 repo synced-repo]} user-config]
     {:config (configuration user-config)
-     :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file ; TODO: usage of infra.core.fact is forbidden as infra is the boundary
+     :file-fact-keyword spec-domain/fact-id-file
      :trust (repo/trust
               (reduce-kv
                 (fn [c k v] (into c v))

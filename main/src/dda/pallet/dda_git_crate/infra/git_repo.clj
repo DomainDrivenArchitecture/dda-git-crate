@@ -22,7 +22,7 @@
     [pallet.crate :as crate]
     [selmer.parser :as selmer]
     [dda.config.commons.user-home :as user-home]
-    [dda.pallet.dda-serverspec-crate.infra.core.fact :as fact] ; TODO: usage of infra.core.fact is forbidden as infra is the boundary
+    [dda.pallet.dda-serverspec-crate.infra :as fact]
     [clojure.pprint :as pp]))
 
 (def Repository
