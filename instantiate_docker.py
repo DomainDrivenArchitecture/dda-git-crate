@@ -8,10 +8,8 @@ import argparse
 # 2) Install the docker sdk with pip: pip3 install docker
 
 parser = argparse.ArgumentParser()
-parser.add_argument("standalone_jar", help="relative or absolute path to the uberjar used for provisioning.")
-parser.add_argument("config", help="relative or absolute path to the config file in edn format for the provisioning crate.")
-parser.add_argument("serverspec_jar", help="relative or absolute path to the dda-serverspec-crate uberjar.")
-parser.add_argument("serverspec_config", help="relative or absolute path to the config file in edn format for the serverspec tests.")
+parser.add_argument("jar", help="relative or absolute path to the dda-serverspec-crate uberjar.")
+parser.add_argument("config", help="relative or absolute path to the config file in edn format.")
 parser.add_argument("-c", "--cmd", help="alternative command to execute in the docker container.\
                     Default is to run the given uberjar with the given config.")
 parser.add_argument("-i", "--image", help="image for the docker container. Default image is openjdk:8 (where netstat tests do not work since net-tools is not installed).")
@@ -21,17 +19,10 @@ docker_logs = os.getcwd() + '/docker-logs/'
 if not os.path.exists(docker_logs):
     os.makedirs(docker_logs)
 
-#serverspec jar and config file for integration testing
-serverspec_jar = os.path.abspath(args.serverspec_jar)
-serverspec_config = os.path.abspath(args.serverspec_config)
-
-
 edn_file = os.path.abspath(args.config)
-jar_file = os.path.abspath(args.standalone_jar)
+jar_file = os.path.abspath(args.jar)
 
-
-
-execute_command = 'java -jar /app/uberjar.jar /app/config.edn && java -jar /app/serverspec.jar /app/serverspec_config.edn'
+execute_command = 'java -jar /app/uberjar.jar /app/config.edn'
 if args.cmd:
     execute_command = args.cmd
 
@@ -46,7 +37,7 @@ client = docker.APIClient()
 container = client.create_container(
     image=image,
     command=execute_command,
-    volumes=['/app/config.edn', '/app/uberjar.jar', '/logs', '/app/serverspec.jar', '/app/serverspec_config.edn'],
+    volumes=['/app/config.edn', '/app/uberjar.jar', '/logs'],
 
     host_config=client.create_host_config(binds={
         edn_file: {
@@ -60,14 +51,6 @@ container = client.create_container(
         docker_logs: {
             'bind': '/logs/',
             'mode': 'rw',
-        },
-        serverspec_jar: {
-            'bind': '/app/serverspec.jar',
-            'mode': 'ro',
-        },
-        serverspec_config: {
-            'bind': '/app/serverspec_config.edn',
-            'mode': 'ro',
         }
     })
 )
@@ -76,4 +59,3 @@ container = client.create_container(
 response = client.start(container=container)
 for log in client.logs(container, stream=True, stdout=True, stderr=True):
     print(log)
-
