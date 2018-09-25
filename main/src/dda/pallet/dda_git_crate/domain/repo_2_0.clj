@@ -13,8 +13,8 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-
 (ns dda.pallet.dda-git-crate.domain.repo-2-0
+  {:deprecated "2.0"}
   (:require
    [clojure.string :as string]
    [schema.core :as s]
