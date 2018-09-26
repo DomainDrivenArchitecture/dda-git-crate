@@ -142,14 +142,14 @@
      :settings #{:sync}}]
    :infra-fact-expectation
    {:file-fact
-    {:_home_test_user_repo_folder1_dda_git_crate
+    {:_home_test-user_repo_folder1_dda-git-crate
      {:path "/home/test-user/repo/folder1/dda-git-crate"},
-     :_home_test_user_repo_folder1_dda_serverspec_crate
+     :_home_test-user_repo_folder1_dda-serverspec-crate
      {:path
       "/home/test-user/repo/folder1/dda-serverspec-crate"},
-     :_home_test_user_repo_folder2_dda_managed_ide
+     :_home_test-user_repo_folder2_dda-managed-ide
      {:path "/home/test-user/repo/folder2/dda-managed-ide"},
-     :_home_test_user_repo_folder1_a_private_repo
+     :_home_test-user_repo_folder1_a-private-repo
      {:path "/home/test-user/repo/folder1/a-private-repo"}}}})
 
 (deftest repo-test
