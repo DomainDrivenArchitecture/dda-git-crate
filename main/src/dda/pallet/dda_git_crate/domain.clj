@@ -24,6 +24,14 @@
    [dda.pallet.dda-serverspec-crate.domain :as spec-domain]
    [dda.pallet.dda-git-crate.domain.repo :as repo]))
 
+(def ServerIdentity repo/ServerIdentity)
+(def Repository repo/Repository)
+(def OrganizedRepositories repo/OrganizedRepositories)
+(def GitCredential repo/GitCredential)
+(def GitCredentialResolved repo/GitCredentialResolved)
+(def GitCredentials repo/GitCredentials)
+(def GitCredentialsResolved repo/GitCredentialsResolved)
+
 (def UserGit
   {:user-email s/Str
    (s/optional-key :signing-key) s/Str
