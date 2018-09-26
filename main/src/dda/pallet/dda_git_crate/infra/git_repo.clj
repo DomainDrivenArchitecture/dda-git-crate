@@ -37,7 +37,7 @@
 
 (s/defn path-to-keyword :- s/Keyword
   [path :- s/Str]
-  (keyword (st/replace path #"[/-]" "_")))
+  (keyword (st/replace path #"[/]" "_")))
 
 (s/defn
   create-project-parent
