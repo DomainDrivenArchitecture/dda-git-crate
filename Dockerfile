@@ -4,6 +4,6 @@ COPY target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar /app/dda-git-crate.jar
 COPY example-git.edn /app/dda-git-crate-config.edn
 RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 RUN mkdir -p /etc/cron.d/
-RUN useradd -ms /bin/bash test-user
+RUN useradd -ms /bin/bash initial
 
 RUN java -jar /app/dda-git-crate.jar /app/dda-git-crate-config.edn
