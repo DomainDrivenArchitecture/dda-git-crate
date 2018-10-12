@@ -21,6 +21,7 @@
     [pallet.api :as api]
     [pallet.actions :as actions]
     [pallet.crate :as crate]
+    [dda.config.commons.user-home :as user-home]
     [dda.pallet.core.infra :as core-infra]
     [dda.pallet.dda-git-crate.infra.git-repo :as git-repo]
     [dda.pallet.dda-git-crate.infra.git-config :as git-config]
@@ -51,7 +52,9 @@
           user-name (name user)
           {:keys [config repo trust file-fact-keyword]} user-config]
       (pallet.action/with-action-options
-        {:sudo-user "root"}
+        {:sudo-user "root"
+         :script-dir (user-home/user-home-dir user-name)
+         :script-env {:HOME (user-home/user-home-dir user-name)}}
         (git-config/configure-user user-name config)
         (server-trust/configure-user facility user-name trust)
         (git-repo/configure-user facility user-name repo file-fact-keyword)))))

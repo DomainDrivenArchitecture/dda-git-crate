@@ -205,7 +205,7 @@
 
 (deftest test-infra-fact
  (testing
-   (is (= {:_home_test_user_repo_folder1_gitlab_ce
+   (is (= {:_home_test-user_repo_folder1_gitlab-ce
              {:path "/home/test-user/repo/folder1/gitlab-ce"}}
           (sut/infra-fact
               :test-user
@@ -214,9 +214,9 @@
 
 (deftest test-infra-facts
  (testing
-   (is (= {:_home_test_user_repo_folder1_gitlab_ce
+   (is (= {:_home_test-user_repo_folder1_gitlab-ce
            {:path "/home/test-user/repo/folder1/gitlab-ce"},
-           :_home_test_user_repo_folder1_a_private_repo
+           :_home_test-user_repo_folder1_a-private-repo
            {:path "/home/test-user/repo/folder1/a-private-repo"}}
           (sut/infra-facts
               :test-user
