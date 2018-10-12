@@ -1,1 +1,18 @@
+sudo: required
+
 language: clojure
+
+services:
+  - docker
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - lein version
+        - lein deps
+        - lein test
+        - lein uberjar
+    - stage: integrationtest
+      script:
+        - echo "integrationtest"
