@@ -6,19 +6,17 @@ services:
   - docker
 
 stages:
-  - provide_docker
+  - build
   - integrationtest
-
-script:
-  - lein test
-  - lein uberjar
 
 jobs:
   include:
-    - stage: provide_docker
+    - stage: build
       install:
         - echo "ommit install"
       script:
+        - lein test
+        - lein uberjar
         - docker build -t dda/dda-git-crate .
     - stage: integrationtest
       install:
