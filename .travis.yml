@@ -15,4 +15,4 @@ jobs:
         - lein uberjar
     - stage: integrationtest
       script:
-        - echo "integrationtest"
+        - docker build -t dda/dda-git-crate .
