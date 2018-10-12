@@ -9,17 +9,22 @@ stages:
   - build
   - integrationtest
 
+env:
+  global:
+    - DOCKER_USERNAME: domaindrivenarchitecture
+    - secure: "BBnpv1SF+SGa+lEVkvBQ+7DKSNWa5yV1HUnwkUy4JzLhWDhdo8knLI1kH8Ci36UsWGkd3aAZnCUOmKR01fui8ct9tEV7Lt02KOAEKfCZ4z6kow2+0/JgqhiGS1+JK6NgAx6M4O3++My2ZgMLDylAjBJC4MAjVwZLtN5eHdGQKwf34pORZNWgx2xqMKNWncijfoRICJfWKNvAm1YccTUkyR0Rwf2wjCNxHfRpntJxBV9h+J4Lm77Y2V9DdyEPOGkT1D6PRvhIe/1yYJDxO5sU2ecr1ARaahhT8yO1LEI0fBKi2s5tWlgVPa5B9K4gInEMo4kFaXeFeRBQHKLBm657sHXJcR+aWxjbncHlT4Hp2Rtsn33CEWdPRoWhdMmRK5sk0bhX4C8KHnHdLmlbDjMcEFUKfL27D4lpFCujru1thtCXUZU17XJ4Ln/PwT1P/K+BiqXZqu+f9yzvjg1vQFirHtoeArpIgEZHzvMPMlw7pmaVrItyG0OnrkL/AbP3DNavFlsBCf+434h4kPRYUw+BY6L5SxTulZyDnibwZz8EfXCpUCrjquzCfsUeE9r9u6XOX4j6azGFUAmvtIyk2Hky58yKAeRWdDZqN5oBUvljTjdknsUQPKHOWTQ1khFM3FJohggZG9yQxYMicH2m99QgDNb3QNBIChn6SduqYBnRKb4="
+
 jobs:
   include:
     - stage: build
-      secure: "BBnpv1SF+SGa+lEVkvBQ+7DKSNWa5yV1HUnwkUy4JzLhWDhdo8knLI1kH8Ci36UsWGkd3aAZnCUOmKR01fui8ct9tEV7Lt02KOAEKfCZ4z6kow2+0/JgqhiGS1+JK6NgAx6M4O3++My2ZgMLDylAjBJC4MAjVwZLtN5eHdGQKwf34pORZNWgx2xqMKNWncijfoRICJfWKNvAm1YccTUkyR0Rwf2wjCNxHfRpntJxBV9h+J4Lm77Y2V9DdyEPOGkT1D6PRvhIe/1yYJDxO5sU2ecr1ARaahhT8yO1LEI0fBKi2s5tWlgVPa5B9K4gInEMo4kFaXeFeRBQHKLBm657sHXJcR+aWxjbncHlT4Hp2Rtsn33CEWdPRoWhdMmRK5sk0bhX4C8KHnHdLmlbDjMcEFUKfL27D4lpFCujru1thtCXUZU17XJ4Ln/PwT1P/K+BiqXZqu+f9yzvjg1vQFirHtoeArpIgEZHzvMPMlw7pmaVrItyG0OnrkL/AbP3DNavFlsBCf+434h4kPRYUw+BY6L5SxTulZyDnibwZz8EfXCpUCrjquzCfsUeE9r9u6XOX4j6azGFUAmvtIyk2Hky58yKAeRWdDZqN5oBUvljTjdknsUQPKHOWTQ1khFM3FJohggZG9yQxYMicH2m99QgDNb3QNBIChn6SduqYBnRKb4="
       script:
         - lein test
         - lein uberjar
-        - docker build -t domaindrivenarchitecture/dda-git-crate .
-        - echo "$DOCKER_PASSWORD" | docker login -u "domaindrivenarchitecture" --password-stdin
-        - docker tag latest domaindrivenarchitecture/dda-git-crate
-        - docker push domaindrivenarchitecture/dda-git-crate
+        - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        - docker build -t dda-git-crate .
+        - docker images
+        - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate
+        - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
       install:
         - echo "ommit install"
