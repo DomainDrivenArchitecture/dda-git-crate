@@ -12,8 +12,6 @@ stages:
 jobs:
   include:
     - stage: build
-      install:
-        - echo "ommit install"
       script:
         - lein test
         - lein uberjar
