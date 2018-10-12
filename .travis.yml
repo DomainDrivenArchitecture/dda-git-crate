@@ -5,14 +5,23 @@ language: clojure
 services:
   - docker
 
+stages:
+  - provide_docker
+  - integrationtest
+
+script:
+  - lein test
+  - lein uberjar
+
 jobs:
   include:
-    - stage: build
-      script:
-        - lein version
-        - lein deps
-        - lein test
-        - lein uberjar
-    - stage: integrationtest
+    - stage: provide_docker
+      install:
+        - echo "ommit install"
       script:
         - docker build -t dda/dda-git-crate .
+    - stage: integrationtest
+      install:
+        - echo "ommit install"
+      script:
+        - echo "test it"
