@@ -15,18 +15,8 @@ env:
 
 matrix:
   include:
-    - language: clojure
-    - language: python
-      python:
-        - "3.6"
-      install:
-        - pip install docker
-      script:
-        - echo $(python --version)
-        - echo $(pip --version)
-        - echo $(python3 --version)
-        - echo $(pip3 --version)
     - stage: build
+      language: clojure
       script:
         - lein test
         - lein uberjar
@@ -36,6 +26,11 @@ matrix:
         - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT
         - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
+      language: python
+      python:
+        - "3.6"
+      install:
+        - pip install docker
       script:
         - docker pull domaindrivenarchitecture/dda-git-crate
         - docker images
