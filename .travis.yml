@@ -1,6 +1,9 @@
 sudo: required
 
 language: clojure
+    language: python
+    python: 
+      - "3.6"
 
 services:
   - docker
@@ -26,8 +29,9 @@ jobs:
         - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT
         - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
+      install:  
+        - pip install docker
       script:
         - docker pull domaindrivenarchitecture/dda-git-crate
         - docker images
-        - pip3 install docker
         - python3 instantiate_docker.py target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar git-serverspec.edn -i dda-git-crate
