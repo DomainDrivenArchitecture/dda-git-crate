@@ -35,9 +35,9 @@ jobs:
         - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
       install:  
-        - pip install docker
+        - pip3 install docker
       script:
         - docker pull domaindrivenarchitecture/dda-git-crate
         - docker images
-        - python --version
-        - python instantiate_docker.py target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar git-serverspec.edn -i dda-git-crate
+        - python3 --version
+        - python3 instantiate_docker.py target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar git-serverspec.edn -i dda-git-crate
