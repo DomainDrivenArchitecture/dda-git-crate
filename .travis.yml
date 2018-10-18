@@ -26,7 +26,6 @@ jobs:
         - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT
         - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
-      install:
-        - echo "ommit install"
       script:
+        - docker pull domaindrivenarchitecture/dda-git-crate
         - echo "test it"
