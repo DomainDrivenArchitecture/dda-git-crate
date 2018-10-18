@@ -2,6 +2,13 @@ sudo: required
 
 language: clojure
 
+addons:
+  apt:
+    packages:
+      - python3
+      - pip3
+
+
 services:
   - docker
 
