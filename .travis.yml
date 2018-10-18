@@ -6,8 +6,8 @@ language: clojure
 addons:
   apt:
     packages:
-      - python3
-      - pip3
+      - "python3"
+      - "python3-pip"
 
 
 services:
