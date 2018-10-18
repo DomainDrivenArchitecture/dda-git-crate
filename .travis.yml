@@ -29,4 +29,5 @@ jobs:
       script:
         - docker pull domaindrivenarchitecture/dda-git-crate
         - docker images
+        - pip3 install docker
         - python3 instantiate_docker.py target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar git-serverspec.edn -i dda-git-crate
