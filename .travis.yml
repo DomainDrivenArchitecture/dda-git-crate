@@ -35,4 +35,5 @@ matrix:
         - docker pull domaindrivenarchitecture/dda-git-crate
         - docker images
         - python3 --version
-        - python3 instantiate_docker.py target/dda-git-crate-2.1.0-SNAPSHOT-standalone.jar git-serverspec.edn -i domaindrivenarchitecture/dda-git-crate
+        - curl -L -o serverspec.jar https://github.com/DomainDrivenArchitecture/dda-serverspec-crate/releases/download/1.2.1/dda-serverspec-crate-1.2.1-standalone.jar
+        - python3 instantiate_docker.py serverspec.jar git-serverspec.edn -i domaindrivenarchitecture/dda-git-crate
