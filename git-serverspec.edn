@@ -3,4 +3,5 @@
         {:path "/home/initial/repo/dda-pallet/dda-pallet-commons"}
         {:path "/home/initial/repo/dda-pallet/dda-pallet"}
         {:path "/home/initial/repo/dda-pallet/dda-user-crate"}
-        {:path "/home/initial/repo/password-store/password-store-for-teams"}]}
+        {:path "/home/initial/repo/password-store/password-store-for-teams"}
+        {:path "/home/error/err"}]}
