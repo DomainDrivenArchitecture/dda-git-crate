@@ -91,11 +91,11 @@
               :settings #{}}})
 
 (def minimal-https-gitblit
-  {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
+  {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
                 :orga-path "meissa/group" :protocol :https
                 :server-type :gitblit}
    :credential-input nil
-   :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
+   :expected   {:repo "https://repositories.website.com:443/r/meissa/group/a-private-repo.git"
                 :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
@@ -125,31 +125,31 @@
               (:repo-input ssh-github))))))
 
 (def minimal-https-gitblit
-  {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
+  {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
                 :orga-path "meissa/group" :protocol :https
                 :server-type :gitblit}
    :credential-input nil
-   :expected   {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
+   :expected   {:repo "https://repositories.website.com:443/r/meissa/group/a-private-repo.git"
                 :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (def pwd-authoriezd-https-gitblit
-  {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
+  {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
                 :orga-path "meissa/group" :protocol :https
                 :server-type :gitblit}
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
-                      :repo.meissa-gmbh.de_443 {:user-name "test2" :password "pwd2"}}
-   :expected   {:repo "https://test2:pwd2@repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
+                      :repositories.website.com_443 {:user-name "test2" :password "pwd2"}}
+   :expected   {:repo "https://test2:pwd2@repositories.website.com:443/r/meissa/group/a-private-repo.git"
                 :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 
 (def ssh-gitblit
-  {:repo-input {:host "repo.meissa-gmbh.de" :repo-name "a-private-repo"
+  {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
                 :port 29418 :orga-path "meissa/group" :protocol :ssh
                 :server-type :gitblit}
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
-                      :repo.meissa-gmbh.de_29418 {:user-name "test2" :password "pwd2"}}
-   :expected   {:repo "ssh://test2@repo.meissa-gmbh.de:29418/meissa/group/a-private-repo.git"
+                      :repositories.website.com_29418 {:user-name "test2" :password "pwd2"}}
+   :expected   {:repo "ssh://test2@repositories.website.com:29418/meissa/group/a-private-repo.git"
                 :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{:sync}}})
 

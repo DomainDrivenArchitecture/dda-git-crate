@@ -82,12 +82,12 @@
                          :repo-name "dda-managed-ide"
                          :protocol :ssh
                          :server-type :github}]}
-      :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
+      :synced-repo {:folder1 [{:host "repositories.website.com"
                                :repo-name "a-private-repo"
                                :protocol :ssh
                                :server-type :gitblit}]}}}
    :infra-trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
-                 {:pin-fqdn-or-ip {:port 22 :host "repo.meissa-gmbh.de"}}
+                 {:pin-fqdn-or-ip {:port 22 :host "repositories.website.com"}}
                  {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]})
 
 (deftest trust-test
@@ -105,7 +105,12 @@
       :credential [{:host "github.com"
                     :protocol :https
                     :user-name "githubtest"
-                    :password "secure1234"}]
+                    :password "secure1234"}
+                   {:host "repositories.website.com"
+                    :protocol :https
+                    :user-name "githubtest"
+                    :password "secure1234"
+                    :port 22224}]
       :repo {:folder1 [{:host "github.com"
                         :port 443
                         :orga-path "DomainDrivenArchitecture"
@@ -122,11 +127,12 @@
                          :repo-name "dda-managed-ide"
                          :protocol :ssh
                          :server-type :github}]}
-      :synced-repo {:folder1 [{:host "repo.meissa-gmbh.de"
+      :synced-repo {:folder1 [{:host "repositories.website.com"
                                :repo-name "a-private-repo"
                                :orga-path "meissa/group"
                                :protocol :https
-                               :server-type :gitblit}]}}}
+                               :server-type :gitblit
+                               :port 22224}]}}}
    :infra-repo-expectation
    [{:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
      :local-dir "/home/test-user/repo/folder1/dda-git-crate"
@@ -137,7 +143,7 @@
     {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"
      :local-dir "/home/test-user/repo/folder2/dda-managed-ide"
      :settings #{}}
-    {:repo "https://repo.meissa-gmbh.de:443/r/meissa/group/a-private-repo.git"
+    {:repo "https://githubtest:secure1234@repositories.website.com:22224/r/meissa/group/a-private-repo.git"
      :local-dir "/home/test-user/repo/folder1/a-private-repo"
      :settings #{:sync}}]
    :infra-fact-expectation
