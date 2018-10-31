@@ -93,6 +93,17 @@ Example content of file `git.edn`:
                    :server-type :github}]}}}
 ```
 
+If you want to clone your repositories with **https** from a private git server, you need to add your credentials to your `git.edn` file. You also need to add a **:port**, if it differs from **22** or **443**. For example:
+```clojure
+{:initial
+ {:user-email "initial@some-domain.org"
+  :credential [{:user-name {:plain "initial"}
+                :password {:plain "githubpassword"}
+                :host "gitserver.de"
+                :port 123
+                :protocol :https}]}}
+```
+
 ### Watch log for debug reasons
 
 In case any problems occur, you may want to have a look at the log-file:
