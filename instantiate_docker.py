@@ -23,6 +23,7 @@ edn_file = os.path.abspath(args.config)
 jar_file = os.path.abspath(args.jar)
 
 execute_command = 'java -jar /app/uberjar.jar /app/config.edn'
+
 if args.cmd:
     execute_command = args.cmd
 
@@ -55,7 +56,9 @@ container = client.create_container(
     })
 )
 
-
 response = client.start(container=container)
 for log in client.logs(container, stream=True, stdout=True, stderr=True):
     print(log)
+
+sys.exit(client.wait(container)['StatusCode'])
+
