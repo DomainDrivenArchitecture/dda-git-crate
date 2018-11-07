@@ -1,11 +1,10 @@
-(defproject dda/dda-git-crate "2.1.0-SNAPSHOT"
+(defproject dda/dda-git-crate "2.1.0"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "2.2.1"]
-                 ;[com.stuartsierra/component "0.3.2"]
-                 [dda/dda-serverspec-crate "1.2.2-SNAPSHOT"]]
+                 [dda/dda-serverspec-crate "1.2.2"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
@@ -19,7 +18,6 @@
                                     "test/resources"]
                    :dependencies
                    [[org.clojure/test.check "0.10.0-alpha3"]
-                    ;[expectations "2.2.0-SNAPSHOT"]
                     [dda/pallet "0.9.0" :classifier "tests"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                     [org.slf4j/jcl-over-slf4j "1.8.0-beta2"]]
@@ -32,7 +30,6 @@
              :test {:test-paths ["test/src"]
                     :resource-paths ["test/resources"]
                     :dependencies [[dda/pallet "0.9.0" :classifier "tests"]]}
-                                   ;[expectations "2.2.0-SNAPSHOT"]]}
              :uberjar {:source-paths ["uberjar/src"]
                        :resource-paths ["uberjar/resources"]
                        :aot :all
