@@ -10,6 +10,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("jar", help="relative or absolute path to the dda-serverspec-crate uberjar.")
 parser.add_argument("config", help="relative or absolute path to the config file in edn format.")
+# TODO: Review jem 2018.11.08: relevant only for debug? If yes, then remove!
 parser.add_argument("-c", "--cmd", help="alternative command to execute in the docker container.\
                     Default is to run the given uberjar with the given config.")
 parser.add_argument("-i", "--image", help="image for the docker container. Default image is openjdk:8 (where netstat tests do not work since net-tools is not installed).")
@@ -22,14 +23,17 @@ if not os.path.exists(docker_logs):
 edn_file = os.path.abspath(args.config)
 jar_file = os.path.abspath(args.jar)
 
+# TODO: Review jem 2018.11.08: Put defaults to the argparse section
 execute_command = 'java -jar /app/uberjar.jar /app/config.edn'
-
 if args.cmd:
     execute_command = args.cmd
 
+# TODO: Review jem 2018.11.08: Put defaults to the argparse section
 image = 'openjdk:8'
 if args.image:
     image = args.image
+
+# TODO: Review jem 2018.11.08: we curl the serverspec outside - is'nt it a bad idea to do the curl inside of this test-script?
 
 debug_map = {'edn_file':edn_file, 'jar_file':jar_file, 'docker_logs':docker_logs}
 
@@ -61,4 +65,3 @@ for log in client.logs(container, stream=True, stdout=True, stderr=True):
     print(log)
 
 sys.exit(client.wait(container)['StatusCode'])
-

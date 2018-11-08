@@ -1,8 +1,8 @@
 FROM ubuntu
-RUN apt-get update && apt-get upgrade -y && apt-get install openjdk-8-jre openssh-server apt-utils net-tools -y
+RUN apt-get update && apt-get upgrade -y && apt-get install openjdk-8-jre apt-utils net-tools -y
 COPY target/dda-git-crate-2.1.1-SNAPSHOT-standalone.jar /app/dda-git-crate.jar
 COPY example-git.edn /app/dda-git-crate-config.edn
-RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
 RUN mkdir -p /etc/cron.d/
 RUN useradd -ms /bin/bash initial
 
