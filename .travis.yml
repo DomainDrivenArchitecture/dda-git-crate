@@ -21,7 +21,7 @@ matrix:
         - lein test
         - lein uberjar
         - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-        - docker build -t dda-git-crate .
+        - docker build -t dda-git-crate --file integration/docker/Dockerfile .
         - docker images
         - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT
         - docker push $DOCKER_USERNAME/dda-git-crate
