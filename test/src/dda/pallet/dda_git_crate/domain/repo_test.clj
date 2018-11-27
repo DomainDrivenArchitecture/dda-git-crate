@@ -186,7 +186,7 @@
                 :server-type :gitlab}
    :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
                       :gitlab.meissa-gmbh.de_22 {:user-name "test2" :password "pwd2"}}
-   :expected   {:repo "ssh://git@gitlab.meissa-gmbh.de:group/a-private-repo.git"
+   :expected   {:repo "git@gitlab.meissa-gmbh.de:group/a-private-repo.git"
                 :local-dir "/home/test-user/repo/folder1/a-private-repo"
                 :settings #{}}})
 

@@ -127,7 +127,7 @@
           (str (server-url credential repo) "/"
                orga-path "/" repo-name ".git")
           (= :ssh protocol)
-          (str "ssh://git@" host ":"
+          (str "git@" host ":"
                orga-path "/" repo-name ".git"))))
 
 (s/defn credential-map
