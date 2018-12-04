@@ -51,10 +51,10 @@
     {:pin-fqdn-or-ip {:host (first (string/split host #":")) :port resolved-port}}))
 
 (s/defn ^:private
-  git-repository :- GitRepository
+  git-repository ; :- GitRepositor  - schema is unable to validatey
   [local-root :- s/Str
    repo-group :- s/Keyword
-   credentials :- GitCredentialsResolved
+   credentials ; :- GitCredentialsResolved  - schema is unable to validate
    elem :- s/Any]
   (let [{:keys [host scheme path port user]} elem
         parsed-host (first (string/split host #":"))
@@ -96,7 +96,7 @@
 
 (s/defn
   git-url :- s/Str
-  [repository :- GitRepository]
+  [repository]
   (let [{:keys [user-credentials fqdn ssh-port repo local-dir
                 transport-type server-type orga]} repository
         cred (cond
@@ -126,9 +126,9 @@
 
 
 (s/defn
-  crate-repo :- crate-schema/Repository
+  crate-repo
   [synced :- s/Bool
-   domain-repo :- GitRepository]
+   domain-repo]
   {:repo (git-url domain-repo)
    :local-dir (:local-dir domain-repo)
    :settings (if synced
@@ -144,7 +144,7 @@
 
 (s/defn
   collect-repo-group :- [crate-schema/Repository]
-  [credentials :- GitCredentialsResolved
+  [credentials ; :- GitCredentialsResolved - schema is unable to validate
    synced :- s/Bool
    local-root :- s/Str
    key :- s/Keyword
@@ -158,11 +158,11 @@
 
 
 (s/defn
-  collect-repo :- [crate-schema/Repository]
-  [credentials :- GitCredentialsResolved
+  collect-repo
+  [credentials ; :- GitCredentialsResolved - schema is unable to validate
    synced :- s/Bool
    local-root :- s/Str
-   domain-repo-uris :- {s/Keyword [s/Str]}]
+   domain-repo-uris]
   (flatten
     (map
      #(collect-repo-group credentials synced local-root (key %) (val %))

@@ -86,7 +86,7 @@
       (vals (reduce-kv reduce-trust-map {} repos)))))
 
 (s/defn server-url
-  [credential :- GitCredential
+  [credential ;:- GitCredential - schema is not able to validate
    repo :- Repository]
   (let [{:keys [host protocol]} repo]
     (str (name protocol) "://"
@@ -100,7 +100,7 @@
          host ":" (server-identity-port repo))))
 
 (s/defn github-url
-  [credential :- GitCredential
+  [credential ; :- GitCredential - schema is unable to validate
    repo :- Repository]
   (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (cond (= :https protocol)
@@ -111,7 +111,7 @@
                orga-path "/" repo-name ".git"))))
 
 (s/defn gitblit-url
-  [credential :- GitCredentialResolved
+  [credential ; :- GitCredentialResolved - schema is unable to validate
    repo :- Repository]
   (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (str (server-url credential repo)
@@ -120,7 +120,7 @@
       orga-path "/" repo-name ".git")))
 
 (s/defn gitlab-url
-  [credential :- GitCredential
+  [credential ; :- GitCredential - schema is not able to validate
    repo :- Repository]
   (let [{:keys [host orga-path repo-name protocol server-type]} repo]
     (cond (= :https protocol)
@@ -131,7 +131,7 @@
                orga-path "/" repo-name ".git"))))
 
 (s/defn credential-map
-  [credentials :- GitCredentialsResolved]
+  [credentials] ; :- GitCredentialsResolved] - schema is unable to validate
   (reduce-kv
     (fn [col k v]
       (merge col
@@ -155,7 +155,7 @@
   [user :- s/Keyword
    is-synced? :- s/Bool
    orga-group :- s/Keyword
-   credentials :- GitCredentialsResolved
+   credentials ; :- GitCredentialsResolved - schema is not able to validate
    repo :- Repository]
   (let [{:keys [host port orga-path repo-name protocol server-type]} repo
         credential (get credentials (server-identity-key repo))]
@@ -180,8 +180,8 @@
 (s/defn infra-repos
   [user :- s/Keyword
    is-synced? :- s/Bool
-   credentials :- GitCredentialsResolved
-   repos :- OrganizedRepositories]
+   credentials ; :- GitCredentialsResolved - schema is unable to validate
+   repos] ; :- OrganizedRepositories - schema is unable to validate]
   (reduce-kv
     (fn [col k v]
       (into
@@ -194,7 +194,7 @@
 
 (s/defn infra-facts
   [user :- s/Keyword
-   repos :- OrganizedRepositories]
+   repos] ; :- OrganizedRepositories] - schema is unable to validate
   (reduce-kv
     (fn [col k v]
       (apply merge
