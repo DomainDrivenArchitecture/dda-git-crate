@@ -103,6 +103,7 @@
     (when (contains? settings :sync)
       (actions/as-action
         (logging/info (str facility "-configure user: configure-git-sync")))
+      (actions/directory "/etc/cron.d" :owner "root")
       (actions/remote-file
         (str "/etc/cron.d/90_" (user-home/flatten-user-home-path local-dir))
         :literal true
