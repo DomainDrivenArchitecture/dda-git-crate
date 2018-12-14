@@ -108,7 +108,7 @@
         :literal true
         :owner "root"
         :group "root"
-        :mode "664"
+        :mode "644" ;; otherwise INSECURE MODE (group/other writable)
         :content (selmer/render-file
                    "gitsync.templ" {:user-name user-name
                                     :git-repo local-dir})))))
