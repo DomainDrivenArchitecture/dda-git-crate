@@ -1,0 +1,9 @@
+{:initial
+ {:user-email "initial@some-domain.org"
+  :repo  {}
+  :synced-repo  {:password-store
+                 [{:host "github.com"
+                   :orga-path "DomainDrivenArchitecture"
+                   :repo-name "password-store-for-teams"
+                   :protocol :https
+                   :server-type :github}]}}}

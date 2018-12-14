@@ -1,5 +1,5 @@
-sudo: required
 dist: trusty
+language: clojure
 
 services:
   - docker
@@ -13,7 +13,7 @@ env:
     - DOCKER_USERNAME: domaindrivenarchitecture
     - secure: "BBnpv1SF+SGa+lEVkvBQ+7DKSNWa5yV1HUnwkUy4JzLhWDhdo8knLI1kH8Ci36UsWGkd3aAZnCUOmKR01fui8ct9tEV7Lt02KOAEKfCZ4z6kow2+0/JgqhiGS1+JK6NgAx6M4O3++My2ZgMLDylAjBJC4MAjVwZLtN5eHdGQKwf34pORZNWgx2xqMKNWncijfoRICJfWKNvAm1YccTUkyR0Rwf2wjCNxHfRpntJxBV9h+J4Lm77Y2V9DdyEPOGkT1D6PRvhIe/1yYJDxO5sU2ecr1ARaahhT8yO1LEI0fBKi2s5tWlgVPa5B9K4gInEMo4kFaXeFeRBQHKLBm657sHXJcR+aWxjbncHlT4Hp2Rtsn33CEWdPRoWhdMmRK5sk0bhX4C8KHnHdLmlbDjMcEFUKfL27D4lpFCujru1thtCXUZU17XJ4Ln/PwT1P/K+BiqXZqu+f9yzvjg1vQFirHtoeArpIgEZHzvMPMlw7pmaVrItyG0OnrkL/AbP3DNavFlsBCf+434h4kPRYUw+BY6L5SxTulZyDnibwZz8EfXCpUCrjquzCfsUeE9r9u6XOX4j6azGFUAmvtIyk2Hky58yKAeRWdDZqN5oBUvljTjdknsUQPKHOWTQ1khFM3FJohggZG9yQxYMicH2m99QgDNb3QNBIChn6SduqYBnRKb4="
 
-matrix:
+jobs:
   include:
     - stage: build
       language: clojure
@@ -21,19 +21,9 @@ matrix:
         - lein test
         - lein uberjar
         - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-        - docker build -t dda-git-crate --file integration/docker/Dockerfile .
-        - docker images
-        - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT
+        - docker build -t dda-git-crate --file integration/docker/synced_repo/image/Dockerfile .
+        - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT-synced-repo
         - docker push $DOCKER_USERNAME/dda-git-crate
     - stage: integrationtest
-      language: python
-      python:
-        - "3.6"
-      install:
-        - pip install docker
       script:
-        - docker pull domaindrivenarchitecture/dda-git-crate
-        - docker images
-        - python3 --version
-        - curl -L -o serverspec.jar https://github.com/DomainDrivenArchitecture/dda-serverspec-crate/releases/download/1.2.1/dda-serverspec-crate-1.2.1-standalone.jar
-        - python3 integration/python/instantiate_docker.py serverspec.jar integration/resources/git-serverspec.edn -i domaindrivenarchitecture/dda-git-crate
+        - docker build -t dda-httpd-crate-test --file integration/docker/single_static/test/Dockerfile .
