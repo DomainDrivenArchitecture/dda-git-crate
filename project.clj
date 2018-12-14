@@ -4,7 +4,7 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "2.2.2"]
-                 [dda/dda-serverspec-crate "1.2.2"]]
+                 [dda/dda-serverspec-crate "1.3.0-SNAPSHOT"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
@@ -34,6 +34,7 @@
                        :resource-paths ["uberjar/resources"]
                        :aot :all
                        :main dda.pallet.dda-git-crate.main
+                       :uberjar-name "dda-git-standalone.jar"
                        :dependencies [[org.clojure/tools.cli "0.4.1"]
                                       [ch.qos.logback/logback-classic "1.3.0-alpha4"
                                        :exclusions [com.sun.mail/javax.mail]]
