@@ -4,7 +4,7 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "2.2.2"]
-                 [dda/dda-serverspec-crate "1.3.0-SNAPSHOT"]]
+                 [dda/dda-serverspec-crate "1.3.0"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :repositories [["snapshots" :clojars]
