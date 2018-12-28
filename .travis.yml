@@ -6,7 +6,6 @@ services:
 
 stages:
   - build
-  - integrationtest
 
 env:
   global:
@@ -20,10 +19,20 @@ jobs:
       script:
         - lein test
         - lein uberjar
-        - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+        - md5sum target/dda-git-standalone.jar > target/dda-git-standalone.jar.md5
+        - # create docker image
         - docker build -t dda-git-crate --file integration/docker/synced_repo/image/Dockerfile .
-        - docker tag dda-git-crate domaindrivenarchitecture/dda-git-crate:SNAPSHOT-synced-repo
-        - docker push $DOCKER_USERNAME/dda-git-crate
-    - stage: integrationtest
-      script:
-        - docker build -t dda-httpd-crate-test --file integration/docker/single_static/test/Dockerfile .
+        - # integration test on docker image level
+        - docker build -t dda-git-crate-test --file integration/docker/synced_repo/test/Dockerfile .
+      deploy:
+        skip_cleanup: true
+        provider: releases
+        overwrite: true
+        draft: true
+        api_key:
+          secure: "m86pn7NJtpPuC8wdD53KvShCSEtcWUVUIgWYlqQh4TT17Rs8LI6AwoQ4oZlPVr5ZITsD01vvT05BMp8TSFa9L2fvMoAgNX2d9Rlnh7CwjQr8BU40HjaslLozyxIBCerjehaufzBpEHaoPKtjQR0/p2DNACt1d504Uv6JlCZ8UIkUwDJl6CjO/L5wtk2IEFKen8wk+/B9Oa7UB0V4mrxzzwjFQWJQsud/lV+Ti71aZISSrxnLSAx6oAe727oU9/WP94d2hbZ9FmnHyzXLYrD+G6coHh/mm3+VVyhjq8KR6BgrfhJmoR7DjSXgCsV/FxSCByu/pc1O8CGLx5V/iMf4DnF0Mcrt9MNijsV0QqZ3pFBq1S2PkCa1F+StZY3khkfVW1AlHGQJdiZezst1FfJZs7rfiSqC96E+5QAyUV57IlJoRWRfFXU38Gt5zsT+bd2Eu1lIVBx71wcEF0prZJkYkyyUbayZTFC9XTe9x3uIZVI6VbBwL/biOXz7RBbXFg69mmwZLXbQymUMDs58XlUvps1PWwdDF7wlU1ANBxHZ9SxrU4N2/5BnSXNGdA5hKM8viuh6hMl4nCRCgMJKsvhD/dAvdU1HbvQkAEs6WRlo03gk6bCb5xxfAzcSf+UQTYmmttVvkFft8mih2w9xZDVIvFvzZkydLeTe/zOuq/3iTOg="
+        file:
+          - target/dda-git-standalone.jar
+          - target/dda-git-standalone.jar.md5
+        provider: script
+        script: bash integration/docker/publish.sh dda-git-crate
