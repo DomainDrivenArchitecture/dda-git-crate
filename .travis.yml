@@ -25,8 +25,8 @@ jobs:
         - # integration test on docker image level
         - docker build -t dda-git-crate-test --file integration/docker/synced_repo/test/Dockerfile .
       deploy:
-        skip_cleanup: true
         - provider: releases
+          skip_cleanup: true
           overwrite: true
           draft: true
           api_key:
@@ -35,4 +35,5 @@ jobs:
             - target/dda-git-standalone.jar
             - target/dda-git-standalone.jar.md5
         - provider: script
+          skip_cleanup: true
           script: bash integration/docker/publish.sh dda-git-crate
