@@ -51,6 +51,8 @@
        {infra/facility infra/GitInfra}
        spec-domain/InfraResult))
 
+(def repo-directory-name repo/repo-directory-name)
+
 (defn-
   configuration
   [user-config]
