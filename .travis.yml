@@ -27,8 +27,8 @@ jobs:
       deploy:
         - provider: releases
           skip_cleanup: true
-          overwrite: true
-          draft: true
+          on:
+            tags: true
           api_key:
             secure: "i52VCwtwL5gZEPJ7B5ELtKUmjc1GqdHBLE04fuveDSGt9iMniwjn+UvntBtkBmp39o2/qXWizhAZSsYsqIo9MWpXg+HtyqTtgfhkFPOKAeyPWRgYM13QKB5X0cjjVPAtDLqcdIBk7lFcXDFnciXOAYKBz8Sn8L3zDyDIwRkLsN8oBDIrj+7yg+LMJg80wBM591mc34sDR3xrfCqgFKgJB7ATB9UttKdX5UeCzeMG2cP4vwc1KjVUBaqy/BIvKHmoS5TxP3uBCjxStsF8AwaocPAXXTjV/NS5+QIIeBXrAeuTtWxRNuNRlSakpeQUa6MdpnyE35u+pJiObflDzYr34gDHjR5HgZ0Qbu/nQMaKirahFfRHkfAfcm/wqOS7SjQHzo1kjm2HOeQO+nKoagnepALs8tElE/2EZUkFhBfHpheLtmIV2AqyrjKshgLk6M5wojsaFKn2ujQ4v54dvREVuHzeQPoxEEy4ymYSOvTB8vvkLflyeBL9JGJDnBT5PpQrpXpB0MKQtp8muxLuu8pbhhV/gA4H0y1MJP09trRPWsjOqzxMdJkGOVzpsUKdIXn9PNitbavZbCl7GP4+gJH+P7NI1krbUFctj9jVYOZvvqlx/t0mxdcsaET57iVqkHF8W4rolktRHjne++m99IdNIoIj/nFD1SUL/bn4MCADJp4="
           file:
@@ -36,4 +36,6 @@ jobs:
             - target/dda-git-standalone.jar.md5
         - provider: script
           skip_cleanup: true
+          on:
+            tags: true
           script: bash integration/docker/publish.sh dda-git-crate
