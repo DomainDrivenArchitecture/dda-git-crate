@@ -20,6 +20,7 @@
    [clojure.string :as str]
    [clojure.tools.cli :as cli]
    [dda.pallet.core.app :as core-app]
+   [dda.config.commons.styled-output :as styled]
    [dda.pallet.core.main-helper :as mh]
    [dda.pallet.dda-git-crate.app :as app]))
 
@@ -49,8 +50,8 @@
   (let [{:keys [options arguments errors summary help]} (cli/parse-opts args cli-options)]
     (cond
       help (mh/exit 0 (usage summary))
-      errors (mh/exit 1 (error-msg errors))
-      (not= (count arguments) 1) (exit 1 (usage summary))
+      errors (mh/exit 1 (mh/error-msg errors))
+      (not= (count arguments) 1) (mh/exit 1 (usage summary))
       (:serverspec options) (if (core-app/existing-serverspec
                                  app/crate-app
                                  {:domain (first arguments)
