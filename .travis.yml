@@ -7,11 +7,6 @@ services:
 stages:
   - build
 
-env:
-  global:
-    - DOCKER_USERNAME: domaindrivenarchitecture
-    - secure: "BBnpv1SF+SGa+lEVkvBQ+7DKSNWa5yV1HUnwkUy4JzLhWDhdo8knLI1kH8Ci36UsWGkd3aAZnCUOmKR01fui8ct9tEV7Lt02KOAEKfCZ4z6kow2+0/JgqhiGS1+JK6NgAx6M4O3++My2ZgMLDylAjBJC4MAjVwZLtN5eHdGQKwf34pORZNWgx2xqMKNWncijfoRICJfWKNvAm1YccTUkyR0Rwf2wjCNxHfRpntJxBV9h+J4Lm77Y2V9DdyEPOGkT1D6PRvhIe/1yYJDxO5sU2ecr1ARaahhT8yO1LEI0fBKi2s5tWlgVPa5B9K4gInEMo4kFaXeFeRBQHKLBm657sHXJcR+aWxjbncHlT4Hp2Rtsn33CEWdPRoWhdMmRK5sk0bhX4C8KHnHdLmlbDjMcEFUKfL27D4lpFCujru1thtCXUZU17XJ4Ln/PwT1P/K+BiqXZqu+f9yzvjg1vQFirHtoeArpIgEZHzvMPMlw7pmaVrItyG0OnrkL/AbP3DNavFlsBCf+434h4kPRYUw+BY6L5SxTulZyDnibwZz8EfXCpUCrjquzCfsUeE9r9u6XOX4j6azGFUAmvtIyk2Hky58yKAeRWdDZqN5oBUvljTjdknsUQPKHOWTQ1khFM3FJohggZG9yQxYMicH2m99QgDNb3QNBIChn6SduqYBnRKb4="
-
 jobs:
   include:
     - stage: build
@@ -20,6 +15,8 @@ jobs:
         - lein test
         - lein uberjar
         - md5sum target/uberjar/dda-git-standalone.jar > target/uberjar/dda-git-standalone.jar.md5
+        - sha256sum target/uberjar/dda-git-standalone.jar > target/uberjar/dda-git-standalone.jar.sha256
+        - sha512sum target/uberjar/dda-git-standalone.jar > target/uberjar/dda-git-standalone.jar.sha512
         - # create docker image
         - docker build -t dda-git-crate --file integration/docker/synced_repo/image/Dockerfile .
         - # integration test on docker image level
@@ -34,3 +31,5 @@ jobs:
           file:
             - target/uberjar/dda-git-standalone.jar
             - target/uberjar/dda-git-standalone.jar.md5
+            - target/uberjar/dda-git-standalone.jar.sha256
+            - target/uberjar/dda-git-standalone.jar.sha512
