@@ -1,7 +1,7 @@
 {:initial
  {:user-email "initial@some-domain.org"
   :repo  {}
-  :synced-repo  {:password-store
+  :synced-repo  {:synced-repos
                  [{:host "github.com"
                    :orga-path "DomainDrivenArchitecture"
                    :repo-name "dda-git-crate"

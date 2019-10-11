@@ -1,2 +1,2 @@
-{:file [{:path "/home/initial/repo/password-store/password-store-for-teams"}
-        {:path "/etc/cron.d/90_repo_password-store_password-store-for-teams"}]}
+{:file [{:path "/home/initial/repo/synced-repos/dda-git-crate"}
+        {:path "/etc/cron.d/90_repo_synced-repos_dda-git-crate"}]}
