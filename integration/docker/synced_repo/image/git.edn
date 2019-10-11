@@ -4,6 +4,6 @@
   :synced-repo  {:password-store
                  [{:host "github.com"
                    :orga-path "DomainDrivenArchitecture"
-                   :repo-name "password-store-for-teams"
+                   :repo-name "dda-git-crate"
                    :protocol :https
                    :server-type :github}]}}}
