@@ -15,30 +15,15 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.app-test
   (:require
-    [clojure.test :refer :all]
-    [schema.core :as s]
-    [dda.pallet.dda-git-crate.app :as sut]))
+   [clojure.test :refer :all]
+   [data-test :refer :all]
+   [schema.core :as s]
+   [dda.pallet.dda-git-crate.app :as sut]))
 
 (s/set-fn-validation! true)
 
-(deftest test-schema
-  (testing
-    (is (s/validate
-          sut/GitDomain
-          {:test-user
-            {:user-email "test-user@domain"
-             :credential [{:host "github.com"
-                           :protocol :https
-                           :user-name {:plain "githubtest"}
-                           :password {:plain "secure1234"}}]
-             :repo {:folder1 [{:host "github.com"
-                               :port 443
-                               :orga-path "DomainDrivenArchitecture"
-                               :repo-name "dda-git-crate"
-                               :protocol :https
-                               :server-type :github}]}}}))))
+(defdatatest should-be-valid [input expected]
+  (is (s/validate sut/GitDomain input)))
 
-(deftest plan-def
-  (testing
-    "test plan-def"
-      (is (map? sut/with-git))))
+(deftest should-def-a-plan
+  (is (map? sut/with-git)))

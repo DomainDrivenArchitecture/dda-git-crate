@@ -1,0 +1,14 @@
+{:input {:test-user
+         {:user-email "test-user@domain"
+          :credential [{:host "github.com"
+                        :protocol :https
+                        :user-name {:plain "githubtest"}
+                        :password {:plain "secure1234"}}]
+          :repo {:folder1 [{:host "github.com"
+                            :port 443
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-git-crate"
+                            :protocol :https
+                            :server-type :github}]}}}
+ :expected true
+ }
