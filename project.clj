@@ -4,7 +4,7 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "3.0.0"]
-                 [dda/dda-serverspec-crate "1.3.3"]]
+                 [dda/dda-serverspec-crate "1.3.4"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :target-path "target/%s/"
@@ -18,10 +18,10 @@
                    :resource-paths ["integration/resources"
                                     "test/resources"]
                    :dependencies
-                   [[org.clojure/test.check "0.10.0-alpha4"]
+                   [[org.clojure/test.check "0.10.0"]
                     [dda/pallet "0.9.1" :classifier "tests"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
-                    [org.slf4j/jcl-over-slf4j "1.8.0-beta4"]]
+                    [org.slf4j/jcl-over-slf4j "2.0.0-alpha1"]]
                    :plugins [[lein-sub "0.3.0"]
                              [lein-pprint "1.1.2"]]
                    :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-existing}
@@ -30,7 +30,7 @@
              :test {:test-paths ["test/src"]
                     :resource-paths ["test/resources"]
                     :dependencies [[dda/pallet "0.9.1" :classifier "tests"]
-                                   [org.clojure/test.check "0.10.0-alpha4"]]}
+                                   [org.clojure/test.check "0.10.0"]]}
              :uberjar {:source-paths ["uberjar/src"]
                        :resource-paths ["uberjar/resources"]
                        :aot :all
@@ -39,7 +39,7 @@
                        :dependencies [[org.clojure/tools.cli "0.4.2"]
                                       [ch.qos.logback/logback-classic "1.3.0-alpha4"
                                        :exclusions [com.sun.mail/javax.mail]]
-                                      [org.slf4j/jcl-over-slf4j "1.8.0-beta4"]]}}
+                                      [org.slf4j/jcl-over-slf4j "2.0.0-alpha1"]]}}
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
                   ["vcs" "commit"]
