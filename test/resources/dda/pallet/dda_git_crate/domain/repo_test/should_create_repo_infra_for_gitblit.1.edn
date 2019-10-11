@@ -1,0 +1,8 @@
+{:input {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
+                      :orga-path "meissa/group" :protocol :https
+                      :server-type :gitblit}
+         :credential-input nil}
+ :expected {:repo "https://repositories.website.com:443/r/meissa/group/a-private-repo.git"
+            :local-dir "/home/test-user/repo/folder1/a-private-repo"
+            :settings #{}}
+ :meta {:name "minimal-https-gitblit"}}

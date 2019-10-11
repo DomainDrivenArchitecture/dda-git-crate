@@ -1,0 +1,9 @@
+{:input {:repo-input {:host "repositories.website.com" :repo-name "a-private-repo"
+                      :port 29418 :orga-path "meissa/group" :protocol :ssh
+                      :server-type :gitblit}
+         :credential-input {:github.com_443 {:user-name "test" :password "pwd"}
+                            :repositories.website.com_29418 {:user-name "test2" :password "pwd2"}}}
+ :expected {:repo "ssh://test2@repositories.website.com:29418/meissa/group/a-private-repo.git"
+            :local-dir "/home/test-user/repo/folder1/a-private-repo"
+            :settings #{}}
+ :meta {:name "ssh-gitblit"}}

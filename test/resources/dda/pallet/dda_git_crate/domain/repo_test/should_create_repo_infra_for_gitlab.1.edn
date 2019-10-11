@@ -1,0 +1,8 @@
+{:input {:repo-input {:host "gitlab.com" :repo-name "gitlab-ce"
+                      :orga-path "gitlab-org" :protocol :https
+                      :server-type :gitlab}
+         :credential-input nil}
+ :expected {:repo "https://gitlab.com:443/gitlab-org/gitlab-ce.git"
+            :local-dir "/home/test-user/repo/folder1/gitlab-ce"
+            :settings #{}}
+ :meta {:name "minimal-https-gitlab"}}

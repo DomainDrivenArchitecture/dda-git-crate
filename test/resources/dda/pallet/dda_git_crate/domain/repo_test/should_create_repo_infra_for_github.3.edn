@@ -1,0 +1,9 @@
+{:input {:repo-input {:host "github.com"
+                      :orga-path "DomainDrivenArchitecture"
+                      :repo-name "dda-git-crate"
+                      :protocol :ssh :server-type :github}
+         :credential-input {:github.com_22 {:user-name "ssh_test"}}}
+ :expected {:repo "git@github.com:DomainDrivenArchitecture/dda-git-crate.git"
+            :local-dir "/home/test-user/repo/folder1/dda-git-crate"
+            :settings #{}}
+ :meta {:name "ssh-github"}}

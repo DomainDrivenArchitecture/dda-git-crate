@@ -1,0 +1,9 @@
+{:input {:repo-input {:host "github.com" :port 443
+                      :orga-path "DomainDrivenArchitecture"
+                      :repo-name "dda-git-crate"
+                      :protocol :https :server-type :github}
+         :credential-input nil}
+ :expected {:repo "https://github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+            :local-dir "/home/test-user/repo/folder1/dda-git-crate"
+            :settings #{}}
+ :meta {:name "minimal-https-github"}}
