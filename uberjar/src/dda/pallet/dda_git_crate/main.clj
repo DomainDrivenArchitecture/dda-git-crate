@@ -17,10 +17,11 @@
 (ns dda.pallet.dda-git-crate.main
   (:gen-class)
   (:require
-    [clojure.string :as str]
-    [clojure.tools.cli :as cli]
-    [dda.pallet.core.app :as core-app]
-    [dda.pallet.dda-git-crate.app :as app]))
+   [clojure.string :as str]
+   [clojure.tools.cli :as cli]
+   [dda.pallet.core.app :as core-app]
+   [dda.pallet.core.main-helper :as mh]
+   [dda.pallet.dda-git-crate.app :as app]))
 
 (def cli-options
   [["-h" "--help"]
@@ -44,29 +45,27 @@
     "  - has to be a valid DdaGitDomain (see: https://github.com/DomainDrivenArchitecture/dda-git-crate)"
     ""]))
 
-(defn error-msg [errors]
-  (str "The following errors occurred while parsing your command:\n\n"
-       (str/join \newline errors)))
-
-(defn exit [status msg]
-  (println msg)
-  (System/exit status))
-
 (defn -main [& args]
   (let [{:keys [options arguments errors summary help]} (cli/parse-opts args cli-options)]
     (cond
-      help (exit 0 (usage summary))
-      errors (exit 1 (error-msg errors))
+      help (mh/exit 0 (usage summary))
+      errors (mh/exit 1 (error-msg errors))
       (not= (count arguments) 1) (exit 1 (usage summary))
-      (:serverspec options) (core-app/existing-serverspec
-                              app/crate-app
-                              {:domain (first arguments)
-                               :targets (:targets options)})
-      (:configure options) (core-app/existing-configure
-                             app/crate-app
-                             {:domain (first arguments)
-                              :targets (:targets options)})
-      :default (core-app/existing-install
-                 app/crate-app
-                 {:domain (first arguments)
-                  :targets (:targets options)}))))
+      (:serverspec options) (if (core-app/existing-serverspec
+                                 app/crate-app
+                                 {:domain (first arguments)
+                                  :targets (:targets options)})
+                              (mh/exit 0 (styled/styled "ALL TESTS PASSED" :green))
+                              (mh/exit 2 (styled/styled "SOME TESTS FAILED" :red)))
+      (:configure options) (if (core-app/existing-configure
+                                app/crate-app
+                                {:domain (first arguments)
+                                 :targets (:targets options)})
+                             (mh/exit-default-success)
+                             (mh/exit-default-error))
+      :default (if (core-app/existing-install
+                    app/crate-app
+                    {:domain (first arguments)
+                     :targets (:targets options)})
+                 (mh/exit-default-success)
+                 (mh/exit-default-error)))))
