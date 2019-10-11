@@ -1,0 +1,7 @@
+{:input {:test-user {:user-email "test-user@domain"}}
+ :expected {:dda-git
+            {:test-user
+             {:config {:email "test-user@domain"}, :trust [], :repo []
+              :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}}
+            :dda-servertest {:file-fact {}}}
+ }

@@ -1,0 +1,25 @@
+{:input {:test-user
+         {:user-email "test-user@domain"
+          :repo {:folder1 [{:host "github.com"
+                            :port 443
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-git-crate"
+                            :protocol :https
+                            :server-type :github}
+                           {:host "github.com"
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-serverspec-crate"
+                            :protocol :https
+                            :server-type :github}]
+                 :folder2 [{:host "github.com"
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-managed-ide"
+                            :protocol :ssh
+                            :server-type :github}]}
+          :synced-repo {:folder1 [{:host "repositories.website.com"
+                                   :repo-name "a-private-repo"
+                                   :protocol :ssh
+                                   :server-type :gitblit}]}}}
+ :expected [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
+            {:pin-fqdn-or-ip {:port 22 :host "repositories.website.com"}}
+            {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]}

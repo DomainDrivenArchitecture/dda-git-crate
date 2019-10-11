@@ -1,0 +1,57 @@
+{:input {:test-user
+         {:user-email "test-user@domain"
+          :credential [{:host "github.com"
+                        :protocol :https
+                        :user-name "githubtest"
+                        :password "secure1234"}
+                       {:host "repositories.website.com"
+                        :protocol :https
+                        :user-name "githubtest"
+                        :password "secure1234"
+                        :port 22224}]
+          :repo {:folder1 [{:host "github.com"
+                            :port 443
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-git-crate"
+                            :protocol :https
+                            :server-type :github}
+                           {:host "github.com"
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-serverspec-crate"
+                            :protocol :https
+                            :server-type :github}]
+                 :folder2 [{:host "github.com"
+                            :orga-path "DomainDrivenArchitecture"
+                            :repo-name "dda-managed-ide"
+                            :protocol :ssh
+                            :server-type :github}]}
+          :synced-repo {:folder1 [{:host "repositories.website.com"
+                                   :repo-name "a-private-repo"
+                                   :orga-path "meissa/group"
+                                   :protocol :https
+                                   :server-type :gitblit
+                                   :port 22224}]}}}
+ :expected {:infra-repo-expectation
+            [{:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
+              :local-dir "/home/test-user/repo/folder1/dda-git-crate"
+              :settings #{}}
+             {:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
+              :local-dir "/home/test-user/repo/folder1/dda-serverspec-crate"
+              :settings #{}}
+             {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"
+              :local-dir "/home/test-user/repo/folder2/dda-managed-ide"
+              :settings #{}}
+             {:repo "https://githubtest:secure1234@repositories.website.com:22224/r/meissa/group/a-private-repo.git"
+              :local-dir "/home/test-user/repo/folder1/a-private-repo"
+              :settings #{:sync}}]
+            :infra-fact-expectation
+            {:file-fact
+             {:_home_test-user_repo_folder1_dda-git-crate
+              {:path "/home/test-user/repo/folder1/dda-git-crate"}
+              :_home_test-user_repo_folder1_dda-serverspec-crate
+              {:path
+               "/home/test-user/repo/folder1/dda-serverspec-crate"}
+              :_home_test-user_repo_folder2_dda-managed-ide
+              {:path "/home/test-user/repo/folder2/dda-managed-ide"}
+              :_home_test-user_repo_folder1_a-private-repo
+              {:path "/home/test-user/repo/folder1/a-private-repo"}}}}}

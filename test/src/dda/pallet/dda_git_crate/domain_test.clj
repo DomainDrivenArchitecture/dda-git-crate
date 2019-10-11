@@ -15,9 +15,10 @@
 ; limitations under the License.
 (ns dda.pallet.dda-git-crate.domain-test
   (:require
-    [clojure.test :refer :all]
-    [schema.core :as s]
-    [dda.pallet.dda-git-crate.domain :as sut]))
+   [clojure.test :refer :all]   
+   [data-test :refer :all]
+   [schema.core :as s]
+   [dda.pallet.dda-git-crate.domain :as sut]))
 
 
 (def invalid
@@ -30,141 +31,24 @@
     (is (thrown? Exception (sut/infra-configuration
                              (:domain-input invalid))))))
 
-(def git-minimal
-  {:domain-input {:test-user {:user-email "test-user@domain"}}
-   :infra {:dda-git
-           {:test-user
-            {:config {:email "test-user@domain"}, :trust [], :repo []
-             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}}
-           :dda-servertest {:file-fact {}}}})
+(defdatatest should-generate-infra-with-minimal-input [input expected]
+  (is (= expected
+         (sut/infra-configuration input))))
 
-(deftest minimal-test
- (testing
-   (is (= (:infra git-minimal)
-          (sut/infra-configuration
-            (:domain-input git-minimal))))))
+(defdatatest should-generate-infra-with-multiuser-input [input expected]
+  (is (= expected
+         (sut/infra-configuration input))))
 
-(def git-multiuser
-  {:domain-input {:test-user1 {:user-email "test-user1@domain"}
-                  :test-user2 {:user-email "test-user2@domain"}}
-   :infra {:dda-git
-           {:test-user1
-            {:config {:email "test-user1@domain"}, :trust [], :repo []
-             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}
-            :test-user2
-            {:config {:email "test-user2@domain"}, :trust [], :repo []
-             :file-fact-keyword :dda.pallet.dda-serverspec-crate.infra.fact.file/file}}
-           :dda-servertest {:file-fact {}}}})
+(defdatatest should-generate-infra-with-trust-input [input expected]
+ (is (= expected
+        (get-in
+         (sut/infra-configuration input)
+         [:dda-git :test-user :trust]))))
 
-(deftest multiuser-test
- (testing
-   (is (= (:infra git-multiuser)
-          (sut/infra-configuration
-            (:domain-input git-multiuser))))))
-
-(def trust
-  {:domain-input
-   {:test-user
-     {:user-email "test-user@domain"
-      :repo {:folder1 [{:host "github.com"
-                        :port 443
-                        :orga-path "DomainDrivenArchitecture"
-                        :repo-name "dda-git-crate"
-                        :protocol :https
-                        :server-type :github}
-                       {:host "github.com"
-                        :orga-path "DomainDrivenArchitecture"
-                        :repo-name "dda-serverspec-crate"
-                        :protocol :https
-                        :server-type :github}]
-              :folder2 [{:host "github.com"
-                         :orga-path "DomainDrivenArchitecture"
-                         :repo-name "dda-managed-ide"
-                         :protocol :ssh
-                         :server-type :github}]}
-      :synced-repo {:folder1 [{:host "repositories.website.com"
-                               :repo-name "a-private-repo"
-                               :protocol :ssh
-                               :server-type :gitblit}]}}}
-   :infra-trust [{:pin-fqdn-or-ip {:port 443 :host "github.com"}}
-                 {:pin-fqdn-or-ip {:port 22 :host "repositories.website.com"}}
-                 {:pin-fqdn-or-ip {:port 22 :host "github.com"}}]})
-
-(deftest trust-test
- (testing
-   (is (= (:infra-trust trust)
-          (get-in
-            (sut/infra-configuration
-              (:domain-input trust))
-            [:dda-git :test-user :trust])))))
-
-(def repos
-  {:domain-input
-   {:test-user
-     {:user-email "test-user@domain"
-      :credential [{:host "github.com"
-                    :protocol :https
-                    :user-name "githubtest"
-                    :password "secure1234"}
-                   {:host "repositories.website.com"
-                    :protocol :https
-                    :user-name "githubtest"
-                    :password "secure1234"
-                    :port 22224}]
-      :repo {:folder1 [{:host "github.com"
-                        :port 443
-                        :orga-path "DomainDrivenArchitecture"
-                        :repo-name "dda-git-crate"
-                        :protocol :https
-                        :server-type :github}
-                       {:host "github.com"
-                        :orga-path "DomainDrivenArchitecture"
-                        :repo-name "dda-serverspec-crate"
-                        :protocol :https
-                        :server-type :github}]
-              :folder2 [{:host "github.com"
-                         :orga-path "DomainDrivenArchitecture"
-                         :repo-name "dda-managed-ide"
-                         :protocol :ssh
-                         :server-type :github}]}
-      :synced-repo {:folder1 [{:host "repositories.website.com"
-                               :repo-name "a-private-repo"
-                               :orga-path "meissa/group"
-                               :protocol :https
-                               :server-type :gitblit
-                               :port 22224}]}}}
-   :infra-repo-expectation
-   [{:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-git-crate.git"
-     :local-dir "/home/test-user/repo/folder1/dda-git-crate"
-     :settings #{}}
-    {:repo "https://githubtest:secure1234@github.com:443/DomainDrivenArchitecture/dda-serverspec-crate.git"
-     :local-dir "/home/test-user/repo/folder1/dda-serverspec-crate"
-     :settings #{}}
-    {:repo "git@github.com:DomainDrivenArchitecture/dda-managed-ide.git"
-     :local-dir "/home/test-user/repo/folder2/dda-managed-ide"
-     :settings #{}}
-    {:repo "https://githubtest:secure1234@repositories.website.com:22224/r/meissa/group/a-private-repo.git"
-     :local-dir "/home/test-user/repo/folder1/a-private-repo"
-     :settings #{:sync}}]
-   :infra-fact-expectation
-   {:file-fact
-    {:_home_test-user_repo_folder1_dda-git-crate
-     {:path "/home/test-user/repo/folder1/dda-git-crate"},
-     :_home_test-user_repo_folder1_dda-serverspec-crate
-     {:path
-      "/home/test-user/repo/folder1/dda-serverspec-crate"},
-     :_home_test-user_repo_folder2_dda-managed-ide
-     {:path "/home/test-user/repo/folder2/dda-managed-ide"},
-     :_home_test-user_repo_folder1_a-private-repo
-     {:path "/home/test-user/repo/folder1/a-private-repo"}}}})
-
-(deftest repo-test
-  (testing
-    (is (= (:infra-repo-expectation repos)
-           (get-in (sut/infra-configuration
-                     (:domain-input repos))
+(defdatatest should-generate-infra-with-repo-input [input expected]
+  (is (= (:infra-repo-expectation expected)
+           (get-in (sut/infra-configuration input)
                    [:dda-git :test-user :repo])))
-    (is (= (:infra-fact-expectation repos)
-           (get-in (sut/infra-configuration
-                     (:domain-input repos))
-                   [:dda-servertest])))))
+    (is (= (:infra-fact-expectation expected)
+           (get-in (sut/infra-configuration input)
+                   [:dda-servertest]))))

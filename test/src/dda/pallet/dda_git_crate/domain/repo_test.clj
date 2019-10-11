@@ -19,7 +19,7 @@
     [schema.core :as s]
     [dda.pallet.dda-git-crate.domain.repo :as sut]))
 
-(s/set-fn-validation! true)
+;;(s/set-fn-validation! true)
 
 (deftest test-server-identity-port
  (testing
