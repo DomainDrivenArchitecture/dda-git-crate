@@ -50,7 +50,7 @@
       (logging/info (str facility "-configure user: add-pinned-fqdn-or-ip")))
     (actions/exec-checked-script
       "add delivered key to known_hosts"
-      ("su" ~user-name "-c" "\"ssh-keyscan -p " ~port "-H" ~host ">> ~/.ssh/known_hosts\""))))
+      ("su" ~user-name "-c" "\"ssh-keyscan -H" ~host ">> ~/.ssh/known_hosts\""))))
 
 (s/defn configure-user
   [facility :- s/Keyword
