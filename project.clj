@@ -1,4 +1,4 @@
-(defproject dda/dda-git-crate "2.2.3"
+(defproject dda/dda-git-crate "2.2.4-SNAPSHOT"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
@@ -23,8 +23,6 @@
                     [dda/data-test "0.1.1"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                     [org.slf4j/jcl-over-slf4j "2.0.0-alpha1"]]
-                   :plugins [[lein-sub "0.3.0"]
-                             [lein-pprint "1.1.2"]]
                    :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-existing}
                    :leiningen/reply {:dependencies [[org.slf4j/jcl-over-slf4j "1.8.0-beta0"
                                                      :exclusions [commons-logging]]]}}
