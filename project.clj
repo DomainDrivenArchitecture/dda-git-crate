@@ -1,4 +1,4 @@
-(defproject dda/dda-git-crate "2.2.3-SNAPSHOT"
+(defproject dda/dda-git-crate "2.2.3"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
