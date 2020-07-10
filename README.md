@@ -21,8 +21,8 @@
 
 dda-pallet is compatible to the following versions
  * pallet 0.9
- * clojure 1.9
- * (x)ubuntu 18.04
+ * clojure 1.10
+ * (x)ubuntu 20.04
 
 ## Features
 
