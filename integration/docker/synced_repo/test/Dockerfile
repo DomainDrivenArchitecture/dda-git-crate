@@ -4,6 +4,6 @@ FROM dda-git-crate
 RUN apt-get install net-tools curl -y
 
 RUN curl -L -o /app/serverspec.jar https://github.com/DomainDrivenArchitecture/dda-serverspec-crate/releases/download/1.3.2/dda-serverspec-standalone.jar
-COPY integration/docker/synced_repo/test/serverspec.edn /app/serverspec.edn
+COPY serverspec.edn /app/serverspec.edn
 
 RUN java -jar /app/serverspec.jar /app/serverspec.edn -v
