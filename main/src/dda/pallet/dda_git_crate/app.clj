@@ -22,38 +22,38 @@
    [dda.pallet.dda-config-crate.infra :as config-crate]
    [dda.pallet.dda-serverspec-crate.app :as serverspec]
    [dda.pallet.dda-git-crate.infra :as infra]
-   [dda.pallet.dda-git-crate.domain :as domain]))
+   [dda.pallet.dda-git-crate.convention :as convention]))
 
 (def with-git infra/with-git)
 
-(def InfraResult domain/InfraResult)
+(def InfraResult convention/InfraResult)
 
-(def GitDomain domain/GitDomain)
+(def GitConvention convention/GitConvention)
 
-(def GitDomainResolved (secret/create-resolved-schema GitDomain))
+(def GitConventionResolved (secret/create-resolved-schema GitConvention))
 
 (def GitAppConfig
   {:group-specific-config {s/Keyword InfraResult}})
 
 (s/defn ^:always-validate
   app-configuration-resolved :- GitAppConfig
-  [domain-config :- GitDomainResolved
+  [convention-config :- GitConventionResolved
    & options]
   (let [{:keys [group-key] :or {group-key infra/facility}} options]
-    {:group-specific-config {group-key (domain/infra-configuration domain-config)}}))
+    {:group-specific-config {group-key (convention/infra-configuration convention-config)}}))
 
 (s/defn ^:always-validate
   app-configuration :- GitAppConfig
-  [domain-config :- GitDomain
+  [convention-config :- GitConvention
    & options]
-  (let [resolved-domain-config (secret/resolve-secrets domain-config GitDomain)]
-    (apply app-configuration-resolved resolved-domain-config options)))
+  (let [resolved-convention-config (secret/resolve-secrets convention-config GitConvention)]
+    (apply app-configuration-resolved resolved-convention-config options)))
 
 (s/defmethod ^:always-validate
   core-app/group-spec infra/facility
   [crate-app
-   domain-config :- GitDomainResolved]
-  (let [app-config (app-configuration-resolved domain-config)]
+   convention-config :- GitConventionResolved]
+  (let [app-config (app-configuration-resolved convention-config)]
     (core-app/pallet-group-spec
       app-config [(config-crate/with-config app-config)
                   serverspec/with-serverspec
@@ -61,6 +61,6 @@
 
 (def crate-app (core-app/make-dda-crate-app
                   :facility infra/facility
-                  :domain-schema GitDomain
-                  :domain-schema-resolved GitDomainResolved
+                  :domain-schema GitConvention
+                  :domain-schema-resolved GitConventionResolved
                   :default-domain-file "git.edn"))

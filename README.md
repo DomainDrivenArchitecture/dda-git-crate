@@ -13,7 +13,7 @@
 [Targets config example](#targets-config-example)  
 [Git config example](#git-config-example)  
 [Reference-Targets](#targets)  
-[Reference-Domain-API](#domain-api)  
+[Reference-Convention-API](#convention-api)  
 [Reference-Infra-API](#infra-api)  
 [License](#license)  
 
@@ -122,7 +122,7 @@ You can define provisioning targets using the [targets-schema](https://github.co
 ### Domain API
 
 You can use our conventions as a starting point:
-[see domain reference](doc/reference_domain.md)
+[see convention reference](doc/reference_convention.md)
 
 ### Infra API
 

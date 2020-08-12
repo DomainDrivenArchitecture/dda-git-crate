@@ -13,23 +13,23 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.dda-git-crate.domain-test
+(ns dda.pallet.dda-git-crate.convention-test
   (:require
    [clojure.test :refer :all]   
    [data-test :refer :all]
    [schema.core :as s]
-   [dda.pallet.dda-git-crate.domain :as sut]))
+   [dda.pallet.dda-git-crate.convention :as sut]))
 
 
 (def invalid
-  {:domain-input {:test-user {:invalid 42}}
+  {:convention-input {:test-user {:invalid 42}}
    :infra {}})
 
 (deftest invalid-test
  (testing
    "test infra-configuration"
     (is (thrown? Exception (sut/infra-configuration
-                             (:domain-input invalid))))))
+                             (:convention-input invalid))))))
 
 (defdatatest should-generate-infra-with-minimal-input [input expected]
   (is (= expected

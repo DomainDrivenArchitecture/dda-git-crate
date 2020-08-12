@@ -29,7 +29,7 @@
    (s/optional-key :repo) repo/OrganizedRepositories
    (s/optional-key :synced-repo) repo/OrganizedRepositories})
 
-(def GitDomain
+(def GitConvention
   {s/Keyword                 ;represents the user-name
    UserGit})
 ```

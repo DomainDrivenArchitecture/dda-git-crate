@@ -14,7 +14,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.dda-git-crate.domain.repo
+(ns dda.pallet.dda-git-crate.convention.repo
   (:require
     [clojure.string :as st]
     [clojure.tools.logging :as logging]

@@ -43,7 +43,7 @@
     ""
     "git.edn"
     "  - follows the edn format."
-    "  - has to be a valid DdaGitDomain (see: https://github.com/DomainDrivenArchitecture/dda-git-crate)"
+    "  - has to be a valid DdaGitConvention (see: https://github.com/DomainDrivenArchitecture/dda-git-crate)"
     ""]))
 
 (defn -main [& args]

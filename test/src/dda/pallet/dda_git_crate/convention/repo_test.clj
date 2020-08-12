@@ -13,12 +13,12 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
-(ns dda.pallet.dda-git-crate.domain.repo-test
+(ns dda.pallet.dda-git-crate.convention.repo-test
   (:require
    [clojure.test :refer :all]
    [data-test :refer :all]
    [schema.core :as s]
-   [dda.pallet.dda-git-crate.domain.repo :as sut]))
+   [dda.pallet.dda-git-crate.convention.repo :as sut]))
 
 (deftest test-server-identity-port
   (is (= 42

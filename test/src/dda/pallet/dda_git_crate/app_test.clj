@@ -23,7 +23,7 @@
 (s/set-fn-validation! true)
 
 (defdatatest should-be-valid [input expected]
-  (is (s/validate sut/GitDomain input)))
+  (is (s/validate sut/GitConvention input)))
 
 (deftest should-def-a-plan
   (is (map? sut/with-git)))

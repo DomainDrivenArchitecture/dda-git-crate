@@ -14,7 +14,8 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(ns dda.pallet.dda-git-crate.domain
+(ns dda.pallet.dda-git-crate.convention
+  {:deprecated "3.0"}
   (:require
    [schema.core :as s]
    [dda.config.commons.map-utils :as mu]
@@ -22,7 +23,7 @@
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
    [dda.pallet.dda-serverspec-crate.domain :as spec-domain]
-   [dda.pallet.dda-git-crate.domain.repo :as repo]))
+   [dda.pallet.dda-git-crate.convention.repo :as repo]))
 
 (def ServerIdentity repo/ServerIdentity)
 (def Repository repo/Repository)
@@ -40,11 +41,11 @@
    (s/optional-key :repo) repo/OrganizedRepositories
    (s/optional-key :synced-repo) repo/OrganizedRepositories})
 
-(def GitDomain
+(def GitConvention
   {s/Keyword                 ;represents the user-name
    UserGit})
 
-(def GitDomainResolved (secret/create-resolved-schema GitDomain))
+(def GitConventionResolved (secret/create-resolved-schema GitConvention))
 
 (def InfraResult
      (merge
@@ -93,14 +94,14 @@
 
 (s/defn ^:always-validate
   infra-configuration
-  [domain-config :- GitDomainResolved]
+  [convention-config :- GitConventionResolved]
   {infra/facility
     (into {}
       (map
         (fn [[k v]] [k (infra-configuration-per-user k v)])
-        domain-config))
+        convention-config))
    dda.pallet.dda-serverspec-crate.infra/facility
     (apply merge {}
       (map
         (fn [[k v]] (infra-facts-per-user k v))
-        domain-config))})
+        convention-config))})
