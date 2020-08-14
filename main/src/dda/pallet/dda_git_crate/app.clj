@@ -61,6 +61,6 @@
 
 (def crate-app (core-app/make-dda-crate-app
                   :facility infra/facility
-                  :domain-schema GitConvention
-                  :domain-schema-resolved GitConventionResolved
-                  :default-domain-file "git.edn"))
+                  :convention-schema GitConvention
+                  :convention-schema-resolved GitConventionResolved
+                  :default-convention-file "git.edn"))

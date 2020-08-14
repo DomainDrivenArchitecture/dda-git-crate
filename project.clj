@@ -1,9 +1,9 @@
-(defproject dda/dda-git-crate "2.2.6-SNAPSHOT"
+(defproject dda/dda-git-crate "3.0.0-SNAPSHOT"
   :description "Module for cloning and managing git repositories & server conectivity."
   :url "https://domaindrivenarchitecture.org"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
-  :dependencies [[dda/dda-pallet "3.1.2"]
+  :dependencies [[dda/dda-pallet "4.0.0"]
                  [dda/dda-serverspec-crate "1.3.4"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]

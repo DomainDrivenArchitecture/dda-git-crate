@@ -28,6 +28,7 @@
   [["-h" "--help"]
    ["-s" "--serverspec"]
    ["-c" "--configure"]
+   ["-i" "--infra-instead-of-convention"]
    ["-t" "--targets TARGETS.edn" "edn file containing the targets to install on."
     :default "localhost-target.edn"]])
 
