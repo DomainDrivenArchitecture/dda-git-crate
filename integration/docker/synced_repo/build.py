@@ -5,7 +5,7 @@ import logging
 
 name = 'dda-git'
 MODULE = 'docker-synced-repo'
-PROJECT_ROOT_PATH = '../..'
+PROJECT_ROOT_PATH = '../../..'
 
 class MyBuild(DevopsDockerBuild):
     pass

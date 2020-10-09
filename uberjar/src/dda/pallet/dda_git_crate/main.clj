@@ -19,16 +19,16 @@
   (:require
    [clojure.string :as str]
    [clojure.tools.cli :as cli]
-   [dda.pallet.core.app :as core-app]
-   [dda.config.commons.styled-output :as styled]
    [dda.pallet.core.main-helper :as mh]
+   [dda.config.commons.styled-output :as styled]
+   [dda.pallet.core.app :as core-app]
    [dda.pallet.dda-git-crate.app :as app]))
 
 (def cli-options
   [["-h" "--help"]
    ["-s" "--serverspec"]
    ["-c" "--configure"]
-   ["-i" "--infra-instead-of-convention"]
+   ["-i" "--install"]
    ["-t" "--targets TARGETS.edn" "edn file containing the targets to install on."
     :default "localhost-target.edn"]])
 
@@ -55,19 +55,19 @@
       (not= (count arguments) 1) (mh/exit 1 (usage summary))
       (:serverspec options) (if (core-app/existing-serverspec
                                  app/crate-app
-                                 {:domain (first arguments)
+                                 {:convention (first arguments)
                                   :targets (:targets options)})
                               (mh/exit 0 (styled/styled "ALL TESTS PASSED" :green))
                               (mh/exit 2 (styled/styled "SOME TESTS FAILED" :red)))
       (:configure options) (if (core-app/existing-configure
                                 app/crate-app
-                                {:domain (first arguments)
+                                {:convention (first arguments)
                                  :targets (:targets options)})
                              (mh/exit-default-success)
                              (mh/exit-default-error))
       :default (if (core-app/existing-install
                     app/crate-app
-                    {:domain (first arguments)
+                    {:convention (first arguments)
                      :targets (:targets options)})
                  (mh/exit-default-success)
                  (mh/exit-default-error)))))
