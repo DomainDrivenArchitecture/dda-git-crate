@@ -22,7 +22,7 @@
    [dda.config.commons.user-home :as user-home]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
-   [dda.pallet.dda-serverspec-crate.domain :as spec-domain]
+   [dda.pallet.dda-serverspec-crate.convention :as spec-domain]
    [dda.pallet.dda-git-crate.convention.repo :as repo]))
 
 (def ServerIdentity repo/ServerIdentity)

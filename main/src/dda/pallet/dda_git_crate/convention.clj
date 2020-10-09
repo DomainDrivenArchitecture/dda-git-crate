@@ -15,14 +15,13 @@
 ; limitations under the License.
 
 (ns dda.pallet.dda-git-crate.convention
-  {:deprecated "3.0"}
   (:require
    [schema.core :as s]
    [dda.config.commons.map-utils :as mu]
    [dda.config.commons.user-home :as user-home]
    [dda.pallet.commons.secret :as secret]
    [dda.pallet.dda-git-crate.infra :as infra]
-   [dda.pallet.dda-serverspec-crate.domain :as spec-domain]
+   [dda.pallet.dda-serverspec-crate.convention :as spec-domain]
    [dda.pallet.dda-git-crate.convention.repo :as repo]))
 
 (def ServerIdentity repo/ServerIdentity)

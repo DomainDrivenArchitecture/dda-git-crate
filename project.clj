@@ -4,7 +4,7 @@
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[dda/dda-pallet "4.0.0"]
-                 [dda/dda-serverspec-crate "1.3.4"]]
+                 [dda/dda-serverspec-crate "2.0.0"]]
   :source-paths ["main/src"]
   :resource-paths ["main/resources"]
   :target-path "target/%s/"
@@ -23,7 +23,6 @@
                     [dda/data-test "0.1.1"]
                     [ch.qos.logback/logback-classic "1.3.0-alpha4"]
                     [org.slf4j/jcl-over-slf4j "2.0.0-alpha1"]]
-                   :repl-options {:init-ns dda.pallet.dda-git-crate.app.instantiate-existing}
                    :leiningen/reply {:dependencies [[org.slf4j/jcl-over-slf4j "1.8.0-beta0"
                                                      :exclusions [commons-logging]]]}}
              :test {:test-paths ["test/src"]
